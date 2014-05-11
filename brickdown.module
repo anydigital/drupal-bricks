@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Brickdown feature.
+ */
+
+include_once 'brickdown.features.inc';
