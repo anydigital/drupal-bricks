@@ -1,0 +1,225 @@
+<?php
+
+/**
+ * Implements hook_theme_registry_alter() as described here: https://www.drupal.org/node/715160.
+ */
+function brickdown_theme_registry_alter(&$theme_registry) {
+  $theme_registry_copy = $theme_registry;
+  $module_path = drupal_get_path('module', 'brickdown');
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'brickdown', $module_path);
+  $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
+  // A list of templates the module will provide templates for
+  $hooks = array('entity');
+  foreach ($hooks as $hook) {
+    // Add the key 'theme paths' if it doesn't exist in this theme's registry
+    if (!isset($theme_registry[$hook]['theme paths'])) {
+      $theme_registry[$hook]['theme paths'] = array();
+    }
+    // Shift this module's directory to the top of the theme path list
+    if (is_array($theme_registry[$hook]['theme paths'])) {
+      $first_element = array_shift($theme_registry[$hook]['theme paths']);
+      if ($first_element) {
+        array_unshift($theme_registry[$hook]['theme paths'], $first_element, $module_path);
+      }
+      else {
+        array_unshift($theme_registry[$hook]['theme paths'], $module_path);
+      }
+    }
+  }
+  if (isset($theme_registry['inline_entity_form_entity_table'])) {
+    $theme_registry['inline_entity_form_entity_table'] = array(
+      'theme path' => $module_path,
+      'function' => 'brickdown_inline_entity_form_entity_table',
+    ) + $theme_registry['inline_entity_form_entity_table'];
+  }
+}
+
+/**
+ * Implements hook_field_schema_alter() provided by this patch: https://www.drupal.org/node/691932.
+ */
+function brickdown_field_schema_alter(&$schema, $field) {
+  if ($field['field_name'] == 'field_brick') {
+    $schema['columns'] += array(
+      'brickdown_parent' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The parent sequence number for this data item, used for multi-value fields',
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for inline_entity_form.
+ */
+function brickdown_field_widget_inline_entity_form_form_alter(&$element, &$form_state, $context) {
+  if ($context['field']['field_name'] == 'field_brick') {
+    $parents = array_merge($element['#field_parents'], array($element['#field_name'], $element['#language']));
+    $ief_id = sha1(implode('-', $parents));
+    $items = $context['items'];
+    foreach ($form_state['inline_entity_form'][$ief_id]['entities'] as $key => $value) {
+      $element['entities'][$key]['delta'] = array(
+        '#type' => 'textfield',
+        '#size' => 2,
+      ) + $element['entities'][$key]['delta'];
+      $element['entities'][$key] += array(
+        'brickdown_delta' => array(
+          '#type' => 'textfield',
+          '#default_value' => $value['weight'],
+          '#size' => 2,
+          '#attributes' => array('class' => array('brickdown-delta')),
+          '#disabled' => TRUE,
+        ),
+        'brickdown_parent' => array(
+          '#type' => 'textfield',
+          '#default_value' => isset($items[$key]['brickdown_parent']) ? $items[$key]['brickdown_parent'] : -1,
+          '#size' => 2,
+          '#attributes' => array('class' => array('brickdown-parent')),
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_field_attach_submit().
+ */
+function brickdown_field_attach_submit($parent_entity_type, $parent_entity, $form, &$form_state) {
+  list(, , $bundle_name) = entity_extract_ids($parent_entity_type, $parent_entity);
+
+  foreach (field_info_instances($parent_entity_type, $bundle_name) as $instance_name => $instance) {
+    if ($instance_name == 'field_brick') {
+      $field_name = $instance['field_name'];
+      $langcode = $form[$field_name]['#language'];
+      $ief_id = $form[$field_name][$langcode]['#ief_id'];
+
+      $values = $form_state['inline_entity_form'][$ief_id];
+
+      // Build prior-new delta translation arrays:
+      $new_keys = array_keys($values['entities']);
+      uasort($values['entities'], 'drupal_sort_weight');
+      $prior_keys = array_keys($values['entities']);
+      $new_deltas = array_combine($prior_keys, $new_keys);
+      $prior_deltas = array_combine($new_keys, $prior_keys);
+
+      // Save parents in the field:
+      foreach ($parent_entity->{$field_name}[$langcode] as $delta => &$item) {
+        $prior_delta = $prior_deltas[$delta];
+        $prior_parent = $form[$field_name][$langcode]['entities'][$prior_delta]['brickdown_parent']['#value'];
+        $parent = $prior_parent == -1 ? NULL : $new_deltas[$prior_parent];
+
+        $item['brickdown_parent'] = $parent;
+      }
+    }
+  }
+}
+
+function brickdown_inline_entity_form_entity_table($vars) {
+  $form = $vars['form'];
+  module_load_include('inc', 'brickdown.ief');
+  $table_data = _brickdown_inline_entity_form_entity_table_data($vars);
+  $preview_index = $table_data['has_tabledrag'] ? 3 : 1;
+
+  // Adjust header:
+  array_splice($table_data['header'], $preview_index, 0, t('Preview'));
+  if ($table_data['has_tabledrag']) {
+    $table_data['header'][] = t('Delta');
+    $table_data['header'][] = t('Parent');
+  }
+
+  // Adjust rows:
+  $depths = array(-1 => -1);
+  $delta = 0;
+  foreach ($table_data['rows'] as &$row) {
+
+    if (isset($row['data'][0]['colspan'])) {
+
+      // This is an open form row => increase colspan because of additional preview column:
+      $row['data'][0]['colspan'] += 1;
+    }
+    else {
+
+      // This is an entity row => get entity:
+      $entity = $form[$delta]['#entity'];
+
+      // Add preview:
+      $build = entity_view('brick', array($entity));
+      $build = reset($build);
+      array_splice($row['data'], $preview_index, 0, array(drupal_render($build)));
+
+      if ($table_data['has_tabledrag']) {
+
+        // Add indentation:
+        $depth = 0;
+        if (isset($depths[$form[$delta]['brickdown_parent']['#value']])) {
+          $depth = $depths[$form[$delta]['brickdown_parent']['#value']] + 1;
+          $depths[$delta] = $depth;
+        }
+        $row['data'][0] = theme('indentation', array('size' => max($depth, 0)));
+
+        // Add tree support:
+        $row['data'][] = drupal_render($form[$delta]['brickdown_delta']);
+        $row['data'][] = drupal_render($form[$delta]['brickdown_parent']);
+      }
+
+      $delta++;
+    }
+  }
+
+  // Add drag support:
+  $table_id = $table_data['attributes']['id'];
+  drupal_add_tabledrag($table_id, 'match', 'parent', 'brickdown-parent', NULL, 'brickdown-delta');
+  drupal_add_tabledrag($table_id, 'order', 'root', 'ief-entity-delta');
+  drupal_add_js(drupal_get_path('module', 'brickdown') . '/brickdown.js');
+
+  return theme('table', $table_data);
+}
+
+/**
+ * Processes variables for theme_field().
+ */
+function brickdown_process_field(&$vars) {
+  $element = $vars['element'];
+  if ($element['#field_name'] == 'field_brick') {
+
+    // Simplify items:
+    $items = $vars['items'];
+    foreach ($items as $delta => $item) {
+      $tmp_item = reset($item);
+      $tmp_item = reset($tmp_item);
+      $tmp_item['#bricks'] = array();
+      $items[$delta] = $tmp_item;
+    }
+
+    // Reverse items to process them without recursion:
+    $items = array_reverse($items, TRUE);
+
+    // Process items:
+    foreach ($items as $delta => $item) {
+      if (isset($element['#items'][$delta]['brickdown_parent'])) {
+        $parent = $element['#items'][$delta]['brickdown_parent'];
+        array_unshift($items[$parent]['#bricks'], $items[$delta]);
+        unset($items[$delta]);
+      }
+    }
+
+    // Reverse items back:
+    $items = array_reverse($items, TRUE);
+
+    $vars['items'] = $items;
+  }
+}
+
+/**
+ * Processes variables for entity.tpl.php.
+ */
+function brickdown_process_entity(&$vars) {
+  $element = $vars['elements'];
+  if ($element['#entity_type'] == 'brick') {
+    $vars['bricks'] = NULL;
+    if (isset($element['#bricks'])) {
+      $vars['bricks'] = $element['#bricks'];
+    }
+  }
+}

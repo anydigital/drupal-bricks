@@ -1,0 +1,7 @@
+name = Brickdown
+description = Brickdown content.
+core = 7.x
+
+dependencies[] = eck
+dependencies[] = entityreference
+dependencies[] = inline_entity_form (1.5)

@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function brickdown_install() {
+  // Increase module weight to be invoked after inline_entity_form hooks:
+  db_update('system')
+    ->fields(array('weight' => 1))
+    ->condition('name', 'brickdown', '=')
+    ->execute();
+}
