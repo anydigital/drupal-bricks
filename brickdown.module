@@ -117,7 +117,7 @@ function brickdown_field_attach_submit($parent_entity_type, $parent_entity, $for
 
 function brickdown_inline_entity_form_entity_table($vars) {
   $form = $vars['form'];
-  module_load_include('inc', 'brickdown.ief');
+  module_load_include('inc', 'brickdown', 'brickdown.ief');
   $table_data = _brickdown_inline_entity_form_entity_table_data($vars);
   $preview_index = $table_data['has_tabledrag'] ? 3 : 1;
 
