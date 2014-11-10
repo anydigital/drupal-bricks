@@ -213,6 +213,20 @@ function brickdown_process_field(&$vars) {
 }
 
 /**
+ * Implements hook_entity_view_alter().
+ */
+function brickdown_entity_view_alter(&$build, $type) {
+  if ($type == 'brick' && !isset($build['#contextual_links'])) {
+    $build['#contextual_links'] = array(
+      'entity' => array(
+        'brick' . '/' . $build['#bundle'],
+        array($build['#entity']->id),
+      ),
+    );
+  }
+}
+
+/**
  * Processes variables for entity.tpl.php.
  */
 function brickdown_process_entity(&$vars) {
@@ -222,5 +236,7 @@ function brickdown_process_entity(&$vars) {
     if (isset($element['#bricks'])) {
       $vars['bricks'] = $element['#bricks'];
     }
+    $vars['prefix'] = '<div class="' . $vars['classes'] . '">' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
+    $vars['suffix'] = '</div>';
   }
 }
