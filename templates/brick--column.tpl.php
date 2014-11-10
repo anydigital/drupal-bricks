@@ -1,5 +1,1 @@
-<?php if ($bricks): ?>
-<?php foreach ($bricks as $brick): ?>
-<?php print render($brick) ?>
-<?php endforeach ?>
-<?php endif ?>
+<?php if ($bricks): ?><?php print render($bricks) ?><?php endif ?>
