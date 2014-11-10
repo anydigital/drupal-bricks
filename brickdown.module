@@ -119,7 +119,7 @@ function brickdown_inline_entity_form_entity_table($vars) {
   $form = $vars['form'];
   module_load_include('inc', 'brickdown', 'brickdown.ief');
   $table_data = _brickdown_inline_entity_form_entity_table_data($vars);
-  $preview_index = $table_data['has_tabledrag'] ? 3 : 1;
+  $preview_index = $table_data['has_tabledrag'] ? 4 : 1;
 
   // Adjust header:
   array_splice($table_data['header'], $preview_index, 0, t('Preview'));
@@ -144,7 +144,8 @@ function brickdown_inline_entity_form_entity_table($vars) {
       $entity = $form[$delta]['#entity'];
 
       // Add preview:
-      $build = entity_view('brick', array($entity));
+      $build = entity_view('brick', array($entity), 'teaser');
+      $build = reset($build);
       $build = reset($build);
       array_splice($row['data'], $preview_index, 0, array(drupal_render($build)));
 
