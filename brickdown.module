@@ -144,15 +144,9 @@ function brickdown_inline_entity_form_entity_table($vars) {
 
   // Adjust rows:
   $depths = array(-1 => -1);
-  $delta = 0;
-  foreach ($table_data['rows'] as &$row) {
-
-    if (isset($row['data'][0]['colspan'])) {
-
-      // This is an open form row => increase colspan because of additional preview and settings columns:
-      $row['data'][0]['colspan'] += 2;
-    }
-    else {
+  $row_index = 0;
+  foreach (element_children($form) as $delta) {
+    $row = &$table_data['rows'][$row_index];
 
       // This is an entity row => get entity:
       $entity = $form[$delta]['#entity'];
@@ -181,8 +175,14 @@ function brickdown_inline_entity_form_entity_table($vars) {
         $row['data'][] = drupal_render($form[$delta]['brickdown_parent']);
       }
 
-      $delta++;
-    }
+      $row_index++;
+
+      if (isset($form[$delta]['form'])) {
+        // Next row is an open form row => increase colspan because of additional preview and settings columns:
+        $table_data['rows'][$row_index]['data'][0]['colspan'] += 2;
+        // And shift row index:
+        $row_index++;
+      }
   }
 
   // Add drag support:
