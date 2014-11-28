@@ -134,14 +134,6 @@ function brickdown_inline_entity_form_entity_table($vars) {
   $table_data = _brickdown_inline_entity_form_entity_table_data($vars);
   $preview_index = $table_data['has_tabledrag'] ? 4 : 1;
 
-  // Adjust header:
-  array_splice($table_data['header'], $preview_index, 0, t('Preview'));
-  array_splice($table_data['header'], $preview_index + 1, 0, t('Settings'));
-  if ($table_data['has_tabledrag']) {
-    $table_data['header'][] = t('Delta');
-    $table_data['header'][] = t('Parent');
-  }
-
   // Adjust rows:
   $depths = array(-1 => -1);
   $row_index = 0;
@@ -185,6 +177,16 @@ function brickdown_inline_entity_form_entity_table($vars) {
       }
   }
 
+  if (!empty($table_data['rows'])) {
+
+  // Adjust header:
+  array_splice($table_data['header'], $preview_index, 0, t('Preview'));
+  array_splice($table_data['header'], $preview_index + 1, 0, t('Settings'));
+  if ($table_data['has_tabledrag']) {
+    $table_data['header'][] = t('Delta');
+    $table_data['header'][] = t('Parent');
+  }
+
   // Add drag support:
   $table_id = $table_data['attributes']['id'];
   drupal_add_tabledrag($table_id, 'match', 'parent', 'brickdown-parent', NULL, 'brickdown-delta');
@@ -192,6 +194,8 @@ function brickdown_inline_entity_form_entity_table($vars) {
   drupal_add_js(drupal_get_path('module', 'brickdown') . '/brickdown.js');
 
   return theme('table', $table_data);
+
+  }
 }
 
 /**
