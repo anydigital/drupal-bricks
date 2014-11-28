@@ -140,61 +140,60 @@ function brickdown_inline_entity_form_entity_table($vars) {
   foreach (element_children($form) as $delta) {
     $row = &$table_data['rows'][$row_index];
 
-      // This is an entity row => get entity:
-      $entity = $form[$delta]['#entity'];
+    // This is an entity row => get entity:
+    $entity = $form[$delta]['#entity'];
 
-      // Add preview:
-      $build = entity_view('brick', array($entity), 'teaser');
-      $build = reset($build);
-      $build = reset($build);
-      array_splice($row['data'], $preview_index, 0, array(drupal_render($build)));
+    // Add preview:
+    $build = entity_view('brick', array($entity), 'teaser');
+    $build = reset($build);
+    $build = reset($build);
+    array_splice($row['data'], $preview_index, 0, array(drupal_render($build)));
 
-      // Add settings form:
-      array_splice($row['data'], $preview_index + 1, 0, array(drupal_render($form[$delta]['brickdown_settings'])));
+    // Add settings form:
+    array_splice($row['data'], $preview_index + 1, 0, array(drupal_render($form[$delta]['brickdown_settings'])));
 
-      if ($table_data['has_tabledrag']) {
+    if ($table_data['has_tabledrag']) {
 
-        // Add indentation:
-        $depth = 0;
-        if (isset($depths[$form[$delta]['brickdown_parent']['#value']])) {
-          $depth = $depths[$form[$delta]['brickdown_parent']['#value']] + 1;
-          $depths[$delta] = $depth;
-        }
-        $row['data'][0] = theme('indentation', array('size' => max($depth, 0)));
-
-        // Add tree support:
-        $row['data'][] = drupal_render($form[$delta]['brickdown_delta']);
-        $row['data'][] = drupal_render($form[$delta]['brickdown_parent']);
+      // Add indentation:
+      $depth = 0;
+      if (isset($depths[$form[$delta]['brickdown_parent']['#value']])) {
+        $depth = $depths[$form[$delta]['brickdown_parent']['#value']] + 1;
+        $depths[$delta] = $depth;
       }
+      $row['data'][0] = theme('indentation', array('size' => max($depth, 0)));
 
+      // Add tree support:
+      $row['data'][] = drupal_render($form[$delta]['brickdown_delta']);
+      $row['data'][] = drupal_render($form[$delta]['brickdown_parent']);
+    }
+
+    $row_index++;
+
+    if (isset($form[$delta]['form'])) {
+      // Next row is an open form row => increase colspan because of additional preview and settings columns:
+      $table_data['rows'][$row_index]['data'][0]['colspan'] += 2;
+      // And shift row index:
       $row_index++;
-
-      if (isset($form[$delta]['form'])) {
-        // Next row is an open form row => increase colspan because of additional preview and settings columns:
-        $table_data['rows'][$row_index]['data'][0]['colspan'] += 2;
-        // And shift row index:
-        $row_index++;
-      }
+    }
   }
 
   if (!empty($table_data['rows'])) {
 
-  // Adjust header:
-  array_splice($table_data['header'], $preview_index, 0, t('Preview'));
-  array_splice($table_data['header'], $preview_index + 1, 0, t('Settings'));
-  if ($table_data['has_tabledrag']) {
-    $table_data['header'][] = t('Delta');
-    $table_data['header'][] = t('Parent');
-  }
+    // Adjust header:
+    array_splice($table_data['header'], $preview_index, 0, t('Preview'));
+    array_splice($table_data['header'], $preview_index + 1, 0, t('Settings'));
+    if ($table_data['has_tabledrag']) {
+      $table_data['header'][] = t('Delta');
+      $table_data['header'][] = t('Parent');
+    }
 
-  // Add drag support:
-  $table_id = $table_data['attributes']['id'];
-  drupal_add_tabledrag($table_id, 'match', 'parent', 'brickdown-parent', NULL, 'brickdown-delta');
-  drupal_add_tabledrag($table_id, 'order', 'root', 'ief-entity-delta');
-  drupal_add_js(drupal_get_path('module', 'brickdown') . '/brickdown.js');
+    // Add drag support:
+    $table_id = $table_data['attributes']['id'];
+    drupal_add_tabledrag($table_id, 'match', 'parent', 'brickdown-parent', NULL, 'brickdown-delta');
+    drupal_add_tabledrag($table_id, 'order', 'root', 'ief-entity-delta');
+    drupal_add_js(drupal_get_path('module', 'brickdown') . '/brickdown.js');
 
-  return theme('table', $table_data);
-
+    return theme('table', $table_data);
   }
 }
 
