@@ -46,6 +46,13 @@ function brickdown_field_schema_alter(&$schema, $field) {
         'not null' => FALSE,
         'description' => 'The parent sequence number for this data item, used for multi-value fields',
       ),
+      'brickdown_settings' => array(
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+        'description' => 'Brick settings',
+      ),
     );
   }
 }
@@ -59,6 +66,7 @@ function brickdown_field_widget_inline_entity_form_form_alter(&$element, &$form_
     $ief_id = sha1(implode('-', $parents));
     $items = $context['items'];
     foreach ($form_state['inline_entity_form'][$ief_id]['entities'] as $key => $value) {
+      $settings = unserialize($items[$key]['brickdown_settings']);
       $element['entities'][$key]['delta'] = array(
         '#type' => 'textfield',
         '#size' => 2,
@@ -77,6 +85,7 @@ function brickdown_field_widget_inline_entity_form_form_alter(&$element, &$form_
           '#size' => 2,
           '#attributes' => array('class' => array('brickdown-parent')),
         ),
+        'brickdown_settings' => brickdown_brick_settings_form($settings),
       );
     }
   }
@@ -95,6 +104,7 @@ function brickdown_field_attach_submit($parent_entity_type, $parent_entity, $for
       $ief_id = $form[$field_name][$langcode]['#ief_id'];
 
       $values = $form_state['inline_entity_form'][$ief_id];
+      $submitted_values = $form_state['values'];
 
       // Build prior-new delta translation arrays:
       $new_keys = array_keys($values['entities']);
@@ -103,13 +113,16 @@ function brickdown_field_attach_submit($parent_entity_type, $parent_entity, $for
       $new_deltas = array_combine($prior_keys, $new_keys);
       $prior_deltas = array_combine($new_keys, $prior_keys);
 
-      // Save parents in the field:
+      // Save data in the field:
       foreach ($parent_entity->{$field_name}[$langcode] as $delta => &$item) {
         $prior_delta = $prior_deltas[$delta];
-        $prior_parent = $form[$field_name][$langcode]['entities'][$prior_delta]['brickdown_parent']['#value'];
-        $parent = $prior_parent == -1 ? NULL : $new_deltas[$prior_parent];
+        $item_values = $submitted_values[$field_name][$langcode]['entities'][$prior_delta];
 
+        $prior_parent = $item_values['brickdown_parent'];
+        $parent = $prior_parent == -1 ? NULL : $new_deltas[$prior_parent];
         $item['brickdown_parent'] = $parent;
+
+        $item['brickdown_settings'] = serialize($item_values['brickdown_settings']);
       }
     }
   }
@@ -123,6 +136,7 @@ function brickdown_inline_entity_form_entity_table($vars) {
 
   // Adjust header:
   array_splice($table_data['header'], $preview_index, 0, t('Preview'));
+  array_splice($table_data['header'], $preview_index + 1, 0, t('Settings'));
   if ($table_data['has_tabledrag']) {
     $table_data['header'][] = t('Delta');
     $table_data['header'][] = t('Parent');
@@ -135,8 +149,8 @@ function brickdown_inline_entity_form_entity_table($vars) {
 
     if (isset($row['data'][0]['colspan'])) {
 
-      // This is an open form row => increase colspan because of additional preview column:
-      $row['data'][0]['colspan'] += 1;
+      // This is an open form row => increase colspan because of additional preview and settings columns:
+      $row['data'][0]['colspan'] += 2;
     }
     else {
 
@@ -148,6 +162,9 @@ function brickdown_inline_entity_form_entity_table($vars) {
       $build = reset($build);
       $build = reset($build);
       array_splice($row['data'], $preview_index, 0, array(drupal_render($build)));
+
+      // Add settings form:
+      array_splice($row['data'], $preview_index + 1, 0, array(drupal_render($form[$delta]['brickdown_settings'])));
 
       if ($table_data['has_tabledrag']) {
 
@@ -198,6 +215,9 @@ function brickdown_process_field(&$vars) {
 
     // Process items:
     foreach ($items as $delta => $item) {
+      if (isset($element['#items'][$delta]['brickdown_settings'])) {
+        $items[$delta]['#brick_settings'] = unserialize($element['#items'][$delta]['brickdown_settings']);
+      }
       if (isset($element['#items'][$delta]['brickdown_parent'])) {
         $parent = $element['#items'][$delta]['brickdown_parent'];
         array_unshift($items[$parent]['#bricks'], $items[$delta]);
@@ -227,16 +247,97 @@ function brickdown_entity_view_alter(&$build, $type) {
 }
 
 /**
+ * Preprocesses variables for entity.tpl.php.
+ */
+function brickdown_preprocess_entity(&$vars) {
+  $element = $vars['elements'];
+  if ($element['#entity_type'] == 'brick') {
+    $vars['classes_array'][] = 'brick--' . $element['#bundle'];
+    $vars['bricks'] = array();
+    if (isset($element['#bricks'])) {
+      $vars['bricks'] = $element['#bricks'];
+    }
+    if (isset($element['#brick_settings'])) {
+      $vars['settings'] = $element['#brick_settings'];
+      if (!empty($vars['settings']['modifier'])) {
+        $vars['classes_array'][] = 'brick--' . $element['#bundle'] . '--' . $vars['settings']['modifier'];
+      }
+      if (!empty($vars['settings']['class'])) {
+        $vars['classes_array'][] = $vars['settings']['class'];
+      }
+    }    
+  }
+}
+
+/**
  * Processes variables for entity.tpl.php.
  */
 function brickdown_process_entity(&$vars) {
   $element = $vars['elements'];
   if ($element['#entity_type'] == 'brick') {
-    $vars['bricks'] = NULL;
-    if (isset($element['#bricks'])) {
-      $vars['bricks'] = $element['#bricks'];
-    }
     $vars['prefix'] = '<div class="' . $vars['classes'] . '">' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
   }
+}
+
+/**
+ * Form constructor for the brick item settings.
+ */
+function brickdown_brick_settings_form($settings) {
+  if (empty($settings)) $settings = array();
+  $settings += array(
+    'class' => '',
+    'modifier' => '',
+    'subclass' => '',
+  );
+
+  $element = array(
+    '#tree' => TRUE,
+    '#prefix' => '<div class="brickdown-settings-form" style="display: none">',
+    '#suffix' => '</div>',
+    'class' => array(
+      '#attributes' => array('data-summary-key' => array('brickdown-settings-summary-class')),
+      '#title' => t('Class'),
+      '#type' => 'textfield',
+      '#size' => 10,
+      '#default_value' => $settings['class'],
+    ),
+    'modifier' => array(
+      '#attributes' => array('data-summary-key' => array('brickdown-settings-summary-modifier')),
+      '#title' => t('Modifier'),
+      '#type' => 'textfield',
+      '#size' => 10,
+      '#default_value' => $settings['modifier'],
+    ),
+    'subclass' => array(
+      '#attributes' => array('data-summary-key' => array('brickdown-settings-summary-subclass')),
+      '#title' => t('Subclass'),
+      '#type' => 'textfield',
+      '#size' => 10,
+      '#default_value' => $settings['subclass'],
+    ),
+  );
+
+  $summary = '';
+  foreach ($settings as $key => $value) {
+    $summary .= sprintf('<div class="brickdown-settings-summary-%s" style="%s"><strong>%s</strong>: <span>%s</span></div>',
+      $key,
+      $value ? '' : 'display: none',
+      $element[$key]['#title'],
+      $value
+    );
+  }
+  $summary = '<div class="brickdown-settings-summary">' . $summary . '</div>';
+
+  $toggler = theme('image_button', array(
+    'element' => array(
+      '#attributes' => array('class' => array('brickdown-settings-toggler')),
+      '#button_type' => 'submit',
+      '#src' => 'misc/configure.png',
+    ),
+  ));
+
+  $element['#prefix'] = $toggler . $summary . $element['#prefix'];
+
+  return $element;
 }

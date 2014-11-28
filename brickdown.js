@@ -32,4 +32,21 @@ Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
   }
 };
 
+$(function () {
+  $(document.body).on('click', '.brickdown-settings-toggler', function (e) {
+    e.preventDefault();
+    var $this = $(this),
+        $form = $this.siblings('.brickdown-settings-form'),
+        $summary = $this.siblings('.brickdown-settings-summary');
+    $form.find('input').each(function (i, el) {
+      var $this = $(el),
+          val = $this.val(),
+          summary_key = $this.data('summary-key');
+      $summary.children('.' + summary_key).toggle(!!val);
+      $summary.children('.' + summary_key).children('span').text(val);
+    });
+    $this.siblings().toggle();
+  });
+});
+
 })(jQuery);
