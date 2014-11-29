@@ -1,3 +1,4 @@
+<?php print $prefix ?>
 <?php if ($bricks): ?>
 <table>
   <tr>
@@ -9,3 +10,4 @@
   </tr>
 </table>
 <?php endif ?>
+<?php print $suffix ?>
