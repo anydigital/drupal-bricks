@@ -1,5 +1,6 @@
 name = Brickdown
 description = Brickdown content.
+package = User interface
 core = 7.x
 
 dependencies[] = eck
