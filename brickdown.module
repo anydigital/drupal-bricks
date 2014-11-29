@@ -291,7 +291,7 @@ function brickdown_brick_settings_form($settings) {
   $settings += array(
     'class' => '',
     'modifier' => '',
-    'subclass' => '',
+    'extra' => '',
   );
 
   $element = array(
@@ -312,12 +312,13 @@ function brickdown_brick_settings_form($settings) {
       '#size' => 10,
       '#default_value' => $settings['modifier'],
     ),
-    'subclass' => array(
-      '#attributes' => array('data-summary-key' => array('brickdown-settings-summary-subclass')),
-      '#title' => t('Subclass'),
-      '#type' => 'textfield',
-      '#size' => 10,
-      '#default_value' => $settings['subclass'],
+    'extra' => array(
+      '#attributes' => array('data-summary-key' => array('brickdown-settings-summary-extra')),
+      '#title' => t('Extra'),
+      '#type' => 'textarea',
+      '#cols' => 20,
+      '#rows' => 2,
+      '#default_value' => $settings['extra'],
     ),
   );
 

@@ -38,7 +38,7 @@ $(function () {
     var $this = $(this),
         $form = $this.siblings('.brickdown-settings-form'),
         $summary = $this.siblings('.brickdown-settings-summary');
-    $form.find('input').each(function (i, el) {
+    $form.find('input, textarea').each(function (i, el) {
       var $this = $(el),
           val = $this.val(),
           summary_key = $this.data('summary-key');
