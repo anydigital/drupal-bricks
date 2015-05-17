@@ -7,3 +7,6 @@ dependencies[] = eck
 dependencies[] = entityreference
 dependencies[] = references_dialog
 dependencies[] = treeable
+dependencies[] = entityreference_live_preview
+
+stylesheets[all][] = brickdown.css

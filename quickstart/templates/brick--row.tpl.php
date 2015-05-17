@@ -1,4 +1,5 @@
 <?php print $prefix ?>
+<?php print $view_mode == 'teaser' ? '&lt;Row&gt;' : '' ?>
 <?php if ($bricks): ?>
 <table>
   <tr>

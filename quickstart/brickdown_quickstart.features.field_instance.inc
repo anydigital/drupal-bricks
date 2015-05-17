@@ -141,6 +141,11 @@ function brickdown_quickstart_field_default_field_instances() {
       'active' => 1,
       'module' => 'entityreference',
       'settings' => array(
+        'entityreference_live_preview' => array(
+          'enabled' => 1,
+          'mode' => 'teaser',
+          'preview_type' => 'target',
+        ),
         'match_operator' => 'CONTAINS',
         'path' => '',
         'references_dialog_add' => 1,
