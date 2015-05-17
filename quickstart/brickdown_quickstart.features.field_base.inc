@@ -41,6 +41,7 @@ function brickdown_quickstart_field_default_field_bases() {
         'target_bundles' => array(),
       ),
       'target_type' => 'brick',
+      'treeable' => 1,
     ),
     'translatable' => 0,
     'type' => 'entityreference',
