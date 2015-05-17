@@ -36,20 +36,6 @@ function brickdown_process_field(&$vars) {
 }
 
 /**
- * Implements hook_entity_view_alter().
- */
-function brickdown_entity_view_alter(&$build, $type) {
-  if ($type == 'brick' && !isset($build['#contextual_links'])) {
-    $build['#contextual_links'] = array(
-      'entity' => array(
-        'brick' . '/' . $build['#bundle'],
-        array($build['#entity']->id),
-      ),
-    );
-  }
-}
-
-/**
  * Preprocesses variables for entity.tpl.php.
  */
 function brickdown_preprocess_entity(&$vars) {
