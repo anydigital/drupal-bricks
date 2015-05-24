@@ -1,35 +1,35 @@
 <?php
 /**
  * @file
- * brickdown_quickstart.features.inc
+ * atoms_default.features.inc
  */
 
 /**
  * Implements hook_eck_bundle_info().
  */
-function brickdown_quickstart_eck_bundle_info() {
+function atoms_default_eck_bundle_info() {
   $items = array(
-    'brick_column' => array(
-      'machine_name' => 'brick_column',
-      'entity_type' => 'brick',
+    'atom_column' => array(
+      'machine_name' => 'atom_column',
+      'entity_type' => 'atom',
       'name' => 'column',
       'label' => 'Column',
     ),
-    'brick_image' => array(
-      'machine_name' => 'brick_image',
-      'entity_type' => 'brick',
+    'atom_image' => array(
+      'machine_name' => 'atom_image',
+      'entity_type' => 'atom',
       'name' => 'image',
       'label' => 'Image',
     ),
-    'brick_row' => array(
-      'machine_name' => 'brick_row',
-      'entity_type' => 'brick',
+    'atom_row' => array(
+      'machine_name' => 'atom_row',
+      'entity_type' => 'atom',
       'name' => 'row',
       'label' => 'Row',
     ),
-    'brick_text' => array(
-      'machine_name' => 'brick_text',
-      'entity_type' => 'brick',
+    'atom_text' => array(
+      'machine_name' => 'atom_text',
+      'entity_type' => 'atom',
       'name' => 'text',
       'label' => 'Text',
     ),
@@ -40,11 +40,11 @@ function brickdown_quickstart_eck_bundle_info() {
 /**
  * Implements hook_eck_entity_type_info().
  */
-function brickdown_quickstart_eck_entity_type_info() {
+function atoms_default_eck_entity_type_info() {
   $items = array(
-    'brick' => array(
-      'name' => 'brick',
-      'label' => 'Brick',
+    'atom' => array(
+      'name' => 'atom',
+      'label' => 'Atom',
       'properties' => array(),
     ),
   );
@@ -54,7 +54,7 @@ function brickdown_quickstart_eck_entity_type_info() {
 /**
  * Implements hook_node_info().
  */
-function brickdown_quickstart_node_info() {
+function atoms_default_node_info() {
   $items = array(
     'page' => array(
       'name' => t('Page'),

@@ -1,17 +1,17 @@
 <?php
 /**
  * @file
- * brickdown_quickstart.features.field_instance.inc
+ * atoms_default.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function brickdown_quickstart_field_default_field_instances() {
+function atoms_default_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'brick-image-field_image'
-  $field_instances['brick-image-field_image'] = array(
+  // Exported field_instance: 'atom-image-field_image'
+  $field_instances['atom-image-field_image'] = array(
     'bundle' => 'image',
     'deleted' => 0,
     'description' => '',
@@ -37,7 +37,7 @@ function brickdown_quickstart_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
-    'entity_type' => 'brick',
+    'entity_type' => 'atom',
     'field_name' => 'field_image',
     'label' => 'Image',
     'required' => 0,
@@ -64,8 +64,8 @@ function brickdown_quickstart_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'brick-text-field_text'
-  $field_instances['brick-text-field_text'] = array(
+  // Exported field_instance: 'atom-text-field_text'
+  $field_instances['atom-text-field_text'] = array(
     'bundle' => 'text',
     'default_value' => NULL,
     'deleted' => 0,
@@ -88,7 +88,7 @@ function brickdown_quickstart_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
-    'entity_type' => 'brick',
+    'entity_type' => 'atom',
     'field_name' => 'field_text',
     'label' => 'Text',
     'required' => 0,
@@ -107,8 +107,8 @@ function brickdown_quickstart_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-page-field_brick'
-  $field_instances['node-page-field_brick'] = array(
+  // Exported field_instance: 'node-page-field_content'
+  $field_instances['node-page-field_content'] = array(
     'bundle' => 'page',
     'deleted' => 0,
     'description' => '',
@@ -131,7 +131,7 @@ function brickdown_quickstart_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_brick',
+    'field_name' => 'field_content',
     'label' => 'Content',
     'required' => 0,
     'settings' => array(

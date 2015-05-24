@@ -1,5 +1,5 @@
-name = Brickdown
-description = Brickdown content.
+name = Atoms
+description = Atomic content management.
 package = User interface
 core = 7.x
 
@@ -9,4 +9,4 @@ dependencies[] = references_dialog
 dependencies[] = treeable
 dependencies[] = entityreference_live_preview
 
-stylesheets[all][] = brickdown.css
+stylesheets[all][] = atoms.css

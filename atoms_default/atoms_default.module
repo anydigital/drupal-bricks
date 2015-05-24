@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * Code for the Brickdown Quickstart feature.
+ * Code for the Atoms Default feature.
  */
 
-include_once 'brickdown_quickstart.features.inc';
+include_once 'atoms_default.features.inc';
 
 /**
  * Implements hook_theme_registry_alter() as described here: https://www.drupal.org/node/715160.
  */
-function brickdown_quickstart_theme_registry_alter(&$theme_registry) {
+function atoms_default_theme_registry_alter(&$theme_registry) {
   $theme_registry_copy = $theme_registry;
-  $module_path = drupal_get_path('module', 'brickdown_quickstart');
-  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'brickdown_quickstart', $module_path);
+  $module_path = drupal_get_path('module', 'atoms_default');
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'atoms_default', $module_path);
   $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
   // A list of templates the module will provide templates for
   $hooks = array('entity');

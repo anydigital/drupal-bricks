@@ -1,28 +1,28 @@
 <?php
 /**
  * @file
- * brickdown_quickstart.features.field_base.inc
+ * atoms_default.features.field_base.inc
  */
 
 /**
  * Implements hook_field_default_field_bases().
  */
-function brickdown_quickstart_field_default_field_bases() {
+function atoms_default_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_brick'
-  $field_bases['field_brick'] = array(
+  // Exported field_base: 'field_content'
+  $field_bases['field_content'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_brick',
+    'field_name' => 'field_content',
     'foreign keys' => array(
-      'eck_brick' => array(
+      'eck_atom' => array(
         'columns' => array(
           'target_id' => 'id',
         ),
-        'table' => 'eck_brick',
+        'table' => 'eck_atom',
       ),
     ),
     'indexes' => array(
@@ -40,7 +40,7 @@ function brickdown_quickstart_field_default_field_bases() {
         ),
         'target_bundles' => array(),
       ),
-      'target_type' => 'brick',
+      'target_type' => 'atom',
       'treeable' => 1,
     ),
     'translatable' => 0,

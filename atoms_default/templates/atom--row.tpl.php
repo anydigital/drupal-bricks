@@ -1,11 +1,11 @@
 <?php print $prefix ?>
 <?php print $view_mode == 'teaser' ? '&lt;Row&gt;' : '' ?>
-<?php if ($bricks): ?>
+<?php if ($atoms): ?>
 <table>
   <tr>
-    <?php foreach ($bricks as $brick): ?>
-    <td width="<?php print 100 / count($bricks) ?>%">
-      <?php print render($brick) ?>
+    <?php foreach ($atoms as $atom): ?>
+    <td width="<?php print 100 / count($atoms) ?>%">
+      <?php print render($atom) ?>
     </td>
     <?php endforeach ?>
   </tr>

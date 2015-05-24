@@ -3,16 +3,16 @@
 /**
  * Processes variables for theme_field().
  */
-function brickdown_process_field(&$vars) {
+function atoms_process_field(&$vars) {
   $element = $vars['element'];
-  if ($element['#field_name'] == 'field_brick') {
+  if ($element['#field_name'] == 'field_content') {
 
     // Simplify items:
     $items = $vars['items'];
     foreach ($items as $delta => $item) {
       $tmp_item = reset($item);
       $tmp_item = reset($tmp_item);
-      $tmp_item['#bricks'] = array();
+      $tmp_item['#atoms'] = array();
       $items[$delta] = $tmp_item;
     }
 
@@ -23,7 +23,7 @@ function brickdown_process_field(&$vars) {
     foreach ($items as $delta => $item) {
       if (isset($element['#items'][$delta]['treeable_parent'])) {
         $parent = $element['#items'][$delta]['treeable_parent'];
-        array_unshift($items[$parent]['#bricks'], $items[$delta]);
+        array_unshift($items[$parent]['#atoms'], $items[$delta]);
         unset($items[$delta]);
       }
     }
@@ -38,13 +38,13 @@ function brickdown_process_field(&$vars) {
 /**
  * Preprocesses variables for entity.tpl.php.
  */
-function brickdown_preprocess_entity(&$vars) {
+function atoms_preprocess_entity(&$vars) {
   $element = $vars['elements'];
-  if ($element['#entity_type'] == 'brick') {
-    $vars['classes_array'][] = 'brick-' . $element['#bundle'];
-    $vars['bricks'] = array();
-    if (isset($element['#bricks'])) {
-      $vars['bricks'] = $element['#bricks'];
+  if ($element['#entity_type'] == 'atom') {
+    $vars['classes_array'][] = 'atom-' . $element['#bundle'];
+    $vars['atoms'] = array();
+    if (isset($element['#atoms'])) {
+      $vars['atoms'] = $element['#atoms'];
     }
   }
 }
@@ -52,9 +52,9 @@ function brickdown_preprocess_entity(&$vars) {
 /**
  * Processes variables for entity.tpl.php.
  */
-function brickdown_process_entity(&$vars) {
+function atoms_process_entity(&$vars) {
   $element = $vars['elements'];
-  if ($element['#entity_type'] == 'brick') {
+  if ($element['#entity_type'] == 'atom') {
     $vars['prefix'] = '<div class="' . $vars['classes'] . '">' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
   }

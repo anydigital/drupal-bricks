@@ -1,4 +1,4 @@
-drupal-brickdown
-================
+Drupal Atoms
+============
 
-Drupal Brickdown Content
+Revolutionary new way to create content in Drupal.
