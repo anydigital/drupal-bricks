@@ -5,7 +5,7 @@
  */
 function atoms_process_field(&$vars) {
   $element = $vars['element'];
-  if ($element['#field_name'] == 'field_content') {
+  if ($element['#field_name'] == 'field_content' || $element['#field_name'] == 'field_header') {
 
     // Simplify items:
     $items = $vars['items'];
