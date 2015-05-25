@@ -5,7 +5,7 @@
  */
 function atoms_process_field(&$vars) {
   $element = $vars['element'];
-  if ($element['#field_name'] == 'field_content' || $element['#field_name'] == 'field_header') {
+  if (in_array($element['#field_name'], array('field_content', 'field_header', 'field_featured'))) {
 
     // Simplify items:
     $items = $vars['items'];
@@ -13,6 +13,7 @@ function atoms_process_field(&$vars) {
       $tmp_item = reset($item);
       $tmp_item = reset($tmp_item);
       $tmp_item['#atoms'] = array();
+      $tmp_item['#host_field'] = $element['#field_name'];
       $items[$delta] = $tmp_item;
     }
 
