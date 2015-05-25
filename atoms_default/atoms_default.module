@@ -33,3 +33,16 @@ function atoms_default_theme_registry_alter(&$theme_registry) {
     }
   }
 }
+
+/**
+ * Preprocesses variables for entity.tpl.php.
+ */
+function atoms_default_preprocess_entity(&$vars) {
+  $element = $vars['elements'];
+  if ($element['#entity_type'] == 'atom') {
+    if (!empty($element['field_bg']) && $element['field_bg']['#field_type'] == 'image') {
+      $img = file_create_url($element['field_bg']['#items'][0]['uri']);
+      $vars['attributes_array']['style'] = sprintf('background-image: url(%s)', $img);
+    }
+  }
+}
