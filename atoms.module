@@ -41,7 +41,6 @@ function atoms_process_field(&$vars) {
 function atoms_preprocess_entity(&$vars) {
   $element = $vars['elements'];
   if ($element['#entity_type'] == 'atom') {
-    $vars['classes_array'][] = 'atom-' . $element['#bundle'];
     $vars['atoms'] = array();
     if (isset($element['#atoms'])) {
       $vars['atoms'] = $element['#atoms'];
@@ -55,7 +54,7 @@ function atoms_preprocess_entity(&$vars) {
 function atoms_process_entity(&$vars) {
   $element = $vars['elements'];
   if ($element['#entity_type'] == 'atom') {
-    $vars['prefix'] = '<div class="' . $vars['classes'] . '">' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
+    $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
   }
 }
