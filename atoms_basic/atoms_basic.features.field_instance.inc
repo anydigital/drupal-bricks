@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * atoms_default.features.field_instance.inc
+ * atoms_basic.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function atoms_default_field_default_field_instances() {
+function atoms_basic_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'atom-image-field_image'
@@ -110,6 +110,7 @@ function atoms_default_field_default_field_instances() {
   // Exported field_instance: 'node-page-field_content'
   $field_instances['node-page-field_content'] = array(
     'bundle' => 'page',
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(

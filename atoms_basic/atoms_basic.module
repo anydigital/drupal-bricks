@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * Code for the Atoms Default feature.
+ * Code for the Atoms Basic feature.
  */
 
-include_once 'atoms_default.features.inc';
+include_once 'atoms_basic.features.inc';
 
 /**
  * Implements hook_theme_registry_alter() as described here: https://www.drupal.org/node/715160.
  */
-function atoms_default_theme_registry_alter(&$theme_registry) {
+function atoms_basic_theme_registry_alter(&$theme_registry) {
   $theme_registry_copy = $theme_registry;
-  $module_path = drupal_get_path('module', 'atoms_default');
-  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'atoms_default', $module_path);
+  $module_path = drupal_get_path('module', 'atoms_basic');
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'atoms_basic', $module_path);
   $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
   // A list of templates the module will provide templates for
   $hooks = array('entity');
@@ -37,7 +37,7 @@ function atoms_default_theme_registry_alter(&$theme_registry) {
 /**
  * Preprocesses variables for entity.tpl.php.
  */
-function atoms_default_preprocess_entity(&$vars) {
+function atoms_basic_preprocess_entity(&$vars) {
   $element = $vars['elements'];
   if ($element['#entity_type'] == 'atom') {
     if (!empty($element['field_bg']) && $element['field_bg']['#field_type'] == 'image') {

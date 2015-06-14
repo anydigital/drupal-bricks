@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * atoms_default.features.field_base.inc
+ * atoms_basic.features.field_base.inc
  */
 
 /**
  * Implements hook_field_default_field_bases().
  */
-function atoms_default_field_default_field_bases() {
+function atoms_basic_field_default_field_bases() {
   $field_bases = array();
 
   // Exported field_base: 'field_content'
@@ -71,6 +71,7 @@ function atoms_default_field_default_field_bases() {
     'module' => 'image',
     'settings' => array(
       'default_image' => 0,
+      'treeable' => FALSE,
       'uri_scheme' => 'public',
     ),
     'translatable' => 0,
@@ -99,7 +100,9 @@ function atoms_default_field_default_field_bases() {
     ),
     'locked' => 0,
     'module' => 'text',
-    'settings' => array(),
+    'settings' => array(
+      'treeable' => FALSE,
+    ),
     'translatable' => 0,
     'type' => 'text_long',
   );

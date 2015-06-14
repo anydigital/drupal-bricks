@@ -1,31 +1,31 @@
 <?php
 /**
  * @file
- * atoms_default.features.inc
+ * atoms_basic.features.inc
  */
 
 /**
  * Implements hook_eck_bundle_info().
  */
-function atoms_default_eck_bundle_info() {
+function atoms_basic_eck_bundle_info() {
   $items = array(
-    'atom_column' => array(
-      'machine_name' => 'atom_column',
+    'atom_columns' => array(
+      'machine_name' => 'atom_columns',
       'entity_type' => 'atom',
-      'name' => 'column',
-      'label' => 'Column',
+      'name' => 'columns',
+      'label' => 'Columns',
+    ),
+    'atom_group' => array(
+      'machine_name' => 'atom_group',
+      'entity_type' => 'atom',
+      'name' => 'group',
+      'label' => 'Group',
     ),
     'atom_image' => array(
       'machine_name' => 'atom_image',
       'entity_type' => 'atom',
       'name' => 'image',
       'label' => 'Image',
-    ),
-    'atom_row' => array(
-      'machine_name' => 'atom_row',
-      'entity_type' => 'atom',
-      'name' => 'row',
-      'label' => 'Row',
     ),
     'atom_text' => array(
       'machine_name' => 'atom_text',
@@ -40,7 +40,7 @@ function atoms_default_eck_bundle_info() {
 /**
  * Implements hook_eck_entity_type_info().
  */
-function atoms_default_eck_entity_type_info() {
+function atoms_basic_eck_entity_type_info() {
   $items = array(
     'atom' => array(
       'name' => 'atom',
@@ -54,7 +54,7 @@ function atoms_default_eck_entity_type_info() {
 /**
  * Implements hook_node_info().
  */
-function atoms_default_node_info() {
+function atoms_basic_node_info() {
   $items = array(
     'page' => array(
       'name' => t('Page'),
