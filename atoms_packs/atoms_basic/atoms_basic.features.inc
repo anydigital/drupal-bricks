@@ -33,7 +33,13 @@ function atoms_basic_eck_entity_type_info() {
     'atom' => array(
       'name' => 'atom',
       'label' => 'Atom',
-      'properties' => array(),
+      'properties' => array(
+        'machine_name' => array(
+          'label' => 'Machine name',
+          'type' => 'text',
+          'behavior' => '',
+        ),
+      ),
     ),
   );
   return $items;

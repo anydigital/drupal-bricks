@@ -46,6 +46,9 @@ function atoms_molecules_preprocess_entity(&$vars) {
     if (isset($element['#atoms'])) {
       $vars['atoms'] = $element['#atoms'];
     }
+    if ($element['#bundle'] == 'unit' && $element['#view_mode'] != 'teaser') {
+      $vars['theme_hook_suggestions'][] = 'atom__unit__' . $element['#entity']->machine_name;
+    }
   }
 }
 

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Atoms Advanced feature.
+ */
+
+include_once 'atoms_advanced.features.inc';
