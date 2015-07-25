@@ -56,3 +56,32 @@ function atoms_process_entity(&$vars) {
     $vars['heading'] = !empty($vars['title']) ? '<h' . $element['#heading_level'] . '>' . $vars['title'] . '</h' . $element['#heading_level'] . '>' : '';
   }
 }
+
+/**
+ * Helper function: converts element's items to molecualar structure.
+ */
+function _atoms_molecular_items($element, $items) {
+
+  // Filter items:
+  $items = array_filter($items, 'element_child', ARRAY_FILTER_USE_KEY);
+
+  // Simplify items:
+  foreach ($items as $delta => $item) {
+    $item = reset($item);
+    $item = reset($item);
+    $item['atoms'] = array();
+    $items[$delta] = $item;
+  }
+
+  // Process items in reverse order (without recursion):
+  $ritems = array_reverse($items, TRUE);
+  foreach ($ritems as $delta => $item) {
+    if (isset($element['#items'][$delta]['treeable_parent'])) {
+      $parent = $element['#items'][$delta]['treeable_parent'];
+      array_unshift($items[$parent]['atoms'], $items[$delta]);
+      unset($items[$delta]);
+    }
+  }
+
+  return $items;
+}
