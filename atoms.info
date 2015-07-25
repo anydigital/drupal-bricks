@@ -1,5 +1,5 @@
 name = Atoms
-description = Atomic content management.
+description = Allows to create atomic content.
 package = Atoms
 core = 7.x
 

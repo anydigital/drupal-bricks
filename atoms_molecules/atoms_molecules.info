@@ -1,0 +1,6 @@
+name = Molecules
+description = Allows to create molecular structures from atoms.
+package = Atoms
+core = 7.x
+
+dependencies[] = treeable

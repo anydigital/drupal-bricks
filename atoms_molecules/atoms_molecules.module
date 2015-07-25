@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * Processes variables for theme_field().
+ */
+function atoms_molecules_process_field(&$vars) {
+  $element = $vars['element'];
+  if (in_array($element['#field_name'], array('field_content', 'field_header', 'field_featured'))) {
+
+    // Simplify items:
+    $items = $vars['items'];
+    foreach ($items as $delta => $item) {
+      $tmp_item = reset($item);
+      $tmp_item = reset($tmp_item);
+      $tmp_item['#atoms'] = array();
+      $tmp_item['#host_field'] = $element['#field_name'];
+      $items[$delta] = $tmp_item;
+    }
+
+    // Reverse items to process them without recursion:
+    $items = array_reverse($items, TRUE);
+
+    // Process items:
+    foreach ($items as $delta => $item) {
+      if (isset($element['#items'][$delta]['treeable_parent'])) {
+        $parent = $element['#items'][$delta]['treeable_parent'];
+        array_unshift($items[$parent]['#atoms'], $items[$delta]);
+        unset($items[$delta]);
+      }
+    }
+
+    // Reverse items back:
+    $items = array_reverse($items, TRUE);
+
+    $vars['items'] = $items;
+  }
+}
+
+/**
+ * Preprocesses variables for entity.tpl.php.
+ */
+function atoms_molecules_preprocess_entity(&$vars) {
+  $element = $vars['elements'];
+  if ($element['#entity_type'] == 'atom') {
+    $vars['atoms'] = array();
+    if (isset($element['#atoms'])) {
+      $vars['atoms'] = $element['#atoms'];
+    }
+  }
+}
+
+/**
+ * Processes variables for entity.tpl.php.
+ */
+function atoms_molecules_process_entity(&$vars) {
+  $element = $vars['elements'];
+  if ($element['#entity_type'] == 'atom') {
+    $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
+    $vars['suffix'] = '</div>';
+  }
+}
