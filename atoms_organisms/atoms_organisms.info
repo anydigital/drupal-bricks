@@ -1,0 +1,6 @@
+name = Organisms
+description = Allows to create organisms from atoms and molecules.
+package = Atoms
+core = 7.x
+
+dependencies[] = atoms
