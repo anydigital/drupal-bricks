@@ -28,13 +28,31 @@ function atoms_theme_registry_alter(&$theme_registry) {
   }
 }
 
+
+/**
+ * Preprocesses variables for entity.tpl.php.
+ */
+function atoms_preprocess_entity(&$vars) {
+  $element = &$vars['elements'];
+  if ($element['#entity_type'] == 'atom') {
+    $vars['title'] = '';
+    if (!empty($vars['content']['field_title']['#items'][0]['value'])) {
+      $vars['title'] = $vars['content']['field_title']['#items'][0]['value'];
+      unset($vars['content']['field_title']);
+    }
+    $base_heading_level = isset($element['#base_heading_level']) ? $element['#base_heading_level'] : 1;
+    $element['#heading_level'] = $base_heading_level + !empty($vars['title']);
+  }
+}
+
 /**
  * Processes variables for entity.tpl.php.
  */
 function atoms_process_entity(&$vars) {
-  $element = $vars['elements'];
+  $element = &$vars['elements'];
   if ($element['#entity_type'] == 'atom') {
     $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
+    $vars['heading'] = !empty($vars['title']) ? '<h' . $element['#heading_level'] . '>' . $vars['title'] . '</h' . $element['#heading_level'] . '>' : '';
   }
 }
