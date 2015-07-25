@@ -9,18 +9,6 @@
  */
 function atoms_basic_eck_bundle_info() {
   $items = array(
-    'atom_columns' => array(
-      'machine_name' => 'atom_columns',
-      'entity_type' => 'atom',
-      'name' => 'columns',
-      'label' => 'Columns',
-    ),
-    'atom_group' => array(
-      'machine_name' => 'atom_group',
-      'entity_type' => 'atom',
-      'name' => 'group',
-      'label' => 'Group',
-    ),
     'atom_image' => array(
       'machine_name' => 'atom_image',
       'entity_type' => 'atom',

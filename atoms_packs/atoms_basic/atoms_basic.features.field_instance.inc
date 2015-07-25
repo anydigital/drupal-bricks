@@ -154,7 +154,6 @@ function atoms_basic_field_default_field_instances() {
         'references_dialog_search' => 1,
         'references_dialog_search_view' => '',
         'size' => 60,
-        'treeable' => 1,
       ),
       'type' => 'entityreference_autocomplete',
       'weight' => 1,

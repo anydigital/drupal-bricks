@@ -1,12 +1,11 @@
-name = Atoms Core
+name = Atoms
 description = Atomic content management.
-package = User interface
+package = Atoms
 core = 7.x
 
 dependencies[] = eck
 dependencies[] = entityreference
 dependencies[] = references_dialog
-dependencies[] = treeable
 dependencies[] = entityreference_live_preview
 
 stylesheets[all][] = atoms.css

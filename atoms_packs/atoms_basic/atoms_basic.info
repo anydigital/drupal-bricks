@@ -1,13 +1,11 @@
-name = Atoms Basic
+name = Basic
 description = Basic atoms and templates.
 core = 7.x
-package = User interface
+package = Atoms Packs
 dependencies[] = atoms
 dependencies[] = features
 dependencies[] = image
 dependencies[] = text
-features[eck_bundle][] = atom_columns
-features[eck_bundle][] = atom_group
 features[eck_bundle][] = atom_image
 features[eck_bundle][] = atom_text
 features[eck_entity_type][] = atom
@@ -19,4 +17,3 @@ features[field_instance][] = atom-image-field_image
 features[field_instance][] = atom-text-field_text
 features[field_instance][] = node-page-field_content
 features[node][] = page
-

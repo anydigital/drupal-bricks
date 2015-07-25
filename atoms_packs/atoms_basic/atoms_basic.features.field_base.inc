@@ -41,7 +41,6 @@ function atoms_basic_field_default_field_bases() {
         'target_bundles' => array(),
       ),
       'target_type' => 'atom',
-      'treeable' => 1,
     ),
     'translatable' => 0,
     'type' => 'entityreference',
@@ -71,7 +70,6 @@ function atoms_basic_field_default_field_bases() {
     'module' => 'image',
     'settings' => array(
       'default_image' => 0,
-      'treeable' => FALSE,
       'uri_scheme' => 'public',
     ),
     'translatable' => 0,
@@ -100,9 +98,7 @@ function atoms_basic_field_default_field_bases() {
     ),
     'locked' => 0,
     'module' => 'text',
-    'settings' => array(
-      'treeable' => FALSE,
-    ),
+    'settings' => array(),
     'translatable' => 0,
     'type' => 'text_long',
   );
