@@ -107,6 +107,48 @@ function atoms_basic_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'atom-text-field_title'
+  $field_instances['atom-text-field_title'] = array(
+    'bundle' => 'text',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'atom',
+    'field_name' => 'field_title',
+    'label' => 'Title',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+        'treeable' => 0,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 0,
+    ),
+  );
+
   // Exported field_instance: 'node-page-field_content'
   $field_instances['node-page-field_content'] = array(
     'bundle' => 'page',
@@ -154,6 +196,7 @@ function atoms_basic_field_default_field_instances() {
         'references_dialog_search' => 1,
         'references_dialog_search_view' => '',
         'size' => 60,
+        'treeable' => 1,
       ),
       'type' => 'entityreference_autocomplete',
       'weight' => 1,
@@ -165,6 +208,7 @@ function atoms_basic_field_default_field_instances() {
   t('Content');
   t('Image');
   t('Text');
+  t('Title');
 
   return $field_instances;
 }
