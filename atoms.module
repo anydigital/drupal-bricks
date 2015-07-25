@@ -27,3 +27,14 @@ function atoms_theme_registry_alter(&$theme_registry) {
     }
   }
 }
+
+/**
+ * Processes variables for entity.tpl.php.
+ */
+function atoms_process_entity(&$vars) {
+  $element = $vars['elements'];
+  if ($element['#entity_type'] == 'atom') {
+    $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
+    $vars['suffix'] = '</div>';
+  }
+}
