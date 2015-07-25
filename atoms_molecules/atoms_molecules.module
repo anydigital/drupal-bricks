@@ -11,35 +11,6 @@ function atoms_molecules_process_field(&$vars) {
 }
 
 /**
- * Helper function: converts element's items to molecualar items.
- */
-function _atoms_molecular_items($element, $items) {
-
-    // Filter items:
-    $items = array_filter($items, 'element_child', ARRAY_FILTER_USE_KEY);
-
-    // Simplify items:
-    foreach ($items as $delta => $item) {
-      $item = reset($item);
-      $item = reset($item);
-      $item['atoms'] = array();
-      $items[$delta] = $item;
-    }
-
-    // Process items in reverse order (without recursion):
-    $ritems = array_reverse($items, TRUE);
-    foreach ($ritems as $delta => $item) {
-      if (isset($element['#items'][$delta]['treeable_parent'])) {
-        $parent = $element['#items'][$delta]['treeable_parent'];
-        array_unshift($items[$parent]['atoms'], $items[$delta]);
-        unset($items[$delta]);
-      }
-    }
-
-    return $items;
-}
-
-/**
  * Preprocesses variables for entity.tpl.php.
  */
 function atoms_molecules_preprocess_entity(&$vars) {
@@ -60,4 +31,33 @@ function atoms_molecules_process_entity(&$vars) {
     $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
   }
+}
+
+/**
+ * Helper function: converts element's items to molecualar items.
+ */
+function _atoms_molecular_items($element, $items) {
+
+  // Filter items:
+  $items = array_filter($items, 'element_child', ARRAY_FILTER_USE_KEY);
+
+  // Simplify items:
+  foreach ($items as $delta => $item) {
+    $item = reset($item);
+    $item = reset($item);
+    $item['atoms'] = array();
+    $items[$delta] = $item;
+  }
+
+  // Process items in reverse order (without recursion):
+  $ritems = array_reverse($items, TRUE);
+  foreach ($ritems as $delta => $item) {
+    if (isset($element['#items'][$delta]['treeable_parent'])) {
+      $parent = $element['#items'][$delta]['treeable_parent'];
+      array_unshift($items[$parent]['atoms'], $items[$delta]);
+      unset($items[$delta]);
+    }
+  }
+
+  return $items;
 }
