@@ -16,8 +16,11 @@ function atoms_molecules_process_field(&$vars) {
 function atoms_molecules_preprocess_entity(&$vars) {
   $element = &$vars['elements'];
   if ($element['#entity_type'] == 'atom') {
-    if ($element['#bundle'] == 'unit' && $element['#view_mode'] != 'teaser') {
+    if ($element['#bundle'] == 'unit') {
       $vars['theme_hook_suggestions'][] = 'atom__unit__' . $element['#entity']->machine_name;
+      if ($element['#view_mode'] == 'teaser') {
+        $vars['title'] = htmlspecialchars('<' . $element['#entity']->machine_name . '>');
+      }
     }
     if (isset($vars['content']['atoms'])) {
       foreach ($vars['content']['atoms'] as &$atom) {
