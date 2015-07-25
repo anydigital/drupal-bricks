@@ -1,3 +1,3 @@
 <?php print $prefix ?>
-<?php print render($content) ?>
+<?php print render($content['field_image']) ?>
 <?php print $suffix ?>
