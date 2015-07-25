@@ -15,6 +15,12 @@ function atoms_basic_eck_bundle_info() {
       'name' => 'image',
       'label' => 'Image',
     ),
+    'atom_organism' => array(
+      'machine_name' => 'atom_organism',
+      'entity_type' => 'atom',
+      'name' => 'organism',
+      'label' => 'Organism',
+    ),
     'atom_text' => array(
       'machine_name' => 'atom_text',
       'entity_type' => 'atom',
