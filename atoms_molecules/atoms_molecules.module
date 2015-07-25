@@ -22,6 +22,15 @@ function atoms_molecules_preprocess_entity(&$vars) {
         $vars['title'] = htmlspecialchars('<' . $element['#entity']->machine_name . '>');
       }
     }
+  }
+}
+
+/**
+ * Processes variables for entity.tpl.php.
+ */
+function atoms_molecules_process_entity(&$vars) {
+  $element = &$vars['elements'];
+  if ($element['#entity_type'] == 'atom') {
     if (isset($vars['content']['atoms'])) {
       foreach ($vars['content']['atoms'] as &$atom) {
         $atom['#base_heading_level'] = $element['#heading_level'];
