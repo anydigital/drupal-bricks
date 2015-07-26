@@ -38,3 +38,22 @@ function atoms_molecules_process_entity(&$vars) {
     }
   }
 }
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function atoms_molecules_entity_property_info_alter(&$info) {
+  $info['atom']['properties']['machine_name']['widget'] = '_atoms_molecules_machine_name_widget';
+}
+
+/**
+ * Helper function: provides a widget for a machine name property.
+ */
+function _atoms_molecules_machine_name_widget($entity) {
+  if ($entity->type != 'unit') return;
+  return array(
+    '#type' => 'textfield',
+    '#title' => 'Machine name',
+    '#default_value' => $entity->machine_name,
+  );
+}
