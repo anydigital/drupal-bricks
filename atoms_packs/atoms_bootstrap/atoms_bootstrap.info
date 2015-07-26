@@ -1,0 +1,5 @@
+name = Bootstrap Pack
+description = Set of atoms and templates for Bootstrap framework.
+core = 7.x
+package = Atoms Packs
+dependencies[] = atoms
