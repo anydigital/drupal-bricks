@@ -64,9 +64,9 @@ function atoms_basic_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'atom-organism-field_content'
-  $field_instances['atom-organism-field_content'] = array(
-    'bundle' => 'organism',
+  // Exported field_instance: 'atom-molecule-field_content'
+  $field_instances['atom-molecule-field_content'] = array(
+    'bundle' => 'molecule',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
