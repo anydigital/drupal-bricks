@@ -1,4 +1,4 @@
-name = Basic
+name = Basic Pack
 description = Basic atoms and templates.
 core = 7.x
 package = Atoms Packs

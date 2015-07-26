@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Code for the Atoms Advanced feature.
+ * Code for the Advanced Pack feature.
  */
 
 include_once 'atoms_advanced.features.inc';
