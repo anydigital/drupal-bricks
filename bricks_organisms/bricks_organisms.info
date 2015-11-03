@@ -1,6 +1,6 @@
 name = Organisms
-description = Allows to create organisms from atoms and molecules.
-package = Atoms
+description = Allows to create organisms from bricks and molecules.
+package = Bricks
 core = 7.x
 
-dependencies[] = atoms
+dependencies[] = bricks

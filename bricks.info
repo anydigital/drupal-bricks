@@ -1,6 +1,6 @@
-name = Atoms
-description = Allows to create atomic content.
-package = Atoms
+name = Bricks
+description = Allows to create bricky content.
+package = Bricks
 core = 7.x
 
 dependencies[] = eck
@@ -8,4 +8,4 @@ dependencies[] = entityreference
 dependencies[] = references_dialog
 dependencies[] = entityreference_live_preview
 
-stylesheets[all][] = atoms.css
+stylesheets[all][] = bricks.css

@@ -3,21 +3,21 @@
 /**
  * Processes variables for theme_field().
  */
-function atoms_molecules_process_field(&$vars) {
+function bricks_molecules_process_field(&$vars) {
   $element = &$vars['element'];
   if ($element['#field_name'] == 'field_content') {
-    $vars['items'] = _atoms_molecular_items($element, $vars['items']);
+    $vars['items'] = _bricks_molecular_items($element, $vars['items']);
   }
 }
 
 /**
  * Preprocesses variables for entity.tpl.php.
  */
-function atoms_molecules_preprocess_entity(&$vars) {
+function bricks_molecules_preprocess_entity(&$vars) {
   $element = &$vars['elements'];
-  if ($element['#entity_type'] == 'atom') {
+  if ($element['#entity_type'] == 'brick') {
     if ($element['#bundle'] == 'unit') {
-      $vars['theme_hook_suggestions'][] = 'atom__unit__' . $element['#entity']->machine_name;
+      $vars['theme_hook_suggestions'][] = 'brick__unit__' . $element['#entity']->machine_name;
       if ($element['#view_mode'] == 'teaser') {
         $vars['title'] = htmlspecialchars('<' . $element['#entity']->machine_name . '>');
       }
@@ -28,12 +28,12 @@ function atoms_molecules_preprocess_entity(&$vars) {
 /**
  * Processes variables for entity.tpl.php.
  */
-function atoms_molecules_process_entity(&$vars) {
+function bricks_molecules_process_entity(&$vars) {
   $element = &$vars['elements'];
-  if ($element['#entity_type'] == 'atom') {
-    if (isset($vars['content']['atoms'])) {
-      foreach ($vars['content']['atoms'] as &$atom) {
-        $atom['#base_heading_level'] = $element['#heading_level'];
+  if ($element['#entity_type'] == 'brick') {
+    if (isset($vars['content']['bricks'])) {
+      foreach ($vars['content']['bricks'] as &$brick) {
+        $brick['#base_heading_level'] = $element['#heading_level'];
       }
     }
   }
@@ -42,14 +42,14 @@ function atoms_molecules_process_entity(&$vars) {
 /**
  * Implements hook_entity_property_info_alter().
  */
-function atoms_molecules_entity_property_info_alter(&$info) {
-  $info['atom']['properties']['machine_name']['widget'] = '_atoms_molecules_machine_name_widget';
+function bricks_molecules_entity_property_info_alter(&$info) {
+  $info['brick']['properties']['machine_name']['widget'] = '_bricks_molecules_machine_name_widget';
 }
 
 /**
  * Helper function: provides a widget for a machine name property.
  */
-function _atoms_molecules_machine_name_widget($entity) {
+function _bricks_molecules_machine_name_widget($entity) {
   if ($entity->type != 'unit') return;
   return array(
     '#type' => 'textfield',

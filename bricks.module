@@ -3,10 +3,10 @@
 /**
  * Implements hook_theme_registry_alter() as described here: https://www.drupal.org/node/715160.
  */
-function atoms_theme_registry_alter(&$theme_registry) {
+function bricks_theme_registry_alter(&$theme_registry) {
   $theme_registry_copy = $theme_registry;
-  $module_path = drupal_get_path('module', 'atoms');
-  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'atoms', $module_path);
+  $module_path = drupal_get_path('module', 'bricks');
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'bricks', $module_path);
   $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
   // A list of templates the module will provide templates for
   $hooks = array('entity');
@@ -32,9 +32,9 @@ function atoms_theme_registry_alter(&$theme_registry) {
 /**
  * Preprocesses variables for entity.tpl.php.
  */
-function atoms_preprocess_entity(&$vars) {
+function bricks_preprocess_entity(&$vars) {
   $element = &$vars['elements'];
-  if ($element['#entity_type'] == 'atom') {
+  if ($element['#entity_type'] == 'brick') {
     $vars['title'] = '';
     if (!empty($vars['content']['field_title']['#items'][0]['value'])) {
       $vars['title'] = $vars['content']['field_title']['#items'][0]['value'];
@@ -48,9 +48,9 @@ function atoms_preprocess_entity(&$vars) {
 /**
  * Processes variables for entity.tpl.php.
  */
-function atoms_process_entity(&$vars) {
+function bricks_process_entity(&$vars) {
   $element = &$vars['elements'];
-  if ($element['#entity_type'] == 'atom') {
+  if ($element['#entity_type'] == 'brick') {
     $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
     $vars['heading'] = !empty($vars['title']) ? '<h' . $element['#heading_level'] . '>' . $vars['title'] . '</h' . $element['#heading_level'] . '>' : '';
@@ -60,7 +60,7 @@ function atoms_process_entity(&$vars) {
 /**
  * Helper function: converts element's items to molecualar structure.
  */
-function _atoms_molecular_items($element, $items) {
+function _bricks_molecular_items($element, $items) {
 
   // Filter items:
   $items = array_filter($items, 'element_child', ARRAY_FILTER_USE_KEY);
@@ -69,7 +69,7 @@ function _atoms_molecular_items($element, $items) {
   foreach ($items as $delta => $item) {
     $item = reset($item);
     $item = reset($item);
-    $item['atoms'] = array();
+    $item['bricks'] = array();
     $items[$delta] = $item;
   }
 
@@ -78,7 +78,7 @@ function _atoms_molecular_items($element, $items) {
   foreach ($ritems as $delta => $item) {
     if (isset($element['#items'][$delta]['treeable_parent'])) {
       $parent = $element['#items'][$delta]['treeable_parent'];
-      array_unshift($items[$parent]['atoms'], $items[$delta]);
+      array_unshift($items[$parent]['bricks'], $items[$delta]);
       unset($items[$delta]);
     }
   }

@@ -1,5 +1,5 @@
 name = Bootstrap Pack
-description = Set of atoms and templates for Bootstrap framework.
+description = Set of bricks and templates for Bootstrap framework.
 core = 7.x
-package = Atoms Packs
-dependencies[] = atoms
+package = Bricks
+dependencies[] = bricks

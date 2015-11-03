@@ -1,36 +1,36 @@
 <?php
 /**
  * @file
- * atoms_basic.features.inc
+ * bricks_basic.features.inc
  */
 
 /**
  * Implements hook_views_api().
  */
-function atoms_basic_views_api($module = NULL, $api = NULL) {
+function bricks_basic_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
 }
 
 /**
  * Implements hook_eck_bundle_info().
  */
-function atoms_basic_eck_bundle_info() {
+function bricks_basic_eck_bundle_info() {
   $items = array(
-    'atom_image' => array(
-      'machine_name' => 'atom_image',
-      'entity_type' => 'atom',
+    'brick_image' => array(
+      'machine_name' => 'brick_image',
+      'entity_type' => 'brick',
       'name' => 'image',
       'label' => 'Image',
     ),
-    'atom_molecule' => array(
-      'machine_name' => 'atom_molecule',
-      'entity_type' => 'atom',
+    'brick_molecule' => array(
+      'machine_name' => 'brick_molecule',
+      'entity_type' => 'brick',
       'name' => 'molecule',
       'label' => 'Molecule',
     ),
-    'atom_text' => array(
-      'machine_name' => 'atom_text',
-      'entity_type' => 'atom',
+    'brick_text' => array(
+      'machine_name' => 'brick_text',
+      'entity_type' => 'brick',
       'name' => 'text',
       'label' => 'Text',
     ),
@@ -41,11 +41,11 @@ function atoms_basic_eck_bundle_info() {
 /**
  * Implements hook_eck_entity_type_info().
  */
-function atoms_basic_eck_entity_type_info() {
+function bricks_basic_eck_entity_type_info() {
   $items = array(
-    'atom' => array(
-      'name' => 'atom',
-      'label' => 'Atom',
+    'brick' => array(
+      'name' => 'brick',
+      'label' => 'Brick',
       'properties' => array(
         'machine_name' => array(
           'label' => 'Machine name',
@@ -61,7 +61,7 @@ function atoms_basic_eck_entity_type_info() {
 /**
  * Implements hook_node_info().
  */
-function atoms_basic_node_info() {
+function bricks_basic_node_info() {
   $items = array(
     'page' => array(
       'name' => t('Page'),

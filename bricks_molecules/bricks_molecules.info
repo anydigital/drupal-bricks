@@ -1,6 +1,6 @@
 name = Molecules
-description = Allows to create molecular structures from atoms.
-package = Atoms
+description = Allows to create molecular structures from bricks.
+package = Bricks
 core = 7.x
 
 dependencies[] = treeable

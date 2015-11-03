@@ -1,17 +1,17 @@
 <?php
 /**
  * @file
- * atoms_basic.features.field_instance.inc
+ * bricks_basic.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function atoms_basic_field_default_field_instances() {
+function bricks_basic_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'atom-image-field_image'
-  $field_instances['atom-image-field_image'] = array(
+  // Exported field_instance: 'brick-image-field_image'
+  $field_instances['brick-image-field_image'] = array(
     'bundle' => 'image',
     'deleted' => 0,
     'description' => '',
@@ -37,7 +37,7 @@ function atoms_basic_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
-    'entity_type' => 'atom',
+    'entity_type' => 'brick',
     'field_name' => 'field_image',
     'label' => 'Image',
     'required' => 0,
@@ -64,8 +64,8 @@ function atoms_basic_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'atom-molecule-field_content'
-  $field_instances['atom-molecule-field_content'] = array(
+  // Exported field_instance: 'brick-molecule-field_content'
+  $field_instances['brick-molecule-field_content'] = array(
     'bundle' => 'molecule',
     'default_value' => NULL,
     'deleted' => 0,
@@ -92,7 +92,7 @@ function atoms_basic_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
-    'entity_type' => 'atom',
+    'entity_type' => 'brick',
     'field_name' => 'field_content',
     'label' => 'Content',
     'required' => 0,
@@ -122,8 +122,8 @@ function atoms_basic_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'atom-text-field_text'
-  $field_instances['atom-text-field_text'] = array(
+  // Exported field_instance: 'brick-text-field_text'
+  $field_instances['brick-text-field_text'] = array(
     'bundle' => 'text',
     'default_value' => NULL,
     'deleted' => 0,
@@ -146,7 +146,7 @@ function atoms_basic_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
-    'entity_type' => 'atom',
+    'entity_type' => 'brick',
     'field_name' => 'field_text',
     'label' => 'Text',
     'required' => 0,
@@ -165,8 +165,8 @@ function atoms_basic_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'atom-text-field_title'
-  $field_instances['atom-text-field_title'] = array(
+  // Exported field_instance: 'brick-text-field_title'
+  $field_instances['brick-text-field_title'] = array(
     'bundle' => 'text',
     'default_value' => NULL,
     'deleted' => 0,
@@ -187,7 +187,7 @@ function atoms_basic_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
-    'entity_type' => 'atom',
+    'entity_type' => 'brick',
     'field_name' => 'field_title',
     'label' => 'Title',
     'required' => 0,

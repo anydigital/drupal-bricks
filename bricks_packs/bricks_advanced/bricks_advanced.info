@@ -1,9 +1,9 @@
 name = Advanced Pack
-description = Advanced atoms and templates.
+description = Advanced bricks and templates.
 core = 7.x
-package = Atoms Packs
-dependencies[] = atoms_molecules
-features[eck_bundle][] = atom_unit
+package = Bricks
+dependencies[] = bricks_molecules
+features[eck_bundle][] = brick_unit
 features[features_api][] = api:2
 features_exclude[dependencies][eck] = eck
 features_exclude[dependencies][features] = features

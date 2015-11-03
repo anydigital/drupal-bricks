@@ -1,15 +1,13 @@
-Drupal Atoms
-============
+# Drupal Bricks
 
 Revolutionary new way to create content in Drupal.
 
 
-Demo
-----
+## Demo
 
-1. Open [this link](http://drupal.tonystar.me/atoms/demo) (pre-configured sandbox on simplytest.me).
+1. Open [pre-configured sandbox](http://ply.st/bricks_bootstrap) on simplytest.me.
 2. Click **Launch sandbox** and wait.
 3. Click **Log in** (email and password should be pre-filled).
-4. Go to **Modules** and enable **Atoms Default**.
+4. Go to **Modules** and enable **Bricks Bootstrap**.
 5. Go to **Structure** > **Content types** > **Page** > **Manage fields** and delete useless **Body** field.
-6. Finally click **Add content** on the toolbar and create your first Atomic page!
+6. Finally click **Add content** on the toolbar and create your first bricky page!

@@ -4,4 +4,4 @@
  * Code for the Basic Pack feature.
  */
 
-include_once 'atoms_basic.features.inc';
+include_once 'bricks_basic.features.inc';

@@ -1,21 +1,21 @@
 <?php
 /**
  * @file
- * atoms_basic.views_default.inc
+ * bricks_basic.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function atoms_basic_views_default_views() {
+function bricks_basic_views_default_views() {
   $export = array();
 
   $view = new view();
-  $view->name = 'atom_selector';
+  $view->name = 'brick_selector';
   $view->description = '';
   $view->tag = 'default';
-  $view->base_table = 'eck_atom';
-  $view->human_name = 'Atom selector';
+  $view->base_table = 'eck_brick';
+  $view->human_name = 'Brick selector';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -31,13 +31,13 @@ function atoms_basic_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Atom: Id */
+  /* Field: Brick: Id */
   $handler->display->display_options['fields']['id']['id'] = 'id';
-  $handler->display->display_options['fields']['id']['table'] = 'eck_atom';
+  $handler->display->display_options['fields']['id']['table'] = 'eck_brick';
   $handler->display->display_options['fields']['id']['field'] = 'id';
-  /* Filter criterion: Atom: atom type */
+  /* Filter criterion: Brick: brick type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'eck_atom';
+  $handler->display->display_options['filters']['type']['table'] = 'eck_brick';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['exposed'] = TRUE;
   $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
@@ -59,9 +59,9 @@ function atoms_basic_views_default_views() {
   $handler->display->display_options['attach'] = array(
     0 => 'node:field_header:page',
     1 => 'node:field_content:page',
-    2 => 'atom:field_content:section',
+    2 => 'brick:field_content:section',
   );
-  $export['atom_selector'] = $view;
+  $export['brick_selector'] = $view;
 
   return $export;
 }

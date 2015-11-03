@@ -4,4 +4,4 @@
  * Code for the Advanced Pack feature.
  */
 
-include_once 'atoms_advanced.features.inc';
+include_once 'bricks_advanced.features.inc';

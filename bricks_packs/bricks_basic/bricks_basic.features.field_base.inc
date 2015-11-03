@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * atoms_basic.features.field_base.inc
+ * bricks_basic.features.field_base.inc
  */
 
 /**
  * Implements hook_field_default_field_bases().
  */
-function atoms_basic_field_default_field_bases() {
+function bricks_basic_field_default_field_bases() {
   $field_bases = array();
 
   // Exported field_base: 'field_content'
@@ -18,11 +18,11 @@ function atoms_basic_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_content',
     'foreign keys' => array(
-      'eck_atom' => array(
+      'eck_brick' => array(
         'columns' => array(
           'target_id' => 'id',
         ),
-        'table' => 'eck_atom',
+        'table' => 'eck_brick',
       ),
     ),
     'indexes' => array(
@@ -40,7 +40,7 @@ function atoms_basic_field_default_field_bases() {
         ),
         'target_bundles' => array(),
       ),
-      'target_type' => 'atom',
+      'target_type' => 'brick',
       'treeable' => 1,
     ),
     'translatable' => 0,
