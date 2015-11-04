@@ -42,9 +42,9 @@ function bricks_preprocess_entity(&$vars) {
     $base_heading_level = isset($element['#base_heading_level']) ? $element['#base_heading_level'] : 1;
     $element['#heading_level'] = $base_heading_level + !empty($vars['title']);
 
-    if ($element['#bundle'] == 'molecule' && isset($vars['content']['field_content'])) {
-      $vars['content']['bricks'] = _bricks_molecular_items($element['field_content'], $vars['content']['field_content']);
-      unset($vars['content']['field_content']);
+    if ($element['#bundle'] == 'body' && isset($vars['content']['field_body'])) {
+      $vars['content']['bricks'] = _bricks_tree_items($element['field_body'], $vars['content']['field_body']);
+      unset($vars['content']['field_body']);
     }
   }
 }
@@ -68,9 +68,9 @@ function bricks_process_entity(&$vars) {
 }
 
 /**
- * Helper function: converts element's items to molecualar structure.
+ * Helper function: converts element's items to tree structure.
  */
-function _bricks_molecular_items($element, $items) {
+function _bricks_tree_items($element, $items) {
 
   // Filter items:
   $items = array_filter($items, 'element_child', ARRAY_FILTER_USE_KEY);
@@ -101,7 +101,7 @@ function _bricks_molecular_items($element, $items) {
  */
 function bricks_process_field(&$vars) {
   $element = &$vars['element'];
-  if ($element['#field_name'] == 'field_content') {
-    $vars['items'] = _bricks_molecular_items($element, $vars['items']);
+  if ($element['#field_name'] == 'field_body') {
+    $vars['items'] = _bricks_tree_items($element, $vars['items']);
   }
 }
