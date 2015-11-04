@@ -73,7 +73,7 @@ function bricks_process_entity(&$vars) {
 function _bricks_tree_items($element, $items) {
 
   // Filter items:
-  $items = array_filter($items, 'element_child', ARRAY_FILTER_USE_KEY);
+  $items = array_intersect_key($items, element_children($items));
 
   // Simplify items:
   foreach ($items as $delta => $item) {
