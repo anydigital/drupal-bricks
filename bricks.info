@@ -5,6 +5,7 @@ core = 7.x
 
 dependencies[] = eck
 dependencies[] = entityreference
+dependencies[] = treeable
 dependencies[] = references_dialog
 dependencies[] = entityreference_live_preview
 

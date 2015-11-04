@@ -41,6 +41,18 @@ function bricks_preprocess_entity(&$vars) {
     }
     $base_heading_level = isset($element['#base_heading_level']) ? $element['#base_heading_level'] : 1;
     $element['#heading_level'] = $base_heading_level + !empty($vars['title']);
+
+    if ($element['#bundle'] == 'unit') {
+      $vars['theme_hook_suggestions'][] = 'brick__unit__' . $element['#entity']->machine_name;
+      if ($element['#view_mode'] == 'teaser') {
+        $vars['title'] = htmlspecialchars('<' . $element['#entity']->machine_name . '>');
+      }
+    }
+
+    if ($element['#bundle'] == 'molecule' && isset($vars['content']['field_content'])) {
+      $vars['content']['bricks'] = _bricks_molecular_items($element['field_content'], $vars['content']['field_content']);
+      unset($vars['content']['field_content']);
+    }
   }
 }
 
@@ -53,6 +65,12 @@ function bricks_process_entity(&$vars) {
     $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
     $vars['heading'] = !empty($vars['title']) ? '<h' . $element['#heading_level'] . '>' . $vars['title'] . '</h' . $element['#heading_level'] . '>' : '';
+
+    if (isset($vars['content']['bricks'])) {
+      foreach ($vars['content']['bricks'] as &$brick) {
+        $brick['#base_heading_level'] = $element['#heading_level'];
+      }
+    }
   }
 }
 
@@ -83,4 +101,33 @@ function _bricks_molecular_items($element, $items) {
   }
 
   return $items;
+}
+
+/**
+ * Processes variables for theme_field().
+ */
+function bricks_molecules_process_field(&$vars) {
+  $element = &$vars['element'];
+  if ($element['#field_name'] == 'field_content') {
+    $vars['items'] = _bricks_molecular_items($element, $vars['items']);
+  }
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function bricks_molecules_entity_property_info_alter(&$info) {
+  $info['brick']['properties']['machine_name']['widget'] = '_bricks_molecules_machine_name_widget';
+}
+
+/**
+ * Helper function: provides a widget for a machine name property.
+ */
+function _bricks_molecules_machine_name_widget($entity) {
+  if ($entity->type != 'unit') return;
+  return array(
+    '#type' => 'textfield',
+    '#title' => 'Machine name',
+    '#default_value' => $entity->machine_name,
+  );
 }
