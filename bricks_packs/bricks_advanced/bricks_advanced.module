@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Advanced Pack feature.
- */
-
-include_once 'bricks_advanced.features.inc';
