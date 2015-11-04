@@ -106,7 +106,7 @@ function _bricks_molecular_items($element, $items) {
 /**
  * Processes variables for theme_field().
  */
-function bricks_molecules_process_field(&$vars) {
+function bricks_process_field(&$vars) {
   $element = &$vars['element'];
   if ($element['#field_name'] == 'field_content') {
     $vars['items'] = _bricks_molecular_items($element, $vars['items']);
@@ -116,14 +116,14 @@ function bricks_molecules_process_field(&$vars) {
 /**
  * Implements hook_entity_property_info_alter().
  */
-function bricks_molecules_entity_property_info_alter(&$info) {
-  $info['brick']['properties']['machine_name']['widget'] = '_bricks_molecules_machine_name_widget';
+function bricks_entity_property_info_alter(&$info) {
+  $info['brick']['properties']['machine_name']['widget'] = '_bricks_machine_name_widget';
 }
 
 /**
  * Helper function: provides a widget for a machine name property.
  */
-function _bricks_molecules_machine_name_widget($entity) {
+function _bricks_machine_name_widget($entity) {
   if ($entity->type != 'unit') return;
   return array(
     '#type' => 'textfield',
