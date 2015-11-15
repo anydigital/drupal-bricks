@@ -20,3 +20,13 @@
 .references-dialog-links {
   margin: 0;
 }
+.references-dialog-links .er-remove {
+  background: url('../references_dialog/img/cancel.png') left top no-repeat;
+  background-size: 14px 14px;
+}
+.er-removed {
+  opacity: 0.5;
+}
+.er-removed * {
+  text-decoration: line-through;
+}

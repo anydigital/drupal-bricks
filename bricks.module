@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Implements hook_init().
+ */
+function bricks_init() {
+  drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
+}
+
+/**
  * Implements hook_module_implements_alter().
  */
 function bricks_module_implements_alter(&$implementations, $hook) {
@@ -128,4 +135,17 @@ function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
       $element['entityreference_live_preview']['#weight'] = -1;
     }
   }
+}
+
+/**
+ * Processes variables for theme_references_dialog_links().
+ */
+function bricks_process_references_dialog_links(&$vars) {
+  $vars['links'][] = array(
+    'title' => t('Remove'),
+    'href' => '#',
+    'attributes' => array(
+      'class' => 'er-remove',
+    ),
+  );
 }
