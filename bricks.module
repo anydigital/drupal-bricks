@@ -1,6 +1,17 @@
 <?php
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function bricks_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'field_widget_form_alter') {
+    $group = $implementations['bricks'];
+    unset($implementations['bricks']);
+    $implementations['bricks'] = $group;
+  }
+}
+
+/**
  * Implements hook_theme_registry_alter() as described here: https://www.drupal.org/node/715160.
  */
 function bricks_theme_registry_alter(&$theme_registry, $module = 'bricks') {
@@ -103,5 +114,18 @@ function bricks_process_field(&$vars) {
   $element = &$vars['element'];
   if ($element['#field_name'] == 'field_body') {
     $vars['items'] = _bricks_tree_items($element, $vars['items']);
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
+  $field = $context['field'];
+  if ($field['type'] == 'entityreference' && $field['field_name'] == 'field_body') {
+    $element['target_id']['#size'] = 10;
+    if (isset($element['entityreference_live_preview'])) {
+      $element['entityreference_live_preview']['#weight'] = -1;
+    }
   }
 }

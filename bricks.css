@@ -1,0 +1,22 @@
+.treeable-form-item > * {
+  float: left;
+}
+.treeable-form-item *[id^="entityreference-live-preview--"] {
+  margin-right: 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  width: 15rem;
+  max-height: 5rem;
+  overflow: hidden;
+}
+.dialog-links {
+  margin: 0 1rem;  
+}
+.dialog-links > * {
+  float: left;
+}
+.dialog-links .ctools-dropdown {
+  margin-right: 0.5rem;
+}
+.references-dialog-links {
+  margin: 0;
+}
