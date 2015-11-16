@@ -9,7 +9,7 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 
 ## Live demo
 
-1. Open [pre-configured sandbox](http://ply.st/bricks_bootstrap) on simplytest.me.
+1. Open [pre-configured sandbox](https://ply.st/bricks_bootstrap/7.x-3.x) on simplytest.me.
 2. Click **Launch sandbox** and wait.
 3. Click **Log in** (email and password should be pre-filled).
 4. Go to **Appearance** and click **Set default** near the Bootstap theme.
