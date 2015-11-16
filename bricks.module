@@ -90,6 +90,7 @@ function bricks_process_entity(&$vars) {
     $vars['prefix'] = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . drupal_render($vars['title_prefix']) . drupal_render($vars['title_suffix']);
     $vars['suffix'] = '</div>';
     $vars['heading'] = !empty($vars['title']) ? '<h' . $element['#heading_level'] . '>' . $vars['title'] . '</h' . $element['#heading_level'] . '>' : '';
+    $vars['placeholder'] = '<div class="er-placeholder">' . $element['#bundle'] . '</div>';
 
     if (isset($vars['content']['bricks'])) {
       foreach ($vars['content']['bricks'] as &$brick) {

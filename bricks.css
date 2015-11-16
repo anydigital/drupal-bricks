@@ -30,3 +30,8 @@
 .er-removed * {
   text-decoration: line-through;
 }
+.er-placeholder {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
