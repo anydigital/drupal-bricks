@@ -8,6 +8,15 @@ function bricks_init() {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function bricks_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'entityreference') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
  * Implements hook_module_implements_alter().
  */
 function bricks_module_implements_alter(&$implementations, $hook) {
@@ -51,6 +60,11 @@ function bricks_theme_registry_alter(&$theme_registry, $module = 'bricks') {
  */
 function bricks_preprocess_entity(&$vars) {
   $element = &$vars['elements'];
+
+  if (!empty($element['#er_options']['classes'])) {
+    $vars['classes_array'][] = check_plain($element['#er_options']['classes']);
+  }
+
   if ($element['#entity_type'] == 'brick') {
     $vars['title'] = '';
     if (!empty($vars['content']['field_title']['#items'][0]['value'])) {
@@ -104,6 +118,9 @@ function _bricks_tree_items($element, $items) {
   // Process items in reverse order (without recursion):
   $ritems = array_reverse($items, TRUE);
   foreach ($ritems as $delta => $item) {
+    if (isset($element['#items'][$delta]['er_options'])) {
+      $items[$delta]['#er_options'] = $element['#items'][$delta]['er_options'];
+    }
     if (isset($element['#items'][$delta]['treeable_parent'])) {
       $parent = $element['#items'][$delta]['treeable_parent'];
       array_unshift($items[$parent]['bricks'], $items[$delta]);
@@ -134,6 +151,19 @@ function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
     if (isset($element['entityreference_live_preview'])) {
       $element['entityreference_live_preview']['#weight'] = -1;
     }
+
+    $item = isset($context['items'][$context['delta']]) ? $context['items'][$context['delta']] : NULL;
+    $element['er_options'] = array(
+      '#tree' => 'true',
+      '#weight' => 11,
+      'classes' => array(
+        '#type' => 'textfield',
+        '#attributes' => array(
+          'placeholder' => t('Additional CSS classes'),
+        ),
+        '#default_value' => !empty($item['er_options']['classes']) ? $item['er_options']['classes'] : '',
+      ),
+    );
   }
 }
 
