@@ -7,7 +7,7 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 ![Bricks UI](https://www.drupal.org/files/bricks-ui.png)
 
 
-## Live demo
+## Live sandbox
 
 1. Open [pre-configured sandbox](https://ply.st/bricks_bootstrap/7.x-3.x) on simplytest.me.
 2. Click **Launch sandbox** and wait.
