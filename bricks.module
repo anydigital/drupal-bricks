@@ -1,0 +1,49 @@
+<?php
+
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_theme().
+ */
+function bricks_theme() {
+  return array(
+    'brick' => array(
+      'render element' => 'elements',
+    ),
+  );
+}
+
+/**
+ * Helper function for hook_theme_registry_alter().
+ */
+function _bricks_theme_registry_alter_bundle(&$theme_registry, $bundle) {
+  $theme_registry['brick__' . $bundle] = array('template' => 'brick--' . $bundle) + $theme_registry['brick'];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK() for brick like node_theme_suggestions_node() does.
+ */
+function bricks_theme_suggestions_brick(array $variables) {
+  $suggestions = array();
+  $brick = $variables['elements']['#brick'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'brick__' . $sanitized_view_mode;
+  $suggestions[] = 'brick__' . $brick->bundle();
+  $suggestions[] = 'brick__' . $brick->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'brick__' . $brick->id();
+  $suggestions[] = 'brick__' . $brick->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for brick.
+ */
+function bricks_preprocess_brick(&$variables) {
+  // Helpful $content variable for templates like in template_preprocess_node().
+  $variables += array('content' => array());
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
