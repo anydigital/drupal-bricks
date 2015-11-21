@@ -16,8 +16,12 @@ function bricks_theme() {
 /**
  * Helper function for hook_theme_registry_alter().
  */
-function _bricks_theme_registry_alter_bundle(&$theme_registry, $bundle) {
-  $theme_registry['brick__' . $bundle] = array('template' => 'brick--' . $bundle) + $theme_registry['brick'];
+function _bricks_theme_registry_alter_bundle(&$theme_registry, $module, $bundle) {
+  $theme_registry['brick__' . $bundle] = array(
+    'theme path' => drupal_get_path('module', $module),
+    'template' => 'brick--' . $bundle,
+    'path' => drupal_get_path('module', $module) . '/templates',
+  ) + $theme_registry['brick'];
 }
 
 /**
