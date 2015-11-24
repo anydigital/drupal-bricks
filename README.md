@@ -23,7 +23,7 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 
 ## Requirements
 
-- [ECK](https://www.drupal.org/project/eck) = 1.x-dev + [this typo fix](https://www.drupal.org/node/2603526)
+- [ECK](https://www.drupal.org/project/eck) = 1.x-dev
 
 
 ## Resources
