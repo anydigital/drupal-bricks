@@ -1,5 +1,7 @@
 # Bricks
 
+[![Join the chat at https://gitter.im/tonystar/drupal-bricks](https://badges.gitter.im/tonystar/drupal-bricks.svg)](https://gitter.im/tonystar/drupal-bricks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **Bricks** — is a revolutionary new way of creating rich content in Drupal. Thanks to the powerful contributions like ECK and Entity Reference, Bricks itself is just 50 lines of code.
 
 In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupal.org/project/paragraphs), drop-in replacement for [Panelizer](https://www.drupal.org/project/panelizer) and a good friend to [Display Suite](https://www.drupal.org/project/ds) and [CKEditor](https://www.drupal.org/project/ckeditor) or any other [WYSIWYG](https://www.drupal.org/project/wysiwyg).
