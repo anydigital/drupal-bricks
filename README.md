@@ -1,6 +1,6 @@
 # Bricks
 
-[![Join the chat at https://gitter.im/tonystar/drupal-bricks](https://badges.gitter.im/tonystar/drupal-bricks.svg)](https://gitter.im/tonystar/drupal-bricks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/highweb/drupal-bricks](https://badges.gitter.im/highweb/drupal-bricks.svg)](https://gitter.im/highweb/drupal-bricks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **Bricks** — is a revolutionary new way of creating rich content in Drupal. Thanks to the powerful contributions like ECK and Entity Reference, Bricks itself is just 50 lines of code.
 
