@@ -28,12 +28,23 @@ function bricks_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_theme_registry_alter() as described here: https://www.drupal.org/node/715160.
+ * Implements hook_theme_registry_alter().
  */
-function bricks_theme_registry_alter(&$theme_registry, $module = 'bricks') {
+function bricks_theme_registry_alter(&$theme_registry, $module) {
+  if (!empty($module)) { // TODO: Delete once not used in Bricks Bootstrap anymore.
+    _bricks_theme_registry_serve_path($theme_registry, 'bricks', drupal_get_path('module', $module));
+    return;
+  }
+  _bricks_theme_registry_serve_path($theme_registry, 'bricks', drupal_get_path('module', 'bricks'));
+  _bricks_theme_registry_serve_path($theme_registry, 'bricks', 'sites/all/templates');
+}
+
+/**
+ * Helper for hook_theme_registry_alter() as described here: https://www.drupal.org/node/715160.
+ */
+function _bricks_theme_registry_serve_path(&$theme_registry, $theme, $path) {
   $theme_registry_copy = $theme_registry;
-  $module_path = drupal_get_path('module', $module);
-  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', $module, $module_path);
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', $theme, $path);
   $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
   // A list of templates the module will provide templates for
   $hooks = array('entity');
@@ -46,10 +57,10 @@ function bricks_theme_registry_alter(&$theme_registry, $module = 'bricks') {
     if (is_array($theme_registry[$hook]['theme paths'])) {
       $first_element = array_shift($theme_registry[$hook]['theme paths']);
       if ($first_element) {
-        array_unshift($theme_registry[$hook]['theme paths'], $first_element, $module_path);
+        array_unshift($theme_registry[$hook]['theme paths'], $first_element, $path);
       }
       else {
-        array_unshift($theme_registry[$hook]['theme paths'], $module_path);
+        array_unshift($theme_registry[$hook]['theme paths'], $path);
       }
     }
   }
