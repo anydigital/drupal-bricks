@@ -5,6 +5,5 @@ core = 7.x
 
 dependencies[] = eck
 dependencies[] = entityreference
-dependencies[] = treeable
 
 stylesheets[all][] = bricks.css

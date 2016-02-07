@@ -1,5 +1,7 @@
 <?php
 
+require_once 'bricks.edit.inc';
+
 /**
  * Implements hook_init().
  */
@@ -85,7 +87,7 @@ function bricks_preprocess_entity(&$vars) {
     $base_heading_level = isset($element['#base_heading_level']) ? $element['#base_heading_level'] : 1;
     $element['#heading_level'] = $base_heading_level + !empty($vars['title']);
 
-    if ($element['#bundle'] == 'body' && isset($vars['content']['field_body'])) {
+    if (isset($vars['content']['field_body'])) {
       $vars['content']['bricks'] = _bricks_tree_items($element['field_body'], $vars['content']['field_body']);
       unset($vars['content']['field_body']);
     }
@@ -127,15 +129,31 @@ function _bricks_tree_items($element, $items) {
     $items[$delta] = $item;
   }
 
-  // Process items in reverse order (without recursion):
-  $ritems = array_reverse($items, TRUE);
-  foreach ($ritems as $delta => $item) {
+  // Prepare items:
+  $parents = array(-1);
+  $prev_depth = 0;
+  foreach ($items as $delta => $item) {
     if (isset($element['#items'][$delta]['options'])) {
       $items[$delta]['#options'] = $element['#items'][$delta]['options'];
     }
-    if (isset($element['#items'][$delta]['parent_delta'])) {
-      $parent = $element['#items'][$delta]['parent_delta'];
-      array_unshift($items[$parent]['bricks'], $items[$delta]);
+
+    $depth = $element['#items'][$delta]['depth'];
+    if ($depth > $prev_depth) {
+      array_unshift($parents, $delta - 1);
+    }
+    else if ($depth < $prev_depth) {
+      array_splice($parents, 0, $prev_depth - $depth);
+    }
+    $prev_depth = $depth;
+
+    $items[$delta]['#parent_delta'] = $parents[0];
+  }
+
+  // Process items in reverse order (without recursion):
+  $ritems = array_reverse($items, TRUE);
+  foreach ($ritems as $delta => $item) {
+    if ($item['#parent_delta'] != -1) {
+      array_unshift($items[$item['#parent_delta']]['bricks'], $items[$delta]);
       unset($items[$delta]);
     }
   }
@@ -165,6 +183,14 @@ function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
     }
 
     $item = isset($context['items'][$context['delta']]) ? $context['items'][$context['delta']] : NULL;
+    $element['depth'] = array(
+      '#type' => 'textfield',
+      '#default_value' => isset($item['depth']) ? $item['depth'] : 0,
+      '#size' => 1,
+      '#attributes' => array(
+        'class' => array($field['field_name'] . '-depth'),
+      ),
+    );
     $element['options'] = array(
       '#tree' => 'true',
       '#weight' => 11,
