@@ -3,13 +3,6 @@
 require_once 'bricks.edit.inc';
 
 /**
- * Implements hook_init().
- */
-function bricks_init() {
-  drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
-}
-
-/**
  * Implements hook_ctools_plugin_directory().
  */
 function bricks_ctools_plugin_directory($module, $plugin) {

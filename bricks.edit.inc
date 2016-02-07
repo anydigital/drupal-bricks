@@ -98,6 +98,7 @@ function theme_bricks_tree_value_form($variables) {
     drupal_add_tabledrag($table_id, 'depth', 'group', $element['#field_name'] . '-depth');
     // Fake call to enable indentation:
     drupal_add_tabledrag($table_id, 'match', 'parent', $order_class);
+    drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
   }
   else {
     foreach (element_children($element) as $key) {
