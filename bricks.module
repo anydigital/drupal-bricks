@@ -25,11 +25,7 @@ function bricks_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_theme_registry_alter().
  */
-function bricks_theme_registry_alter(&$theme_registry, $module) {
-  if (!empty($module)) { // TODO: Delete once not used in Bricks Bootstrap anymore.
-    _bricks_theme_registry_serve_path($theme_registry, 'bricks', drupal_get_path('module', $module));
-    return;
-  }
+function bricks_theme_registry_alter(&$theme_registry) {
   _bricks_theme_registry_serve_path($theme_registry, 'bricks', drupal_get_path('module', 'bricks'));
   _bricks_theme_registry_serve_path($theme_registry, 'bricks', 'sites/all/templates');
 }

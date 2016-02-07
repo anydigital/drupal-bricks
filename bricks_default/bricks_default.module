@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Bricks Default feature.
+ */
+
+include_once 'bricks_default.features.inc';

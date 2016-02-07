@@ -1,6 +1,6 @@
 name = Bricks
 description = Allows to create bricky content.
-package = Bricks
+package = User interface
 core = 7.x
 
 dependencies[] = eck
