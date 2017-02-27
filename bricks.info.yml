@@ -4,5 +4,3 @@ package: Bricks
 
 type: module
 core: 8.x
-dependencies:
-  - eck

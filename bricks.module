@@ -1,53 +1,32 @@
 <?php
 
-use Drupal\Core\Render\Element;
-
 /**
- * Implements hook_theme().
+ * Implements hook_theme_registry_alter().
  */
-function bricks_theme() {
-  return array(
-    'brick' => array(
-      'render element' => 'elements',
-    ),
-  );
+function bricks_theme_registry_alter(&$theme_registry) {
+  if (\Drupal::moduleHandler()->moduleExists('eck')) {
+    _bricks_theme_registry_alter_eck($theme_registry, 'bricks', 'brick');
+  }
 }
 
 /**
  * Helper function for hook_theme_registry_alter().
+ *
+ * Since we have to alter $theme_registry to ship templates in module - let's
+ * give them better names: `brick.html.twig` over `eck-entity--brick.html.twig`.
  */
-function _bricks_theme_registry_alter_bundle(&$theme_registry, $module, $bundle) {
-  $theme_registry['brick__' . $bundle] = array(
-    'theme path' => drupal_get_path('module', $module),
-    'template' => 'brick--' . $bundle,
-    'path' => drupal_get_path('module', $module) . '/templates',
-  ) + $theme_registry['brick'];
-}
+function _bricks_theme_registry_alter_eck(&$theme_registry, $module, $type, $bundle = NULL) {
+  $key = 'eck_entity__' . $type;
+  $template = $type;
 
-/**
- * Implements hook_theme_suggestions_HOOK() for brick like node_theme_suggestions_node() does.
- */
-function bricks_theme_suggestions_brick(array $variables) {
-  $suggestions = array();
-  $brick = $variables['elements']['#brick'];
-  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
-
-  $suggestions[] = 'brick__' . $sanitized_view_mode;
-  $suggestions[] = 'brick__' . $brick->bundle();
-  $suggestions[] = 'brick__' . $brick->bundle() . '__' . $sanitized_view_mode;
-  $suggestions[] = 'brick__' . $brick->id();
-  $suggestions[] = 'brick__' . $brick->id() . '__' . $sanitized_view_mode;
-
-  return $suggestions;
-}
-
-/**
- * Implements hook_preprocess_HOOK() for brick.
- */
-function bricks_preprocess_brick(&$variables) {
-  // Helpful $content variable for templates like in template_preprocess_node().
-  $variables += array('content' => array());
-  foreach (Element::children($variables['elements']) as $key) {
-    $variables['content'][$key] = $variables['elements'][$key];
+  if (isset($bundle)) {
+    $key .= '__' . $bundle;
+    $template .= '--' . $bundle;
   }
+
+  $theme_registry[$key] = array(
+    'theme path' => drupal_get_path('module', $module),
+    'template' => $template,
+    'path' => drupal_get_path('module', $module) . '/templates',
+  ) + $theme_registry['eck_entity'];
 }
