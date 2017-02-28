@@ -1,11 +1,17 @@
 <?php
 
+use Drupal\Core\Render\Element;
+
+
+/* BRICKS FORMATTING */
+
 /**
  * Implements hook_theme_registry_alter().
  */
 function bricks_theme_registry_alter(&$theme_registry) {
   if (\Drupal::moduleHandler()->moduleExists('eck')) {
     _bricks_theme_registry_alter_eck($theme_registry, 'bricks', 'brick');
+    _bricks_theme_registry_alter_eck($theme_registry, 'bricks', 'brick', 'columns');
   }
 }
 
@@ -29,4 +35,110 @@ function _bricks_theme_registry_alter_eck(&$theme_registry, $module, $type, $bun
     'template' => $template,
     'path' => drupal_get_path('module', $module) . '/templates',
   ) + $theme_registry['eck_entity'];
+}
+
+/**
+ * Prepares variables for `field.html.twig`.
+ */
+function bricks_preprocess_field(&$variables) {
+  $element = $variables['element'];
+
+  if ($element['#formatter'] == 'bricks_nested') {
+    $variables['items'] = _bricks_nest_items($element, $variables['items']);
+  }
+}
+
+/**
+ * Helper function: converts element's items to a tree structure.
+ */
+function _bricks_nest_items($element, $items) {
+
+  // Prepare items:
+  $parents = array(-1);
+  $prev_depth = 0;
+  foreach ($items as $delta => $item) {
+    $depth = $element['#items'][$delta]->depth;
+    if ($depth > $prev_depth) {
+      array_unshift($parents, $delta - 1);
+    }
+    else if ($depth < $prev_depth) {
+      array_splice($parents, 0, $prev_depth - $depth);
+    }
+    $prev_depth = $depth;
+
+    $items[$delta]['#delta'] = $delta;
+    $items[$delta]['#parent_delta'] = $parents[0];
+
+    // ['content']['childs'] is good since it's compatible with default field template:
+    $items[$delta]['content']['childs'] = array();
+    unset($items[$delta]['attributes']);
+  }
+
+  // Process items in reverse order (without recursion):
+  $rdeltas = array_reverse(array_keys($items));
+  foreach ($rdeltas as $delta) {
+    $child_ids = array();
+    foreach ($items[$delta]['content']['childs'] as $child) {
+      $child_ids[] = $element['#items'][$child['#delta']]->target_id;
+    }
+    if (!empty($child_ids)) {
+      // Put childs in cache keys to form a proper cache context:
+      $items[$delta]['content']['#cache']['keys'][] = implode(',', $child_ids);
+    }
+
+    $parent_delta = $items[$delta]['#parent_delta'];
+    if ($parent_delta != -1) {
+      array_unshift($items[$parent_delta]['content']['childs'], $items[$delta]);
+      unset($items[$delta]);
+    }
+  }
+
+  return $items;
+}
+
+
+/* BRICKS EDITING */
+
+/**
+ * Prepares variables for `field-multiple-value-form.html.twig`.
+ */
+function bricks_preprocess_field_multiple_value_form(&$variables) {
+  $element = $variables['element'];
+
+  if (isset($element['#widget']) && $element['#widget'] == 'bricks_tree_autocomplete') {
+    foreach (Element::children($element) as $key) {
+      if ($key !== 'add_more') {
+        $depth = $element[$key]['depth']['#value'];
+
+        $indentation = array();
+        if ($depth > 0) {
+          $indentation = array(
+            '#theme' => 'indentation',
+            '#size' => $depth,
+          );
+        }
+
+        $drag_cell = &$variables['table']['#rows'][$key]['data'][0];
+        $drag_cell['data'] = !empty($indentation) ? drupal_render($indentation) : '' . $drag_cell['data'];
+        $drag_cell['style'] = 'width: initial'; // @TODO
+      }
+    }
+
+    $tabledrag_options = &$variables['table']['#tabledrag'];
+    $tabledrag_options[0]['relationship'] = 'all';
+    $tabledrag_options[] = array(
+      'action' => 'depth',
+      'relationship' => 'group',
+      'group' => 'bricks-depth',
+      'hidden' => FALSE,
+    );
+    // Fake option to enable indentation:
+    $tabledrag_options[] = array(
+      'action' => 'match',
+      'relationship' => 'parent',
+      'group' => $element['#field_name'] . '-delta-order', // equal to $order_class in template_preprocess_field_multiple_value_form()
+    );
+
+    $variables['table']['#attached']['library'][] = 'bricks/tabledrag.relationship-all';
+  }
 }
