@@ -1,5 +1,33 @@
 <?php
 
+use Drupal\Core\Render\Element;
+
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function bricks_inline_theme_registry_alter(&$theme_registry) {
+  $theme_registry['inline_entity_form_entity_table']['theme path'] = drupal_get_path('module', 'bricks_inline');
+  $theme_registry['inline_entity_form_entity_table']['function'] = 'bricks_inline_inline_entity_form_entity_table';
+}
+
+/**
+ * Prepares variables for theme_inline_entity_form_entity_table().
+ */
+function bricks_inline_preprocess_inline_entity_form_entity_table(&$variables) {
+  _inline_entity_form_preprocess_inline_entity_form_entity_table($variables);
+  _bricks_preprocess_tabledrag_form($variables, 'form', 'bricks_tree_inline', 'ief-entity-delta', TRUE);
+}
+
+/**
+ * Overrides theme_inline_entity_form_entity_table() with a help from hook_theme_registry_alter().
+ */
+function bricks_inline_inline_entity_form_entity_table($variables) {
+  if (!empty($variables['table'])) {
+    return \Drupal::service('renderer')->render($variables['table']);
+  }
+}
+
 /**
  * Hack: copy-and-paste from theme_inline_entity_form_entity_table().
  */
@@ -113,6 +141,7 @@ function _inline_entity_form_preprocess_inline_entity_form_entity_table(&$variab
       '#tabledrag' => $tabledrag,
     ];
 
-    return $renderer->render($table);
+    // return $renderer->render($table); // -
+    $variables['table'] = $table; // +
   }
 }

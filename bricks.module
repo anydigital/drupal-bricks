@@ -103,9 +103,20 @@ function _bricks_nest_items($element, $items) {
  * Prepares variables for `field-multiple-value-form.html.twig`.
  */
 function bricks_preprocess_field_multiple_value_form(&$variables) {
-  $element = $variables['element'];
+  _bricks_preprocess_tabledrag_form($variables, 'element', 'bricks_tree_autocomplete', $variables['element']['#field_name'] . '-delta-order');
+}
 
-  if (isset($element['#widget']) && $element['#widget'] == 'bricks_tree_autocomplete') {
+/**
+ * Helper function for hook_preprocess_field_multiple_value_form().
+ */
+function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $order_class, $render_depth = FALSE) {
+  $element = $variables[$element_key];
+
+  if (isset($element['#widget']) && $element['#widget'] == $widget) {
+    if ($render_depth) {
+      $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
+    }
+
     foreach (Element::children($element) as $key) {
       if ($key !== 'add_more') {
         $depth = $element[$key]['depth']['#value'];
@@ -121,6 +132,10 @@ function bricks_preprocess_field_multiple_value_form(&$variables) {
         $drag_cell = &$variables['table']['#rows'][$key]['data'][0];
         $drag_cell['data'] = !empty($indentation) ? drupal_render($indentation) : '' . $drag_cell['data'];
         $drag_cell['style'] = 'width: initial'; // @TODO
+
+        if ($render_depth) {
+          $variables['table']['#rows'][$key]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
+        }
       }
     }
 
@@ -130,13 +145,13 @@ function bricks_preprocess_field_multiple_value_form(&$variables) {
       'action' => 'depth',
       'relationship' => 'group',
       'group' => 'bricks-depth',
-      'hidden' => FALSE,
+      'hidden' => $render_depth,
     );
     // Fake option to enable indentation:
     $tabledrag_options[] = array(
       'action' => 'match',
       'relationship' => 'parent',
-      'group' => $element['#field_name'] . '-delta-order', // equal to $order_class in template_preprocess_field_multiple_value_form()
+      'group' => $order_class,
     );
 
     $variables['table']['#attached']['library'][] = 'bricks/tabledrag.relationship-all';

@@ -1,0 +1,10 @@
+name: Bricks Inline
+description: Allows to edit Bricks using Inline Entity Form.
+package: Bricks
+
+type: module
+core: 8.x
+
+dependencies:
+  - bricks
+  - inline_entity_form
