@@ -27,7 +27,7 @@ class BricksTreeInlineWidget extends InlineEntityFormComplex {
     $entities = $form_state->get(['inline_entity_form', $this->getIefId(), 'entities']);
     foreach ($entities as $delta => $value) {
       $element['entities'][$delta]['depth'] = array(
-        '#type' => 'number',
+        '#type' => 'hidden', // @TODO: Other types break the correct indentations.
         '#default_value' => !empty($items[$delta]->depth) ? $items[$delta]->depth : 0,
         '#weight' => 10,
         '#attributes' => array(
