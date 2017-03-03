@@ -71,6 +71,12 @@ function _bricks_nest_items($element, $items) {
 
     // ['content']['childs'] is good since it's compatible with default field template:
     $items[$delta]['content']['childs'] = array();
+    if (!empty($element['#items'][$delta]->options['view_mode'])) {
+      $items[$delta]['content']['#view_mode'] = $element['#items'][$delta]->options['view_mode'];
+    }
+    if (!empty($element['#items'][$delta]->options['css_class'])) {
+      $items[$delta]['content']['#attributes']['class'][] = $element['#items'][$delta]->options['css_class'];
+    }
     unset($items[$delta]['attributes']);
   }
 
@@ -109,13 +115,12 @@ function bricks_preprocess_field_multiple_value_form(&$variables) {
 /**
  * Helper function for hook_preprocess_field_multiple_value_form().
  */
-function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $order_class, $render_depth = FALSE) {
+function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $order_class) {
   $element = $variables[$element_key];
 
   if (isset($element['#widget']) && $element['#widget'] == $widget) {
-    if ($render_depth) {
       $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
-    }
+      $variables['table']['#header'][] = ['data' => t('Options'), 'class' => ['bricks-options-header']];
 
     foreach (Element::children($element) as $key) {
       if ($key !== 'add_more') {
@@ -133,9 +138,10 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
         $drag_cell['data'] = !empty($indentation) ? drupal_render($indentation) : '' . $drag_cell['data'];
         $drag_cell['style'] = 'width: initial'; // @TODO
 
-        if ($render_depth) {
+        show($element[$key]['depth']);
+        show($element[$key]['options']);
           $variables['table']['#rows'][$key]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
-        }
+          $variables['table']['#rows'][$key]['data'][] = \Drupal::service('renderer')->render($element[$key]['options']);
       }
     }
 
@@ -145,7 +151,6 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
       'action' => 'depth',
       'relationship' => 'group',
       'group' => 'bricks-depth',
-      'hidden' => $render_depth,
     );
     // Fake option to enable indentation:
     $tabledrag_options[] = array(
@@ -156,4 +161,36 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
 
     $variables['table']['#attached']['library'][] = 'bricks/tabledrag.relationship-all';
   }
+}
+
+/**
+ * Helper function for widget's formElement().
+ */
+function _bricks_form_element_alter(&$element, $item) {
+  $element['depth'] = array(
+    '#type' => 'hidden', // @TODO: Other types break the correct indentations.
+    '#default_value' => !empty($item->depth) ? $item->depth : 0,
+    '#weight' => 10,
+    '#attributes' => array(
+      'class' => array('bricks-depth'),
+    ),
+  );
+  $element['options']['view_mode'] = array(
+    '#type' => 'textfield',
+    '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : '',
+    '#size' => 10,
+    '#weight' => 4,
+    '#attributes' => array(
+      'placeholder' => t('View mode'),
+    ),
+  );
+  $element['options']['css_class'] = array(
+    '#type' => 'textfield',
+    '#default_value' => !empty($item->options['css_class']) ? $item->options['css_class'] : '',
+    '#size' => 10,
+    '#weight' => 5,
+    '#attributes' => array(
+      'placeholder' => t('CSS class(-es)'),
+    ),
+  );
 }

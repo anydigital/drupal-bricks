@@ -21,14 +21,9 @@ class BricksTreeAutocompleteWidget extends EntityReferenceAutocompleteWidget {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
-    $element['depth'] = array(
-      '#type' => 'hidden',
-      '#default_value' => !empty($items[$delta]->depth) ? $items[$delta]->depth : 0,
-      '#weight' => 10,
-      '#attributes' => array(
-        'class' => array('bricks-depth'),
-      ),
-    );
+    _bricks_form_element_alter($element, $items[$delta]);
+    hide($element['depth']);
+    hide($element['options']);
 
     return $element;
   }

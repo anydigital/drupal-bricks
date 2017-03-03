@@ -25,6 +25,9 @@ class BricksTreeItem extends EntityReferenceItem {
     $properties['depth'] = DataDefinition::create('integer')
       ->setLabel(t('Depth'));
 
+    $properties['options'] = DataDefinition::create('any')
+      ->setLabel(t('Options'));
+
     return $properties;
   }
 
@@ -35,6 +38,13 @@ class BricksTreeItem extends EntityReferenceItem {
       'type' => 'int',
       'size' => 'tiny',
       'unsigned' => TRUE,
+    );
+
+    $schema['columns']['options'] = array(
+      'type' => 'blob',
+      'size' => 'normal',
+      'not null' => FALSE,
+      'serialize' => TRUE,
     );
 
     return $schema;
