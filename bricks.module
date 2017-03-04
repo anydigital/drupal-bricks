@@ -115,12 +115,11 @@ function bricks_preprocess_field_multiple_value_form(&$variables) {
 /**
  * Helper function for hook_preprocess_field_multiple_value_form().
  */
-function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $order_class) {
+function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $order_class, $render_options = FALSE) {
   $element = $variables[$element_key];
 
   if (isset($element['#widget']) && $element['#widget'] == $widget) {
       $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
-      $variables['table']['#header'][] = ['data' => t('Options'), 'class' => ['bricks-options-header']];
 
     foreach (Element::children($element) as $key) {
       if ($key !== 'add_more') {
@@ -139,9 +138,11 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
         $drag_cell['style'] = 'width: initial'; // @TODO
 
         show($element[$key]['depth']);
-        show($element[$key]['options']);
           $variables['table']['#rows'][$key]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
-          $variables['table']['#rows'][$key]['data'][] = \Drupal::service('renderer')->render($element[$key]['options']);
+
+        if ($render_options) { // @TODO: Get rid of $render_options hack.
+          $variables['table']['#rows'][$key]['data'][3]['data']['#suffix'] = \Drupal::service('renderer')->render($element[$key]['options']);
+        }
       }
     }
 
@@ -175,11 +176,14 @@ function _bricks_form_element_alter(&$element, $item) {
       'class' => array('bricks-depth'),
     ),
   );
+  $element['options'] = array(
+    '#type' => 'container',
+    '#weight' => 100,
+  );
   $element['options']['view_mode'] = array(
     '#type' => 'textfield',
     '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : '',
     '#size' => 10,
-    '#weight' => 4,
     '#attributes' => array(
       'placeholder' => t('View mode'),
     ),
@@ -188,7 +192,6 @@ function _bricks_form_element_alter(&$element, $item) {
     '#type' => 'textfield',
     '#default_value' => !empty($item->options['css_class']) ? $item->options['css_class'] : '',
     '#size' => 10,
-    '#weight' => 5,
     '#attributes' => array(
       'placeholder' => t('CSS class(-es)'),
     ),
