@@ -38,6 +38,15 @@ function _bricks_theme_registry_alter_eck(&$theme_registry, $module, $type, $bun
 }
 
 /**
+ * Prepares variables for `eck-entity.html.twig`.
+ */
+function bricks_preprocess_eck_entity(&$variables) {
+  if (!empty($variables['entity']['field_childs']) && Element::children($variables['entity']['field_childs'])) {
+    $variables['entity']['childs'] = array_intersect_key($variables['entity']['field_childs'], Element::children($variables['entity']['field_childs']));
+  }
+}
+
+/**
  * Prepares variables for `field.html.twig`.
  */
 function bricks_preprocess_field(&$variables) {
