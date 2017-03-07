@@ -83,14 +83,9 @@ function _bricks_nest_items($element, $items) {
   // Process items in reverse order (without recursion):
   $rdeltas = array_reverse(array_keys($items));
   foreach ($rdeltas as $delta) {
-    $child_ids = array();
-    foreach ($items[$delta]['content']['childs'] as $child) {
-      $child_ids[] = $element['#items'][$child['#delta']]->target_id;
-    }
-    if (!empty($child_ids)) {
-      // Put childs in cache keys to form a proper cache context:
-      $items[$delta]['content']['#cache']['keys'][] = implode(',', $child_ids);
-    }
+      // Generate a unique key per each brick for a proper cache context:
+      $items[$delta]['content']['#cache']['keys'][] = "{$element['#object']->getEntityTypeId()}:{$element['#object']->id()}:{$element['#field_name']}:{$delta}";
+      // @TODO: Specify cache tags.
 
     $parent_delta = $items[$delta]['#parent_delta'];
     if ($parent_delta != -1) {
