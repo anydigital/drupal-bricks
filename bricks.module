@@ -21,13 +21,18 @@ function bricks_theme_registry_alter(&$theme_registry) {
  * Since we have to alter $theme_registry to ship templates in module - let's
  * give them better names: `brick.html.twig` over `eck-entity--brick.html.twig`.
  */
-function _bricks_theme_registry_alter_eck(&$theme_registry, $module, $type, $bundle = NULL) {
+function _bricks_theme_registry_alter_eck(&$theme_registry, $module, $type, $bundle = NULL, $view_mode = NULL) {
   $key = 'eck_entity__' . $type;
   $template = $type;
 
   if (isset($bundle)) {
     $key .= '__' . $bundle;
     $template .= '--' . $bundle;
+  }
+
+  if (isset($view_mode)) {
+    $key .= '__' . $view_mode;
+    $template .= '--' . $view_mode;
   }
 
   $theme_registry[$key] = array(
