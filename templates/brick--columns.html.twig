@@ -1,7 +1,7 @@
 <table {{ attributes }}>
   <tr>
-    {% for delta, entity in entity.childs %}
-    <td>{{ entity }}</td>
+    {% for delta, subentity in entity.childs %}
+    <td>{{ subentity }}</td>
     {% endfor %}
   </tr>
 </table>
