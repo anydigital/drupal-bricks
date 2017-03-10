@@ -189,12 +189,9 @@ function _bricks_form_element_alter(&$element, $item) {
     '#weight' => 100,
   );
   $element['options']['view_mode'] = array(
-    '#type' => 'textfield',
-    '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : '',
-    '#size' => 10,
-    '#attributes' => array(
-      'placeholder' => t('View mode'),
-    ),
+    '#type' => 'select',
+    '#options' => \Drupal::service('entity_display.repository')->getViewModeOptions($element['#entity']->getEntityTypeId()),
+    '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : NULL,
   );
   $element['options']['css_class'] = array(
     '#type' => 'textfield',
