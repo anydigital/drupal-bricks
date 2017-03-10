@@ -3,7 +3,7 @@
 [![Gitter](https://img.shields.io/gitter/room/highweb/drupal-bricks.svg)](https://gitter.im/highweb/drupal-bricks)
 [![Timezone](https://img.shields.io/badge/time-zone-4682b4.svg)](https://timezone.io/team/drupal-bricks)
 
-**Bricks** — is a revolutionary new way of creating rich content in Drupal. Thanks to the powerful contributions like ECK and Entity Reference, Bricks itself is just ~9 KB of code.
+**Bricks** — is a revolutionary new way of creating rich content in Drupal. Thanks to the powerful contributions like ECK and Entity Reference, Bricks itself is just ~13 KB of code (gzipped).
 
 In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupal.org/project/paragraphs), drop-in replacement for [Panelizer](https://www.drupal.org/project/panelizer) and a good friend to [Display Suite](https://www.drupal.org/project/ds) and [CKEditor](https://www.drupal.org/project/ckeditor) or any other [WYSIWYG](https://www.drupal.org/project/wysiwyg).
 
