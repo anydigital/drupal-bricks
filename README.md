@@ -12,7 +12,7 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 
 ## Live demo
 
-1. Open [pre-configured sandbox](https://simplytest.me/project/bricks/8.x-1.x) on simplytest.me.
+1. Open [pre-configured sandbox](https://simplytest.me/project/bricks/8.x-1.1) on simplytest.me.
 2. Click **Launch sandbox** and wait.
 3. Follow the installation (all settings should be pre-filled, don't change them).
 4. Go to **Extend** and install **Bricks Bootstrap**.
