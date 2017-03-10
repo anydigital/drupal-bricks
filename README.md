@@ -23,8 +23,8 @@ Proposed page layout:
 
 ```
 Columns
-|-- Text
 |-- Image
+|-- Text
 |-- Text
 ```
 
@@ -35,7 +35,7 @@ You can nest items using Drupal drag & drop UI (like for menu or taxonomy items)
 
 All new Bricks for D8 has no requirements and works with ANY entity types!
 
-*Just make sure nested entities have proper templates, like `templates/brick--columns.html.twig`.*
+*Just make sure nested entities have a proper templates, like `templates/brick--columns.html.twig`.*
 
 
 ## Resources
