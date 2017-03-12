@@ -19,8 +19,8 @@ Bricks allows you to nest field items using Drupal drag & drop UI (exactly like 
 3. Follow the installation (all settings should be pre-filled, don't change them).
 4. Go to **Extend** and install **Bricks Bootstrap**.
 5. Go to **Appearance**, install **Tweme** and set as default theme.
-6. Go to home page and check out an example 3-columns node.
-7. Finally go to **Content** and create your own **Bricky** page!
+6. Find a sample 3-columns node and go to **Edit** mode to check magic out!
+7. Finally go to **Content** and create your own first **Bricky** page!
 
 
 ## Requirements
