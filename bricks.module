@@ -127,6 +127,7 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
   $element = $variables[$element_key];
 
   if (isset($element['#widget']) && $element['#widget'] == $widget) {
+    $variables['table']['#header'][0]['style'] = 'min-width: 100px'; // @TODO: Tmp hack for the proper indent width calculation.
       $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
 
     foreach (Element::children($element) as $key) {
