@@ -9,26 +9,18 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 
 ![Bricks UI](https://www.drupal.org/files/bricks-ui-8.x.png)
 
+Bricks allows you to nest field items using Drupal drag & drop UI (exactly like for menu or taxonomy items).
+
 
 ## Live demo
 
-1. Open [pre-configured sandbox](https://simplytest.me/project/bricks/8.x-1.1) on simplytest.me.
+1. Open [pre-configured sandbox](https://simplytest.me/project/bricks/8.x-1.1).
 2. Click **Launch sandbox** and wait.
 3. Follow the installation (all settings should be pre-filled, don't change them).
 4. Go to **Extend** and install **Bricks Bootstrap**.
 5. Go to **Appearance**, install **Tweme** and set as default theme.
-6. Finally go to **Content** and create your first **Bricky** page!
-
-Proposed page layout:
-
-```
-Columns
-|-- Image
-|-- Text
-|-- Text
-```
-
-You can nest items using Drupal drag & drop UI (like for menu or taxonomy items).
+6. Go to home page and check out an example 3-columns node.
+7. Finally go to **Content** and create your own **Bricky** page!
 
 
 ## Requirements
