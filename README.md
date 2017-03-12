@@ -30,6 +30,14 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 *Just make sure nested entities have a proper templates, like `templates/brick--columns.html.twig`.*
 
 
+## Compatibility
+
+| Drupal | Bricks | [ECK](https://www.drupal.org/project/eck) | [IEF](https://www.drupal.org/project/inline_entity_form) | [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) | [Tweme](https://www.drupal.org/project/tweme) |
+| --- | --- | --- | --- | --- | --- |
+| **8.x** | **1.x** | **1.x** | **1.x** | **4.x** | **4.x** |
+| 8.2.6 | 1.1 | 1.0-alpha3 | 1.0-beta1 | 4.0 | 4.0 |
+
+
 ## Resources
 
 - Project page: https://www.drupal.org/project/bricks
