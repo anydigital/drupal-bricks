@@ -26,7 +26,7 @@ class BricksTreeInlineWidget extends InlineEntityFormComplex {
 
     $entities = $form_state->get(['inline_entity_form', $this->getIefId(), 'entities']);
     foreach ($entities as $delta => $value) {
-      _bricks_form_element_alter($element['entities'][$delta], $items[$delta]);
+      _bricks_form_element_alter($element['entities'][$delta], $items[$delta], $element['entities']['#entity_type']);
     }
 
     return $element;
