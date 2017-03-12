@@ -7,7 +7,7 @@
 
 In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupal.org/project/paragraphs), drop-in replacement for [Panelizer](https://www.drupal.org/project/panelizer) and a good friend to [Display Suite](https://www.drupal.org/project/ds) and [CKEditor](https://www.drupal.org/project/ckeditor) or any other [WYSIWYG](https://www.drupal.org/project/wysiwyg).
 
-![Bricks UI](https://www.drupal.org/files/bricks-ui-8.x.png)
+<img src="https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-8.x-1.2.gif" width="608"/>
 
 Bricks allows you to nest field items using Drupal drag & drop UI (exactly like for menu or taxonomy items).
 
