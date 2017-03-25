@@ -1,0 +1,10 @@
+name: Bricks Revisions
+description: Allows to create revisioned Bricks.
+package: Bricks
+
+type: module
+core: 8.x
+
+dependencies:
+  - bricks
+  - entity_reference_revisions

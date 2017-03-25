@@ -12,7 +12,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Bricks tree (Inline entity form)"),
  *   description = @Translation("A tree of inline entity forms."),
  *   field_types = {
- *     "bricks"
+ *     "bricks",
+ *     "bricks_revisioned"
  *   },
  *   multiple_values = true
  * )

@@ -1,6 +1,39 @@
 <?php
 
 use Drupal\Core\Render\Element;
+use Drupal\Core\TypedData\DataDefinition;
+
+
+/* BRICKS STORAGE */
+
+/**
+ * Helper function for FieldItemInterface::propertyDefinitions().
+ */
+function _bricks_field_properties_alter(&$properties) {
+  $properties['depth'] = DataDefinition::create('integer')
+    ->setLabel(t('Depth'));
+
+  $properties['options'] = DataDefinition::create('any')
+    ->setLabel(t('Options'));
+}
+
+/**
+ * Helper function for FieldItemInterface::schema().
+ */
+function _bricks_field_schema_alter(&$schema) {
+  $schema['columns']['depth'] = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'unsigned' => TRUE,
+  );
+
+  $schema['columns']['options'] = array(
+    'type' => 'blob',
+    'size' => 'normal',
+    'not null' => FALSE,
+    'serialize' => TRUE,
+  );
+}
 
 
 /* BRICKS FORMATTING */

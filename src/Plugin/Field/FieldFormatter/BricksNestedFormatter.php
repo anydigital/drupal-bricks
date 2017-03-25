@@ -10,7 +10,8 @@ use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter
  *   label = @Translation("Bricks (Nested)"),
  *   description = @Translation("Display the referenced entities recursively rendered by entity_view()."),
  *   field_types = {
- *     "bricks"
+ *     "bricks",
+ *     "bricks_revisioned"
  *   }
  * )
  */
