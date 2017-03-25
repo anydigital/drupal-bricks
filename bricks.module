@@ -147,6 +147,21 @@ function _bricks_nest_items($element, $items) {
 /* BRICKS EDITING */
 
 /**
+ * Implements hook_field_widget_info_alter().
+ */
+function bricks_field_widget_info_alter(array &$info) {
+  // Let Bricks to re-use ANY Entity Reference -compatible widgets:
+  foreach ($info as $widget_id => &$widget_info) {
+    if (in_array('entity_reference', $widget_info['field_types'])) {
+      $widget_info['field_types'][] = 'bricks';
+    }
+    if (in_array('entity_reference_revisions', $widget_info['field_types'])) {
+      $widget_info['field_types'][] = 'bricks_revisioned';
+    }
+  }
+}
+
+/**
  * Prepares variables for `field-multiple-value-form.html.twig`.
  */
 function bricks_preprocess_field_multiple_value_form(&$variables) {
