@@ -80,13 +80,42 @@ function bricks_preprocess_eck_entity(&$variables) {
 }
 
 /**
+ * Prepares variables for `paragraph.html.twig`.
+ */
+function bricks_preprocess_paragraph(&$variables) {
+  if ($variables['content']['childs']) {
+    $paragraph = $variables['elements']['#paragraph'];
+    if ($field_name = _bricks_first_entity_reference_field_name($paragraph)) {
+      $variables['content'][$field_name] = $variables['content']['childs'];
+      unset($variables['content']['childs']);
+    }
+  }
+}
+
+/**
+ * Helper function: returns a name of the first field of type entity_reference(_revisions).
+ */
+function _bricks_first_entity_reference_field_name($entity) {
+  foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
+    if (!$field_definition->getFieldStorageDefinition()->isBaseField()
+      && in_array($field_definition->getType(), ['entity_reference', 'entity_reference_revisions'])) {
+      return $field_name;
+    }
+  }
+}
+
+/**
  * Prepares variables for `field.html.twig`.
  */
 function bricks_preprocess_field(&$variables) {
   $element = $variables['element'];
 
   if ($element['#formatter'] == 'bricks_nested') {
-    $variables['items'] = _bricks_nest_items($element, $variables['items']);
+    $variables['items'] = [
+      [
+        'content' => _bricks_nest_items($element, $variables['items']),
+      ],
+    ];
   }
 }
 
@@ -108,21 +137,20 @@ function _bricks_nest_items($element, $items) {
     }
     $prev_depth = $depth;
 
+    $items[$delta] = $items[$delta]['content'];
     $items[$delta]['#delta'] = $delta;
     $items[$delta]['#parent_delta'] = $parents[0];
 
-    // ['content']['childs'] is good since it's compatible with default field template:
-    $items[$delta]['content']['childs'] = array();
+    $items[$delta]['childs'] = array();
     if (!empty($element['#items'][$delta]->options['view_mode'])) {
-      $items[$delta]['content']['#view_mode'] = $element['#items'][$delta]->options['view_mode'];
+      $items[$delta]['#view_mode'] = $element['#items'][$delta]->options['view_mode'];
     }
     if (!empty($element['#items'][$delta]->options['css_class'])) {
-      $items[$delta]['content']['#attributes']['class'][] = $element['#items'][$delta]->options['css_class'];
+      $items[$delta]['#attributes']['class'][] = $element['#items'][$delta]->options['css_class'];
     }
-    unset($items[$delta]['attributes']);
 
     // Disable entity render cache, rely on field cache:
-    $items[$delta]['content']['#cache'] = array('disabled' => TRUE);
+    $items[$delta]['#cache'] = array('disabled' => TRUE);
   }
 
   // Process items in reverse order (without recursion):
@@ -130,7 +158,7 @@ function _bricks_nest_items($element, $items) {
   foreach ($rdeltas as $delta) {
     $parent_delta = $items[$delta]['#parent_delta'];
     if ($parent_delta != -1) {
-      array_unshift($items[$parent_delta]['content']['childs'], $items[$delta]);
+      array_unshift($items[$parent_delta]['childs'], $items[$delta]);
       unset($items[$delta]);
     }
   }
