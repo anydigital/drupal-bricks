@@ -39,40 +39,35 @@ function _bricks_field_schema_alter(&$schema) {
 /* BRICKS FORMATTING */
 
 /**
- * Implements hook_theme_registry_alter().
+ * Implements hook_theme().
  */
-function bricks_theme_registry_alter(&$theme_registry) {
-  if (\Drupal::moduleHandler()->moduleExists('eck')) {
-    _bricks_theme_registry_alter_eck($theme_registry, 'bricks', 'brick');
-    _bricks_theme_registry_alter_eck($theme_registry, 'bricks', 'brick', 'columns');
-  }
+function bricks_theme($existing, $type, $theme, $path) {
+  return [
+    'brick' => [
+      'base hook' => 'eck_entity',
+    ],
+    'brick__columns' => [
+      'base hook' => 'eck_entity',
+    ],
+  ];
 }
 
 /**
- * Helper function for hook_theme_registry_alter().
- *
- * Since we have to alter $theme_registry to ship templates in module - let's
- * give them better names: `brick.html.twig` over `eck-entity--brick.html.twig`.
+ * Implements hook_theme_suggestions_HOOK() extending original eck_theme_suggestions_eck_entity().
  */
-function _bricks_theme_registry_alter_eck(&$theme_registry, $module, $type, $bundle = NULL, $view_mode = NULL) {
-  $key = 'eck_entity__' . $type;
-  $template = $type;
+function bricks_theme_suggestions_eck_entity(array $variables) {
+  /** @var \Drupal\eck\Entity\EckEntity $entity */
+  $entity = $variables['entity']['#entity'];
+  $sanitized_view_mode = strtr($variables['entity']['#view_mode'], '.', '_');
 
-  if (isset($bundle)) {
-    $key .= '__' . $bundle;
-    $template .= '--' . $bundle;
-  }
+  $suggestions[] = $entity->getEntityTypeId();
+  $suggestions[] = $entity->getEntityTypeId() . '__' . $sanitized_view_mode;
+  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->bundle();
+  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->id();
+  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->id() . '__' . $sanitized_view_mode;
 
-  if (isset($view_mode)) {
-    $key .= '__' . $view_mode;
-    $template .= '--' . $view_mode;
-  }
-
-  $theme_registry[$key] = array(
-    'theme path' => drupal_get_path('module', $module),
-    'template' => $template,
-    'path' => drupal_get_path('module', $module) . '/templates',
-  ) + $theme_registry['eck_entity'];
+  return $suggestions;
 }
 
 /**
