@@ -13,12 +13,12 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 
 ## Live demo
 
-1. Open [pre-configured sandbox](https://simplytest.me/project/bricks/8.x-1.2).
+1. Open [pre-configured sandbox](https://simplytest.me/project/bricks).
 2. Click **Launch sandbox** and wait.
 3. Follow the installation (all settings should be pre-filled, don't change them).
 4. Go to **Extend** and install **Bricks Bootstrap**.
 5. Go to **Appearance**, install **Tweme** and set as default theme.
-6. Find a sample 3-columns node and go to **Edit** mode to check magic out!
+6. Find a sample node and go to **Edit** mode to check magic out!
 7. Finally go to **Content** and create your own first **Bricky** page!
 
 
@@ -26,15 +26,14 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 
 All new Bricks for D8 has no requirements and works with ANY entity types!
 
-*Just make sure nested entities have a proper templates, like `templates/brick--columns.html.twig`.*
-
 
 ## Compatibility
 
-| Drupal | Bricks | [ECK](https://www.drupal.org/project/eck) | [IEF](https://www.drupal.org/project/inline_entity_form) | [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) | [Tweme](https://www.drupal.org/project/tweme) |
-| --- | --- | --- | --- | --- | --- |
-| **8.x** | **1.x** | **1.x** | **1.x** | **4.x** | **4.x** |
-| 8.2.6 | 1.2 | 1.0-alpha3 | 1.0-beta1 | 4.0 | 4.0 |
+| Drupal | Bricks | [ECK](https://www.drupal.org/project/eck) | [IEF](https://www.drupal.org/project/inline_entity_form) | [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) | [Paragraphs](https://www.drupal.org/project/paragraphs) | [Bootstrap Paragraphs](https://www.drupal.org/project/bootstrap_paragraphs) |
+| --- | --- | --- | --- | --- | --- | --- |
+| **8.x** | **1.x** | **1.x** | **1.x** | **4.x** <sup>+ [Tweme](https://www.drupal.org/project/tweme) 4.x</sup> | **1.x** | **1.x** <sup>+ [Bootstrap](https://www.drupal.org/project/bootstrap) 3.x</sup> |
+| 8.2.7 | 1.3 | 1.0-alpha3 | 1.0-beta1 | 4.1 | 1.1 | 1.0-beta1 |
+| 8.2.6 | 1.2 | 1.0-alpha3 | 1.0-beta1 | 4.0 | — | — |
 
 
 ## Resources
