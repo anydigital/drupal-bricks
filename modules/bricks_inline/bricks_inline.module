@@ -12,6 +12,14 @@ function bricks_inline_theme_registry_alter(&$theme_registry) {
 }
 
 /**
+ * Implements hook_inline_entity_form_reference_form_alter().
+ */
+function bricks_inline_inline_entity_form_reference_form_alter(&$reference_form, &$form_state) {
+  // Skip standard IEF validation to allow multiple references to the same entity:
+  $reference_form['#element_validate'] = array_diff($reference_form['#element_validate'], ['inline_entity_form_reference_form_validate']);
+}
+
+/**
  * Prepares variables for theme_inline_entity_form_entity_table().
  */
 function bricks_inline_preprocess_inline_entity_form_entity_table(&$variables) {
