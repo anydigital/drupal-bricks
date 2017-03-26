@@ -29,11 +29,11 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 
 ## Compatibility
 
-| Drupal | Bricks | [ECK](https://www.drupal.org/project/eck) | [IEF](https://www.drupal.org/project/inline_entity_form) | [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) | [Paragraphs](https://www.drupal.org/project/paragraphs) | [Bootstrap Paragraphs](https://www.drupal.org/project/bootstrap_paragraphs) |
-| --- | --- | --- | --- | --- | --- | --- |
-| **8.x** | **1.x** | **1.x** | **1.x** | **4.x** <sup>+ [Tweme](https://www.drupal.org/project/tweme) 4.x</sup> | **1.x** | **1.x** <sup>+ [Bootstrap](https://www.drupal.org/project/bootstrap) 3.x</sup> |
-| 8.2.7 | 1.3 | 1.0-alpha3 | 1.0-beta1 | 4.1 | 1.1 | 1.0-beta1 |
-| 8.2.6 | 1.2 | 1.0-alpha3 | 1.0-beta1 | 4.0 | — | — |
+| Drupal | Bricks | [ECK](https://www.drupal.org/project/eck) | [IEF](https://www.drupal.org/project/inline_entity_form) | [ERR](https://www.drupal.org/project/entity_reference_revisions) | [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) | [Paragraphs](https://www.drupal.org/project/paragraphs) | [Bootstrap Paragraphs](https://www.drupal.org/project/bootstrap_paragraphs) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **8.x** | **1.x** | **1.x** | **1.x** | **1.x** | **4.x** <sup>+ [Tweme](https://www.drupal.org/project/tweme) 4.x</sup> | **1.x** | **1.x** <sup>+ [Bootstrap](https://www.drupal.org/project/bootstrap) 3.x</sup> |
+| 8.2.7 | 1.3 | 1.0-alpha3 | 1.0-beta1 | 1.2 | 4.1 | 1.1 | 1.0-beta1 |
+| 8.2.6 | 1.2 | 1.0-alpha3 | 1.0-beta1 | — | 4.0 | — | — |
 
 
 ## Resources
