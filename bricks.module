@@ -43,31 +43,13 @@ function _bricks_field_schema_alter(&$schema) {
  */
 function bricks_theme($existing, $type, $theme, $path) {
   return [
-    'brick' => [
+    'eck_entity__brick' => [
       'base hook' => 'eck_entity',
     ],
-    'brick__columns' => [
+    'eck_entity__brick__columns' => [
       'base hook' => 'eck_entity',
     ],
   ];
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK() extending original eck_theme_suggestions_eck_entity().
- */
-function bricks_theme_suggestions_eck_entity(array $variables) {
-  /** @var \Drupal\eck\Entity\EckEntity $entity */
-  $entity = $variables['entity']['#entity'];
-  $sanitized_view_mode = strtr($variables['entity']['#view_mode'], '.', '_');
-
-  $suggestions[] = $entity->getEntityTypeId();
-  $suggestions[] = $entity->getEntityTypeId() . '__' . $sanitized_view_mode;
-  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->bundle();
-  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $sanitized_view_mode;
-  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->id();
-  $suggestions[] = $entity->getEntityTypeId() . '__' . $entity->id() . '__' . $sanitized_view_mode;
-
-  return $suggestions;
 }
 
 /**
