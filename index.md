@@ -30,6 +30,19 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 7. Finally go to **Content** and create your own first **Bricky** page!
 
 
+## Installation
+
+The most easy-to-use method:
+
+1. Download and install [Bricks Bootstrap](https://simplytest.me/project/bricks_bootstrap) with its dependencies.
+2. Download and enable [Tweme](https://www.drupal.org/project/tweme) (or any other Bootstrap 4 theme).
+3. **Done!**
+
+Now you can create **Bricky** pages (content type) using powerful preconfigured **Bricks** such as Text, Image, Accordion, Carousel, Tabs and others (ECK bundles). Use auto-created "All new AirPods" node as a live playground.
+
+![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-bootstrap-8.x-4.1-node.png)
+
+
 ## Requirements
 
 All new Bricks for D8 has no requirements and works with ANY entity types!
