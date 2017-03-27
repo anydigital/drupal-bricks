@@ -34,7 +34,7 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 
 The most easy-to-use method:
 
-1. Download and install [Bricks Bootstrap](https://simplytest.me/project/bricks_bootstrap) with its dependencies.
+1. Download and install [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) with its dependencies.
 2. Download and enable [Tweme](https://www.drupal.org/project/tweme) (or any other Bootstrap 4 theme).
 3. **Done!**
 
