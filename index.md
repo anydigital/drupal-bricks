@@ -28,6 +28,7 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 5. Go to **Appearance**, install **Tweme** and set as default theme.
 6. Find a sample node and go to **Edit** mode to check magic out!
 7. Finally go to **Content** and create your own first **Bricky** page!
+8. Like it? => Support by [★ starring on GitHub](https://github.com/highweb/drupal-bricks) or [sharing on Twitter](https://twitter.com/highwebtech/status/841004866633842689).
 
 
 ## Installation
