@@ -44,7 +44,7 @@ Now you can create **Bricky** pages (content type) using powerful preconfigured 
 
 ![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-bootstrap-8.x-4.1-node-edit.png)
 
-### Paragraphs setup
+### Paragraphs setup <sup>8.x-1.3+, in Beta</sup>
 
 1. Download and install [Bootstrap Paragraphs](https://www.drupal.org/project/bootstrap_paragraphs) with its dependencies.
 2. Download and enable [Bootstrap](https://www.drupal.org/project/bootstrap) (or any other Bootstrap 3 theme).
@@ -73,22 +73,18 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 
 ## Submodules
 
-### Bricks Core
+**Bricks Core**
 
 - **Bricks** field type — An entity field containing a tree of entity reference bricks.
 - **Bricks tree (Autocomplete)** widget — A draggable tree of autocomplete text fields.
 - **Bricks (Nested)** formatter — Display the referenced entities recursively rendered by entity_view().
 - [Paragraphs](https://www.drupal.org/project/paragraphs) support.
 
-### Bricks Inline <sup>8.x-1.1+</sup>
-
-Integration with [Inline Entity Form](https://www.drupal.org/project/inline_entity_form):
+**Bricks Inline** <sup>8.x-1.1+</sup> — Integration with [Inline Entity Form](https://www.drupal.org/project/inline_entity_form):
 
 - **Bricks tree (Inline entity form)** widget — A draggable tree of inline entity forms.
 
-### Bricks Revisions <sup>8.x-1.3+</sup>
-
-Integration with [Entity Reference Revisions](https://www.drupal.org/project/entity_reference_revisions):
+**Bricks Revisions** <sup>8.x-1.3+</sup> — Integration with [Entity Reference Revisions](https://www.drupal.org/project/entity_reference_revisions):
 
 - **Bricks (revisioned)** field type — An entity field containing a tree of revisioned entity reference bricks.
 
@@ -104,8 +100,8 @@ Integration with [Entity Reference Revisions](https://www.drupal.org/project/ent
 
 ## Resources
 
-- Project page: https://www.drupal.org/project/bricks.
-- Source code: https://github.com/highweb/drupal-bricks.
-- Issue board: https://contribkanban.com/board/bricks.
-- Working group: https://groups.drupal.org/bricks.
-- Team: http://timezone.io/team/drupal-bricks.
+- Project page: [drupal.org/project/bricks](https://www.drupal.org/project/bricks).
+- Source code: [github.com/highweb/drupal-bricks](https://github.com/highweb/drupal-bricks).
+- Issue board: [contribkanban.com/board/bricks](https://contribkanban.com/board/bricks).
+- Working group: [groups.drupal.org/bricks](https://groups.drupal.org/bricks).
+- Team: [timezone.io/team/drupal-bricks](https://timezone.io/team/drupal-bricks).
