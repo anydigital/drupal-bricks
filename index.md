@@ -112,6 +112,9 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 
 <dl>
 
+<dt>Which entity types are supported?</dt>
+<dd>Bricks can hold references to any entities - ECK or Paragraphs, doesn’t matter. And Bricks Bootstrap is just an example of using ECK.</dd>
+
 <dt>Does bricks support revisions of the parent entity?</dt>
 <dd>Internally Bricks field is a multi-value Entity Reference field => standard revisioning mechanism works. Moreover, Bricks Revisions (core submodule) allows you to revision referenced entities.</dd>
 
