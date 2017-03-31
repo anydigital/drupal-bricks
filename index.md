@@ -121,4 +121,13 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 <dt>Is there a reason why i can not just use bricks form widget for the normal paragraphs field?</dt>
 <dd>Paragraphs couldn’t be nested using drag and drop! Bricks field allows you to do (like on gif).</dd>
 
+<dt>How to get non-equal column layout, 4-8 in example?</dt>
+<dd>Use universal Wrapper brick with custom CSS classes on it. Bootstrap example:
+<pre><code>
+Wrapper (.row)
+|-- Image (.col-sm-4)
+|-- Text (.col-sm-8)
+</code></pre>
+</dd>
+
 </dl>
