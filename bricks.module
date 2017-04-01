@@ -203,7 +203,8 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
           $variables['table']['#rows'][$key]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
 
         if ($render_options) { // @TODO: Get rid of $render_options hack.
-          $variables['table']['#rows'][$key]['data'][3]['data']['#suffix'] = \Drupal::service('renderer')->render($element[$key]['options']);
+          $element[$key]['options']['#prefix'] = $variables['table']['#rows'][$key]['data'][2]['data'];
+          $variables['table']['#rows'][$key]['data'][2]['data'] = \Drupal::service('renderer')->render($element[$key]['options']);
         }
       }
     }
@@ -241,6 +242,9 @@ function _bricks_form_element_alter(&$element, $item, $entity_type) {
   $element['options'] = array(
     '#type' => 'container',
     '#weight' => 100,
+    '#attributes' => array(
+      'class' => array('container-inline'),
+    ),
   );
   $element['options']['view_mode'] = array(
     '#type' => 'select',

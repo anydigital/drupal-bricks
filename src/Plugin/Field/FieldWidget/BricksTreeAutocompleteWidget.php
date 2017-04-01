@@ -23,7 +23,6 @@ class BricksTreeAutocompleteWidget extends EntityReferenceAutocompleteWidget {
 
     _bricks_form_element_alter($element, $items[$delta], $element['target_id']['#target_type']);
     hide($element['depth']);
-    $element['options']['#attributes']['class'] = array('container-inline');
 
     return $element;
   }
