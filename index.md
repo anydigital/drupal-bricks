@@ -112,6 +112,9 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 
 <dl>
 
+<dt>Are brick bundles translatable?</dt>
+<dd>100% translatable (thanks Entity Translation and ECK). Just mark them as translatable at /admin/config/regional/content-language.</dd>
+
 <dt>Which entity types are supported?</dt>
 <dd>Bricks can hold references to any entities - ECK or Paragraphs, doesn’t matter. And Bricks Bootstrap is just an example of using ECK.</dd>
 
