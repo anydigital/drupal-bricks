@@ -30,7 +30,7 @@ In terms of concept Bricks is a new generation of [Paragraphs](https://www.drupa
 7. Finally go to **Content** and create your own first **Bricky** page!
 8. Like it? => Support by [★ starring on GitHub](https://github.com/highweb/drupal-bricks) or [sharing on Twitter](https://twitter.com/highwebtech/status/841004866633842689).
 
-Video tutorial: https://vimeo.com/211714437.
+Video tutorial: [vimeo.com/211714437](https://vimeo.com/211714437).
 
 
 ## Installation
@@ -43,7 +43,7 @@ The most easy-to-use method:
 
 Now you can create **Bricky** pages (content type) using powerful preconfigured **Bricks** such as Text, Image, Accordion, Carousel, Tabs and others (ECK bundles). Use auto-created "All new AirPods" node as a live playground.
 
-Video tutorial: https://vimeo.com/211714437.
+Video tutorial: [vimeo.com/211714437](https://vimeo.com/211714437).
 
 ![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-bootstrap-8.x-4.1-node.png)
 
