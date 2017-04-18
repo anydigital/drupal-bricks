@@ -165,7 +165,11 @@ function bricks_process_field(&$vars) {
  */
 function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
   $field = $context['field'];
-  if ($field['type'] == 'entityreference' && $field['field_name'] == 'field_body') {
+  if ($field['type'] == 'entityreference' &&
+    ($field_behaviors = $field['settings']['handler_settings']['behaviors']) &&
+    array_key_exists('treeable_behavior', $field_behaviors) &&
+    $field_behaviors['treeable_behavior']['status']
+  ) {
     $element['target_id']['#size'] = 10;
     if (isset($element['entityreference_live_preview'])) {
       $element['entityreference_live_preview']['#weight'] = -1;
