@@ -155,10 +155,8 @@ function _bricks_tree_items($element, $items) {
  */
 function bricks_process_field(&$vars) {
   $element = &$vars['element'];
-
-  if ($element['#field_type'] == 'entityreference' &&
-    _bricks_field_is_treeable(field_info_field($element['#field_name']))
-  ) {
+  $field = field_info_field($element['#field_name']);
+  if (_bricks_field_is_treeable($field)) {
     $vars['items'] = _bricks_tree_items($element, $vars['items']);
   }
 }
@@ -168,7 +166,7 @@ function bricks_process_field(&$vars) {
  */
 function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
   $field = $context['field'];
-  if ($field['type'] == 'entityreference' && _bricks_field_is_treeable($field)) {
+  if (_bricks_field_is_treeable($field)) {
     $element['target_id']['#size'] = 10;
     if (isset($element['entityreference_live_preview'])) {
       $element['entityreference_live_preview']['#weight'] = -1;
@@ -217,7 +215,8 @@ function bricks_process_references_dialog_links(&$vars) {
  * @return bool
  */
 function _bricks_field_is_treeable($field) {
-  return ($field_behaviors = $field['settings']['handler_settings']['behaviors']) &&
+  return $field['type'] == 'entityreference' &&
+    ($field_behaviors = $field['settings']['handler_settings']['behaviors']) &&
     array_key_exists('treeable_behavior', $field_behaviors) &&
     $field_behaviors['treeable_behavior']['status'];
 }

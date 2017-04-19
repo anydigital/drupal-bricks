@@ -20,7 +20,7 @@ function bricks_field_attach_form($entity_type, $entity, &$form, &$form_state, $
 
   // Determine the list of instances to iterate on.
   list(, , $bundle) = entity_extract_ids($entity_type, $entity);
-  $instances = _field_invoke_get_instances($entity_type, $bundle);
+  $instances = field_info_instances($entity_type, $bundle);
 
   // Iterate through the instances and collect results.
   foreach ($instances as $instance) {
@@ -29,7 +29,8 @@ function bricks_field_attach_form($entity_type, $entity, &$form, &$form_state, $
 
     if (_bricks_field_is_treeable($field) &&
       ($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED)) {
-      $form[$field_name][$form[$field_name]['#language']]['#theme'] = 'bricks_tree_value_form';
+      $field_language = $form[$field_name]['#language'];
+      $form[$field_name][$field_language]['#theme'] = 'bricks_tree_value_form';
     }
   }
 }
