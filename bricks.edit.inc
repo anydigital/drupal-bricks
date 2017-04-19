@@ -28,6 +28,7 @@ function bricks_field_attach_form($entity_type, $entity, &$form, &$form_state, $
     $field = field_info_field($field_name);
 
     if (_bricks_field_is_treeable($field) &&
+      $instance['widget']['type'] !== 'inline_entity_form' &&
       ($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED)) {
       $field_language = $form[$field_name]['#language'];
       $form[$field_name][$field_language]['#theme'] = 'bricks_tree_value_form';
@@ -102,7 +103,7 @@ function theme_bricks_tree_value_form($variables) {
     drupal_add_tabledrag($table_id, 'depth', 'group', $element['#field_name'] . '-depth');
     // Fake call to enable indentation:
     drupal_add_tabledrag($table_id, 'match', 'parent', $order_class);
-    drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
+      drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
 
   return $output;
 }

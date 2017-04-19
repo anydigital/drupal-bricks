@@ -166,7 +166,7 @@ function bricks_process_field(&$vars) {
  */
 function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
   $field = $context['field'];
-  if (_bricks_field_is_treeable($field)) {
+  if (_bricks_field_is_treeable($field) && $context['instance']['widget']['type'] != 'inline_entity_form') {
     $element['target_id']['#size'] = 10;
     if (isset($element['entityreference_live_preview'])) {
       $element['entityreference_live_preview']['#weight'] = -1;
