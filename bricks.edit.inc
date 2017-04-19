@@ -27,7 +27,7 @@ function bricks_field_attach_form($entity_type, $entity, &$form, &$form_state, $
     $field_name = $instance['field_name'];
     $field = field_info_field($field_name);
 
-    if (!empty($field['settings']['handler_settings']['behaviors']['treeable_behavior']['status']) &&
+    if (_bricks_field_is_treeable($field) &&
       ($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED)) {
       $form[$field_name][$form[$field_name]['#language']]['#theme'] = 'bricks_tree_value_form';
     }
