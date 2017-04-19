@@ -7,6 +7,7 @@ function bricks_theme() {
   return array(
     'bricks_tree_value_form' => array(
       'render element' => 'element',
+      'base hook' => 'field_multiple_value_form',
     ),
   );
 }
@@ -19,15 +20,17 @@ function bricks_field_attach_form($entity_type, $entity, &$form, &$form_state, $
 
   // Determine the list of instances to iterate on.
   list(, , $bundle) = entity_extract_ids($entity_type, $entity);
-  $instances = _field_invoke_get_instances($entity_type, $bundle);
+  $instances = field_info_instances($entity_type, $bundle);
 
   // Iterate through the instances and collect results.
   foreach ($instances as $instance) {
     $field_name = $instance['field_name'];
     $field = field_info_field($field_name);
 
-    if (!empty($field['settings']['handler_settings']['behaviors']['treeable_behavior']['status'])) {
-      $form[$field_name][$langcode]['#theme'] = 'bricks_tree_value_form';
+    if (_bricks_field_is_treeable($field) &&
+      ($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED)) {
+      $field_language = $form[$field_name]['#language'];
+      $form[$field_name][$field_language]['#theme'] = 'bricks_tree_value_form';
     }
   }
 }
@@ -39,9 +42,7 @@ function bricks_field_attach_form($entity_type, $entity, &$form, &$form_state, $
  */
 function theme_bricks_tree_value_form($variables) {
   $element = $variables['element'];
-  $output = '';
 
-  if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
     $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
     $required = !empty($element['#required']) ? theme('form_required_marker', $variables) : '';
@@ -49,7 +50,7 @@ function theme_bricks_tree_value_form($variables) {
     $header = array(
       array(
         'data' => '<label>' . t('!title !required', array('!title' => $element['#title'], '!required' => $required)) . "</label>",
-        'colspan' => 3,
+        'colspan' => 2,
         'class' => array('field-label'),
       ),
       t('Order'),
@@ -77,9 +78,12 @@ function theme_bricks_tree_value_form($variables) {
       unset($item['depth']);
 
       $cells = array(
-        theme('indentation', array('size' => $depth_element['#value'])),
+        array(
+          'data' => theme('indentation', array('size' => $depth_element['#value'])) .
+            drupal_render($item),
+          'class' => array('treeable-form-item'),
+        ),
         drupal_render($depth_element),
-        array('data' => drupal_render($item), 'class' => array('treeable-form-item')),
         array('data' => $delta_element, 'class' => array('delta-order')),
       );
       $rows[] = array(
@@ -99,12 +103,6 @@ function theme_bricks_tree_value_form($variables) {
     // Fake call to enable indentation:
     drupal_add_tabledrag($table_id, 'match', 'parent', $order_class);
     drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
-  }
-  else {
-    foreach (element_children($element) as $key) {
-      $output .= drupal_render($element[$key]);
-    }
-  }
 
   return $output;
 }
