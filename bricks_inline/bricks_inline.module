@@ -49,6 +49,67 @@ function bricks_inline_field_widget_form_alter(&$element, &$form_state, $context
   }
 }
 
+/**
+ * Implements hook_field_attach_submit().
+ */
+function bricks_inline_field_attach_submit($parent_entity_type, $parent_entity, $form, &$form_state) {
+  list(, , $bundle_name) = entity_extract_ids($parent_entity_type, $parent_entity);
+
+  foreach (field_info_instances($parent_entity_type, $bundle_name) as $instance_name => $instance) {
+    if (isset($instance['widget']) && strpos($instance['widget']['type'], 'inline_entity_form') === 0) {
+      $field_name = $instance['field_name'];
+      if (!isset($form[$field_name])) {
+        // The field wasn't found on this form, skip it.
+        // Usually happens on stub entity forms that don't contain all fields.
+        continue;
+      }
+      $langcode = $form[$field_name]['#language'];
+      $ief_id = $form[$field_name][$langcode]['#ief_id'];
+      if (empty($form_state['inline_entity_form'][$ief_id])) {
+        // No data found, no need to do anything.
+        continue;
+      }
+      $values = $form_state['inline_entity_form'][$ief_id];
+      $entity_type = $values['settings']['entity_type'];
+
+      $entities = $form_state['values'][$field_name][$langcode]['entities'];
+      uasort($values['entities'], 'drupal_sort_weight');
+      uasort($entities, 'drupal_sort_weight');
+
+      foreach ($values['entities'] as $delta => $item) {
+        list($entity_id) = entity_extract_ids($entity_type, $item['entity']);
+        $entity_ids[] = array(
+          $values['settings']['column'] => $entity_id,
+          'depth' => $entities[$delta]['depth'],
+          'options' => $entities[$delta]['options'],
+        );
+      }
+
+      if (!empty($entity_ids)) {
+        // Set the list of ids as the field value.
+        $parent_entity->{$field_name}[$langcode] = $entity_ids;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function bricks_inline_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'field_attach_submit') {
+    // Move bricks_inline_field_attach_submit() at the end of the list of implementations.
+    $group = $implementations['bricks_inline'];
+    unset($implementations['bricks_inline']);
+    $implementations['bricks_inline'] = $group;
+  }
+}
+
+/**
+ * Theme function for inline_entity_form field widget.
+ *
+ * @see bricks_inline_field_widget_form_alter()
+ */
 function theme_bricks_inline_entity_form_table($variables) {
   $form = $variables['form'];
   $entity_type = $form['#entity_type'];
@@ -169,7 +230,7 @@ function theme_bricks_inline_entity_form_table($variables) {
     $id = 'ief-entity-table-' . $form['#id'];
     if ($has_tabledrag) {
       // Add the tabledrag JavaScript.
-      drupal_add_tabledrag($id, 'order', 'sibling', 'ief-entity-delta');
+      drupal_add_tabledrag($id, 'order', 'all', 'ief-entity-delta');
       drupal_add_tabledrag($id, 'depth', 'group', 'ief-entity-depth');
       // Fake call to enable indentation:
       drupal_add_tabledrag($id, 'match', 'parent', 'ief-entity-delta');
