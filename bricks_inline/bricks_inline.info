@@ -1,0 +1,9 @@
+name = Bricks Inline
+description = Allows to edit Bricks using Inline Entity Form.
+package = Bricks
+
+type = module
+core = 7.x
+
+dependencies[] = bricks
+dependencies[] = inline_entity_form

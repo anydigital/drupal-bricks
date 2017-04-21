@@ -1,0 +1,276 @@
+<?php
+/**
+ * @file
+ * Main file for bricks_inline module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function bricks_inline_theme($existing, $type, $theme, $path) {
+  $items['bricks_inline_entity_form_table'] = array(
+    'render element' => 'form',
+    'base hook' => 'inline_entity_form_entity_table',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function bricks_inline_field_widget_form_alter(&$element, &$form_state, $context) {
+  $field = $context['field'];
+  if (_bricks_field_is_treeable($field) && $context['instance']['widget']['type'] == 'inline_entity_form') {
+    $entities = &$element['entities'];
+    $entities['#theme'] = 'bricks_inline_entity_form_table';
+
+    foreach (element_children($entities) as $delta) {
+      $item = isset($context['items'][$delta]) ? $context['items'][$delta] : NULL;
+      _bricks_field_widget_elements($entities[$delta], $item);
+    }
+  }
+}
+
+/**
+ * Implements hook_field_attach_submit().
+ */
+function bricks_inline_field_attach_submit($parent_entity_type, $parent_entity, $form, &$form_state) {
+  list(, , $bundle_name) = entity_extract_ids($parent_entity_type, $parent_entity);
+
+  foreach (field_info_instances($parent_entity_type, $bundle_name) as $instance_name => $instance) {
+    if (isset($instance['widget']) && strpos($instance['widget']['type'], 'inline_entity_form') === 0) {
+      $field_name = $instance['field_name'];
+      if (!isset($form[$field_name])) {
+        // The field wasn't found on this form, skip it.
+        // Usually happens on stub entity forms that don't contain all fields.
+        continue;
+      }
+      $langcode = $form[$field_name]['#language'];
+      $ief_id = $form[$field_name][$langcode]['#ief_id'];
+      if (empty($form_state['inline_entity_form'][$ief_id])) {
+        // No data found, no need to do anything.
+        continue;
+      }
+      $values = $form_state['inline_entity_form'][$ief_id];
+      $entity_type = $values['settings']['entity_type'];
+
+      $entities = $form_state['values'][$field_name][$langcode]['entities'];
+      uasort($values['entities'], 'drupal_sort_weight');
+      uasort($entities, 'drupal_sort_weight');
+
+      foreach ($values['entities'] as $delta => $item) {
+        list($entity_id) = entity_extract_ids($entity_type, $item['entity']);
+        $entity_ids[] = array(
+          $values['settings']['column'] => $entity_id,
+          'depth' => $entities[$delta]['depth'],
+          'options' => $entities[$delta]['options'],
+        );
+      }
+
+      if (!empty($entity_ids)) {
+        // Set the list of ids as the field value.
+        $parent_entity->{$field_name}[$langcode] = $entity_ids;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function bricks_inline_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'field_attach_submit') {
+    // Move bricks_inline_field_attach_submit() at the end of the list of implementations.
+    $group = $implementations['bricks_inline'];
+    unset($implementations['bricks_inline']);
+    $implementations['bricks_inline'] = $group;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_bricks_inline_entity_form_table().
+ */
+function bricks_inline_preprocess_bricks_inline_entity_form_table(&$variables) {
+  _template_preprocess_inline_entity_form_entity_table($variables);
+
+  _bricks_inline_preprocess_tabledrag_form($variables);
+}
+
+/**
+ * Preprocess of bricks' related table fields.
+ */
+function _bricks_inline_preprocess_tabledrag_form(&$variables) {
+  $form = &$variables['form'];
+  foreach (element_children($form) as $key) {
+    $form[$key]['depth']['#attributes']['class'][] = 'ief-entity-depth';
+  }
+
+  $fields = array(
+    'depth' => array(
+      'label' => t('Depth'),
+    ),
+    'options' => array(
+      'label' => t('Options'),
+    )
+  );
+  $form['#table_fields'] = array_merge($fields, $form['#table_fields']);
+}
+
+/**
+ * Part of theme_inline_entity_form_entity_table().
+ */
+function _template_preprocess_inline_entity_form_entity_table(&$variables) {
+  $form = &$variables['form'];
+  $entity_type = $form['#entity_type'];
+  $fields = $form['#table_fields'];
+  // Sort the fields by weight.
+  uasort($fields, 'drupal_sort_weight');
+
+  foreach (element_children($form) as $key) {
+    $entity = &$form[$key]['#entity'];
+    list($entity_id) = entity_extract_ids($entity_type, $entity);
+    // Many field formatters (such as the ones for files and images) need
+    // certain data that might be missing on unsaved entities because the field
+    // load hooks haven't run yet. Because of that, those hooks are invoked
+    // explicitly. This is the same trick used by node_preview().
+    if ($form[$key]['#needs_save']) {
+      _field_invoke_multiple('load', $entity_type, array($entity_id => $entity));
+    }
+
+    // Add fields that represent the entity.
+    $wrapper = entity_metadata_wrapper($entity_type, $entity);
+    foreach ($fields as $field_name => $field) {
+      $data = '';
+      if ($field['type'] == 'property') {
+        $property = $wrapper->{$field_name};
+        // label() returns human-readable versions of token and list properties.
+        $data = $property->label() ? $property->label() : $property->value();
+        $data = empty($field['sanitized']) ? check_plain($data) : $data;
+      }
+      elseif ($field['type'] == 'field' && isset($entity->{$field_name})) {
+        $display = array(
+            'label' => 'hidden',
+          ) + $field;
+        // The formatter needs to be under the 'type' key.
+        if (isset($display['formatter'])) {
+          $display['type'] = $display['formatter'];
+          unset($display['formatter']);
+        }
+
+        $renderable_data = field_view_field($entity_type, $entity, $field_name, $display);
+        // The field has specified an exact delta to display.
+        if (isset($field['delta'])) {
+          if (!empty($renderable_data[$field['delta']])) {
+            $renderable_data = $renderable_data[$field['delta']];
+          }
+          else {
+            // The field has no value for the specified delta, show nothing.
+            $renderable_data = array();
+          }
+        }
+        $data = $renderable_data;
+      }
+      elseif ($field['type'] == 'callback' && isset($field['render_callback']) && is_callable($field['render_callback'])) {
+        $data = call_user_func($field['render_callback'], $entity_type, $entity);
+      }
+
+      $form[$key][$field_name] = $data;
+    }
+  }
+}
+
+/**
+ * Theme function for inline_entity_form field widget.
+ *
+ * @see bricks_inline_field_widget_form_alter()
+ */
+function theme_bricks_inline_entity_form_table($variables) {
+  $form = $variables['form'];
+  $entity_type = $form['#entity_type'];
+  $fields = $form['#table_fields'];
+  $has_tabledrag = inline_entity_form_has_tabledrag($form);
+  // Sort the fields by weight.
+  uasort($fields, 'drupal_sort_weight');
+
+  $header = array();
+  if ($has_tabledrag) {
+    $header[] = array('data' => '', 'class' => array('ief-tabledrag-header'));
+    $header[] = array('data' => t('Sort order'), 'class' => array('ief-sort-order-header'));
+  }
+
+  // Add header columns for each field.
+  $first = TRUE;
+  foreach ($fields as $field_name => $field) {
+    $column = array('data' => $field['label']);
+    // The first column gets a special class.
+    if ($first) {
+      $column['class'] = array('ief-first-column-header');
+      $first = FALSE;
+    }
+    $header[] = $column;
+  }
+  $header[] = t('Operations');
+
+  // Build an array of entity rows for the table.
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    $row_classes = array('ief-row-entity');
+    $cells = array();
+    if ($has_tabledrag) {
+      $indentation = theme('indentation', array('size' => $form[$key]['depth']['#value']));
+      $cells[] = array(
+        'data' => $indentation,
+        'class' => array('ief-tabledrag-handle'),
+        'style' => 'width: auto',
+      );
+      $cells[] = drupal_render($form[$key]['delta']);
+      $row_classes[] = 'draggable';
+    }
+    // Add a special class to rows that have a form underneath, to allow
+    // for additional styling.
+    if (!empty($form[$key]['form'])) {
+      $row_classes[] = 'ief-row-entity-form';
+    }
+
+    // Add fields that represent the entity.
+    foreach ($fields as $field_name => $field) {
+      $data = $form[$key][$field_name];
+      if (is_array($data)) {
+        $data = drupal_render($data);
+      }
+
+      $cells[] = array('data' => $data, 'class' => array('inline-entity-form-' . $entity_type . '-' . $field_name));
+    }
+    // Add the buttons belonging to the "Operations" column.
+    $cells[] = drupal_render($form[$key]['actions']);
+    // Create the row.
+    $rows[] = array('data' => $cells, 'class' => $row_classes);
+
+    // If the current entity array specifies a form, output it in the next row.
+    if (!empty($form[$key]['form'])) {
+      $row = array(
+        array('data' => drupal_render($form[$key]['form']), 'colspan' => count($fields) + 1),
+      );
+      $rows[] = array('data' => $row, 'class' => array('ief-row-form'), 'no_striping' => TRUE);
+    }
+  }
+
+  if (!empty($rows)) {
+    $id = 'ief-entity-table-' . $form['#id'];
+    if ($has_tabledrag) {
+      // Add the tabledrag JavaScript.
+      drupal_add_tabledrag($id, 'order', 'all', 'ief-entity-delta');
+      drupal_add_tabledrag($id, 'depth', 'group', 'ief-entity-depth');
+      // Fake call to enable indentation:
+      drupal_add_tabledrag($id, 'match', 'parent', 'ief-entity-delta');
+      drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
+    }
+
+    // Return the themed table.
+    $table_attributes = array(
+      'id' => $id,
+      'class' => array('ief-entity-table'),
+    );
+    return theme('table', array('header' => $header, 'rows' => $rows, 'sticky' => FALSE, 'attributes' => $table_attributes));
+  }
+}

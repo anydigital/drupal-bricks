@@ -28,6 +28,7 @@ function bricks_field_attach_form($entity_type, $entity, &$form, &$form_state, $
     $field = field_info_field($field_name);
 
     if (_bricks_field_is_treeable($field) &&
+      $instance['widget']['type'] !== 'inline_entity_form' &&
       ($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED)) {
       $field_language = $form[$field_name]['#language'];
       $form[$field_name][$field_language]['#theme'] = 'bricks_tree_value_form';
@@ -75,6 +76,7 @@ function theme_bricks_tree_value_form($variables) {
       $item['_weight']['#attributes']['class'] = array($order_class);
       $delta_element = drupal_render($item['_weight']);
       $depth_element = $item['depth'];
+      $depth_element['#attributes']['class'][] = $element['#field_name'] . '-depth';
       unset($item['depth']);
 
       $cells = array(

@@ -166,33 +166,40 @@ function bricks_process_field(&$vars) {
  */
 function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
   $field = $context['field'];
-  if (_bricks_field_is_treeable($field)) {
+  if (_bricks_field_is_treeable($field) && $context['instance']['widget']['type'] != 'inline_entity_form') {
     $element['target_id']['#size'] = 10;
     if (isset($element['entityreference_live_preview'])) {
       $element['entityreference_live_preview']['#weight'] = -1;
     }
 
     $item = isset($context['items'][$context['delta']]) ? $context['items'][$context['delta']] : NULL;
+    _bricks_field_widget_elements($element, $item);
+  }
+}
+
+/**
+ * Adds bricks' related fields into entityreference field widget.
+ *
+ * @param array $element Render element of the field widget.
+ * @param array $item Array of field property values to use as default values.
+ */
+function _bricks_field_widget_elements(&$element, $item) {
     $element['depth'] = array(
       '#type' => 'textfield',
       '#default_value' => isset($item['depth']) ? $item['depth'] : 0,
       '#size' => 1,
-      '#attributes' => array(
-        'class' => array($field['field_name'] . '-depth'),
-      ),
     );
     $element['options'] = array(
       '#tree' => 'true',
       '#weight' => 11,
-      'classes' => array(
+      'classes' => [
         '#type' => 'textfield',
         '#attributes' => array(
           'placeholder' => t('Additional CSS classes'),
         ),
         '#default_value' => !empty($item['options']['classes']) ? $item['options']['classes'] : '',
-      ),
+      ],
     );
-  }
 }
 
 /**
