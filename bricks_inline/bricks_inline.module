@@ -88,43 +88,46 @@ function bricks_inline_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Theme function for inline_entity_form field widget.
- *
- * @see bricks_inline_field_widget_form_alter()
+ * Implements hook_preprocess_HOOK() for theme_bricks_inline_entity_form_table().
  */
-function theme_bricks_inline_entity_form_table($variables) {
-  $form = $variables['form'];
+function bricks_inline_preprocess_bricks_inline_entity_form_table(&$variables) {
+  _template_preprocess_inline_entity_form_entity_table($variables);
+
+  _bricks_inline_preprocess_tabledrag_form($variables);
+}
+
+/**
+ * Preprocess of bricks' related table fields.
+ */
+function _bricks_inline_preprocess_tabledrag_form(&$variables) {
+  $form = &$variables['form'];
+  foreach (element_children($form) as $key) {
+    $form[$key]['depth']['#attributes']['class'][] = 'ief-entity-depth';
+  }
+
+  $fields = array(
+    'depth' => array(
+      'label' => t('Depth'),
+    ),
+    'options' => array(
+      'label' => t('Options'),
+    )
+  );
+  $form['#table_fields'] = array_merge($fields, $form['#table_fields']);
+}
+
+/**
+ * Part of theme_inline_entity_form_entity_table().
+ */
+function _template_preprocess_inline_entity_form_entity_table(&$variables) {
+  $form = &$variables['form'];
   $entity_type = $form['#entity_type'];
   $fields = $form['#table_fields'];
-  $has_tabledrag = inline_entity_form_has_tabledrag($form);
   // Sort the fields by weight.
   uasort($fields, 'drupal_sort_weight');
 
-  $header = array();
-  if ($has_tabledrag) {
-    $header[] = array('data' => '', 'class' => array('ief-tabledrag-header'));
-    $header[] = array('data' => t('Sort order'), 'class' => array('ief-sort-order-header'));
-    $header[] = array('data' => t('Depth'));
-  }
-  $header[] = array('data' => '');
-
-  // Add header columns for each field.
-  $first = TRUE;
-  foreach ($fields as $field_name => $field) {
-    $column = array('data' => $field['label']);
-    // The first column gets a special class.
-    if ($first) {
-      $column['class'] = array('ief-first-column-header');
-      $first = FALSE;
-    }
-    $header[] = $column;
-  }
-  $header[] = t('Operations');
-
-  // Build an array of entity rows for the table.
-  $rows = array();
   foreach (element_children($form) as $key) {
-    $entity = $form[$key]['#entity'];
+    $entity = &$form[$key]['#entity'];
     list($entity_id) = entity_extract_ids($entity_type, $entity);
     // Many field formatters (such as the ones for files and images) need
     // certain data that might be missing on unsaved entities because the field
@@ -133,28 +136,6 @@ function theme_bricks_inline_entity_form_table($variables) {
     if ($form[$key]['#needs_save']) {
       _field_invoke_multiple('load', $entity_type, array($entity_id => $entity));
     }
-
-    $row_classes = array('ief-row-entity');
-    $cells = array();
-    if ($has_tabledrag) {
-      $indentation = theme('indentation', array('size' => $form[$key]['depth']['#value']));
-      $cells[] = array(
-        'data' => $indentation,
-        'class' => array('ief-tabledrag-handle'),
-        'style' => 'width: auto'
-      );
-      $cells[] = drupal_render($form[$key]['delta']);
-      $form[$key]['depth']['#attributes']['class'][] = 'ief-entity-depth';
-      $cells[] = drupal_render($form[$key]['depth']);
-      $row_classes[] = 'draggable';
-    }
-    // Add a special class to rows that have a form underneath, to allow
-    // for additional styling.
-    if (!empty($form[$key]['form'])) {
-      $row_classes[] = 'ief-row-entity-form';
-    }
-
-    $cells[] = drupal_render($form[$key]['options']);
 
     // Add fields that represent the entity.
     $wrapper = entity_metadata_wrapper($entity_type, $entity);
@@ -187,10 +168,75 @@ function theme_bricks_inline_entity_form_table($variables) {
             $renderable_data = array();
           }
         }
-        $data = drupal_render($renderable_data);
+        $data = $renderable_data;
       }
       elseif ($field['type'] == 'callback' && isset($field['render_callback']) && is_callable($field['render_callback'])) {
         $data = call_user_func($field['render_callback'], $entity_type, $entity);
+      }
+
+      $form[$key][$field_name] = $data;
+    }
+  }
+}
+
+/**
+ * Theme function for inline_entity_form field widget.
+ *
+ * @see bricks_inline_field_widget_form_alter()
+ */
+function theme_bricks_inline_entity_form_table($variables) {
+  $form = $variables['form'];
+  $entity_type = $form['#entity_type'];
+  $fields = $form['#table_fields'];
+  $has_tabledrag = inline_entity_form_has_tabledrag($form);
+  // Sort the fields by weight.
+  uasort($fields, 'drupal_sort_weight');
+
+  $header = array();
+  if ($has_tabledrag) {
+    $header[] = array('data' => '', 'class' => array('ief-tabledrag-header'));
+    $header[] = array('data' => t('Sort order'), 'class' => array('ief-sort-order-header'));
+  }
+
+  // Add header columns for each field.
+  $first = TRUE;
+  foreach ($fields as $field_name => $field) {
+    $column = array('data' => $field['label']);
+    // The first column gets a special class.
+    if ($first) {
+      $column['class'] = array('ief-first-column-header');
+      $first = FALSE;
+    }
+    $header[] = $column;
+  }
+  $header[] = t('Operations');
+
+  // Build an array of entity rows for the table.
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    $row_classes = array('ief-row-entity');
+    $cells = array();
+    if ($has_tabledrag) {
+      $indentation = theme('indentation', array('size' => $form[$key]['depth']['#value']));
+      $cells[] = array(
+        'data' => $indentation,
+        'class' => array('ief-tabledrag-handle'),
+        'style' => 'width: auto',
+      );
+      $cells[] = drupal_render($form[$key]['delta']);
+      $row_classes[] = 'draggable';
+    }
+    // Add a special class to rows that have a form underneath, to allow
+    // for additional styling.
+    if (!empty($form[$key]['form'])) {
+      $row_classes[] = 'ief-row-entity-form';
+    }
+
+    // Add fields that represent the entity.
+    foreach ($fields as $field_name => $field) {
+      $data = $form[$key][$field_name];
+      if (is_array($data)) {
+        $data = drupal_render($data);
       }
 
       $cells[] = array('data' => $data, 'class' => array('inline-entity-form-' . $entity_type . '-' . $field_name));
