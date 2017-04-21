@@ -184,22 +184,22 @@ function bricks_field_widget_form_alter(&$element, &$form_state, $context) {
  * @param array $item Array of field property values to use as default values.
  */
 function _bricks_field_widget_elements(&$element, $item) {
-  $element['depth'] = array(
-    '#type' => 'textfield',
-    '#default_value' => isset($item['depth']) ? $item['depth'] : 0,
-    '#size' => 1,
-  );
-  $element['options'] = array(
-    '#tree' => 'true',
-    '#weight' => 11,
-    'classes' => [
+    $element['depth'] = array(
       '#type' => 'textfield',
-      '#attributes' => array(
-        'placeholder' => t('Additional CSS classes'),
-      ),
-      '#default_value' => !empty($item['options']['classes']) ? $item['options']['classes'] : '',
-    ],
-  );
+      '#default_value' => isset($item['depth']) ? $item['depth'] : 0,
+      '#size' => 1,
+    );
+    $element['options'] = array(
+      '#tree' => 'true',
+      '#weight' => 11,
+      'classes' => [
+        '#type' => 'textfield',
+        '#attributes' => array(
+          'placeholder' => t('Additional CSS classes'),
+        ),
+        '#default_value' => !empty($item['options']['classes']) ? $item['options']['classes'] : '',
+      ],
+    );
 }
 
 /**
