@@ -76,6 +76,7 @@ function theme_bricks_tree_value_form($variables) {
       $item['_weight']['#attributes']['class'] = array($order_class);
       $delta_element = drupal_render($item['_weight']);
       $depth_element = $item['depth'];
+      $depth_element['#attributes']['class'][] = $element['#field_name'] . '-depth';
       unset($item['depth']);
 
       $cells = array(
@@ -103,7 +104,7 @@ function theme_bricks_tree_value_form($variables) {
     drupal_add_tabledrag($table_id, 'depth', 'group', $element['#field_name'] . '-depth');
     // Fake call to enable indentation:
     drupal_add_tabledrag($table_id, 'match', 'parent', $order_class);
-      drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
+    drupal_add_js(drupal_get_path('module', 'bricks') . '/bricks.js');
 
   return $output;
 }

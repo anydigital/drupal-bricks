@@ -26,25 +26,7 @@ function bricks_inline_field_widget_form_alter(&$element, &$form_state, $context
 
     foreach (element_children($entities) as $delta) {
       $item = isset($context['items'][$delta]) ? $context['items'][$delta] : NULL;
-      $entities[$delta]['depth'] = array(
-        '#type' => 'textfield',
-        '#default_value' => isset($item['depth']) ? $item['depth'] : 0,
-        '#size' => 1,
-        '#attributes' => array(
-          'class' => array('ief-entity-depth'),
-        ),
-      );
-        $entities[$delta]['options'] = array(
-        '#tree' => 'true',
-        '#weight' => 11,
-        'classes' => array(
-          '#type' => 'textfield',
-          '#attributes' => array(
-            'placeholder' => t('Additional CSS classes'),
-          ),
-          '#default_value' => !empty($item['options']['classes']) ? $item['options']['classes'] : '',
-        ),
-      );
+      _bricks_field_widget_elements($entities[$delta], $item);
     }
   }
 }
@@ -162,6 +144,7 @@ function theme_bricks_inline_entity_form_table($variables) {
         'style' => 'width: auto'
       );
       $cells[] = drupal_render($form[$key]['delta']);
+      $form[$key]['depth']['#attributes']['class'][] = 'ief-entity-depth';
       $cells[] = drupal_render($form[$key]['depth']);
       $row_classes[] = 'draggable';
     }
