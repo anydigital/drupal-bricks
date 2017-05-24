@@ -65,7 +65,7 @@ function bricks_preprocess_eck_entity(&$variables) {
  * Prepares variables for `paragraph.html.twig`.
  */
 function bricks_preprocess_paragraph(&$variables) {
-  if ($variables['content']['childs']) {
+  if (isset($variables['content']['childs'])) {
     $paragraph = $variables['elements']['#paragraph'];
     if ($field_name = _bricks_first_entity_reference_field_name($paragraph)) {
       $variables['content'][$field_name] = $variables['content']['childs'];
