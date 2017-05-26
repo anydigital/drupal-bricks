@@ -8,7 +8,7 @@
 
 <p>There are a plenty of proven concepts and modules which aimed to help us here: Display Suite, Panels, Panelizer and of course Paragraphs. But with Drupal 8 release we have a lot of opportunities right in core and our mission is to utilize them as much as possible to get the same functionality (or even more!).</p>
 
-<p>In this session we will try to define a set of common problems when building rich websites with dynamic layouts and to design a solution for creating content for such websites. We will try to use Drupal 8 core modules widely, and especially Entity Reference because of its flexibility and wide support in contrib modules. Finally we will go through a live demo of a complete sandbox website.</p>
+<p>In this session we will try to define a set of common problems when building rich websites with dynamic layouts and to design a <a href="https://uibricks.com/" target="_blank">solution for creating flexible content</a> for such websites. We will try to use Drupal 8 core modules widely, and especially Entity Reference because of its flexibility and wide support in contrib modules. Finally we will go through a <a href="https://www.drupal.org/project/bricks#live-demo" target="_blank">live demo</a> of a complete sandbox website.</p>
 
 <p>The following topics will be highlighted:</p>
 
@@ -42,6 +42,6 @@
 	<li>View Field</li>
 </ul>
 
-<p>In this session I want to share a real experience when designing a content architecture for large multi-lingual and multi-layout websites for <a href="http://www.acronis.com/" target="_blank">enterprise</a> and <a href="http://en.cs.msu.ru/" target="_blank">academics</a>.</p>
+<p>In this session I want to share a real experience when designing a content architecture of large multi-lingual and multi-layout websites for <a href="http://www.acronis.com/" target="_blank">enterprise</a> and <a href="http://en.cs.msu.ru/" target="_blank">academics</a>.</p>
 
 <p>These very simple but extremely flexible techniques can be used for <em>any</em> entity type (not just Paragraphs!) and in almost <em>any</em> project. Re-understand your content today and create your own site buidling experience on top of Entity Reference from Drupal 8 core and its wide contrib ecosystem!</p>
