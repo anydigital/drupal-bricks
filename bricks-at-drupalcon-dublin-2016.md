@@ -1,4 +1,4 @@
-<p><strong>Slides:</strong> https://slides.com/tonystar/drupal-entity-reference-power</p>
+<p><strong>Slides:</strong> <a href="http://slides.com/tonystar/drupal-entity-reference-power" target="_blank">slides.com/tonystar/drupal-entity-reference-power</a></p>
 
 <p>Modern websites require the brand new understanding of what content is and how it is structured. Well-organized content architecture makes the website semantically transparent and the content management process simple and clear. Today by term “content” we don’t mean narrative content. <em>Not anymore. </em>That’s why things like Markdown or WYSIWYG are just not enough.</p>
 
