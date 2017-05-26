@@ -21,7 +21,7 @@
 	<li>How to translate a content with layout? How to translate a content partially?</li>
 	<li>How to build custom layouts right in admin UI? How to share layouts between components?</li>
 	<li>How to implement components with dynamic content? Like Views?</li>
-	<li>How to get a maximum benefit from a semantically structured content? How to build tables of contents and h1, h2, h3 headings automatically? How to get responsive design done automatically?</li>
+	<li>How to get a maximum benefit from a semantically structured content? How to get responsive design done automatically?</li>
 </ul>
 
 <p>The following modules will be covered:</p>
@@ -44,6 +44,4 @@
 
 <p>In this session I want to share a real experience when designing a content architecture for large multi-lingual and multi-layout websites for <a href="http://www.acronis.com/" rel="nofollow" target="_blank">enterprise</a> and <a href="http://en.cs.msu.ru/" rel="nofollow" target="_blank">academics</a>.</p>
 
-<p>These very simple but extremely flexible techniques can be used for <em>any</em> entity type (not just Paragraphs!) and in almost <em>any</em> project. We also get some new possibilities like automatic table of contents and h1, h2, h3 headings. And this is only the beginning.</p>
-
-<p>Re-understand your content today and create your own site buidling experience on top of Entity Reference from Drupal 8 core and its wide contrib ecosystem!</p>
+<p>These very simple but extremely flexible techniques can be used for <em>any</em> entity type (not just Paragraphs!) and in almost <em>any</em> project. Re-understand your content today and create your own site buidling experience on top of Entity Reference from Drupal 8 core and its wide contrib ecosystem!</p>
