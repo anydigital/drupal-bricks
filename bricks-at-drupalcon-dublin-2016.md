@@ -42,6 +42,6 @@
 	<li>Viewfield</li>
 </ul>
 
-<p>In this session I want to share a real experience when designing a content architecture for large multi-lingual and multi-layout websites for <a href="http://www.acronis.com/" rel="nofollow" target="_blank">enterprise</a> and <a href="http://en.cs.msu.ru/" rel="nofollow" target="_blank">academics</a>.</p>
+<p>In this session I want to share a real experience when designing a content architecture for large multi-lingual and multi-layout websites for <a href="http://www.acronis.com/" target="_blank">enterprise</a> and <a href="http://en.cs.msu.ru/" target="_blank">academics</a>.</p>
 
 <p>These very simple but extremely flexible techniques can be used for <em>any</em> entity type (not just Paragraphs!) and in almost <em>any</em> project. Re-understand your content today and create your own site buidling experience on top of Entity Reference from Drupal 8 core and its wide contrib ecosystem!</p>
