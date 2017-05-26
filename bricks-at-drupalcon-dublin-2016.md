@@ -34,12 +34,12 @@
 	<li>Entity Translation</li>
 	<li>Entity Reference Revisions</li>
 	<li>Dynamic Entity Reference</li>
-	<li>References dialog</li>
+	<li>Entity Browser</li>
 	<li>Inline Entity Form</li>
 	<li>Entity Reference Live Preview</li>
-	<li>Entity reference viewmode selector</li>
-	<li>Entity view modes</li>
-	<li>Viewfield</li>
+	<li>Bricks</li>
+	<li>Display Modes (core)</li>
+	<li>View Field</li>
 </ul>
 
 <p>In this session I want to share a real experience when designing a content architecture for large multi-lingual and multi-layout websites for <a href="http://www.acronis.com/" target="_blank">enterprise</a> and <a href="http://en.cs.msu.ru/" target="_blank">academics</a>.</p>
