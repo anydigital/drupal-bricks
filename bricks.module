@@ -183,7 +183,7 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
     $variables['table']['#header'][0]['style'] = 'min-width: 100px'; // @TODO: Tmp hack for the proper indent width calculation.
       $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
 
-    foreach (Element::children($element) as $key) {
+    foreach (Element::children($element) as $row => $key) {
       if ($key !== 'add_more') {
         $depth = $element[$key]['depth']['#value'];
 
@@ -195,16 +195,16 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
           );
         }
 
-        $drag_cell = &$variables['table']['#rows'][$key]['data'][0];
+        $drag_cell = &$variables['table']['#rows'][$row]['data'][0];
         $drag_cell['data'] = !empty($indentation) ? drupal_render($indentation) : '' . $drag_cell['data'];
         $drag_cell['style'] = 'width: initial'; // @TODO
 
         show($element[$key]['depth']);
-          $variables['table']['#rows'][$key]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
+          $variables['table']['#rows'][$row]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
 
         if ($render_options) { // @TODO: Get rid of $render_options hack.
-          $element[$key]['options']['#prefix'] = $variables['table']['#rows'][$key]['data'][2]['data'];
-          $variables['table']['#rows'][$key]['data'][2]['data'] = \Drupal::service('renderer')->render($element[$key]['options']);
+          $element[$key]['options']['#prefix'] = $variables['table']['#rows'][$row]['data'][2]['data'];
+          $variables['table']['#rows'][$row]['data'][2]['data'] = \Drupal::service('renderer')->render($element[$key]['options']);
         }
       }
     }
