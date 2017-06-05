@@ -260,3 +260,14 @@ function _bricks_form_element_alter(&$element, $item, $entity_type) {
     ),
   );
 }
+
+
+/* MISC */
+
+/**
+ * Prepares variables for `block.html.twig` for `system_powered_by_block`.
+ */
+function bricks_preprocess_block__system_powered_by_block(&$variables) {
+  $bricks_link = '<a href="https://uibricks.com">Bricks</a>';
+  $variables['content']['#markup'] = str_replace('>Drupal</a>', '>Drupal</a> & ' . $bricks_link, $variables['content']['#markup']);
+}
