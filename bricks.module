@@ -53,6 +53,27 @@ function bricks_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implements hook_entity_view_alter().
+ */
+function bricks_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+  // Check $build['childs']['#theme'] to prevent double-processing:
+  if ($entity->bundle() == 'layout' && empty($build['childs']['#theme']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+    $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
+
+    // Provide any configuration to the layout plugin if necessary.
+    $layoutInstance = $layoutPluginManager->createInstance($build['#layout']);
+    $regionNames = $layoutInstance->getPluginDefinition()->getRegionNames();
+
+    // Build the content for your regions.
+    $regionNames = array_slice($regionNames, 0, count($build['childs']));
+    $regions = array_combine($regionNames, $build['childs']);
+
+    // This builds the render array.
+    $build['childs'] = $layoutInstance->build($regions);
+  }
+}
+
+/**
  * Prepares variables for `eck-entity.html.twig`.
  */
 function bricks_preprocess_eck_entity(&$variables) {
@@ -126,6 +147,9 @@ function _bricks_nest_items($element, $items) {
     $items[$delta]['childs'] = array();
     if (!empty($element['#items'][$delta]->options['view_mode'])) {
       $items[$delta]['#view_mode'] = $element['#items'][$delta]->options['view_mode'];
+    }
+    if (!empty($element['#items'][$delta]->options['layout'])) {
+      $items[$delta]['#layout'] = $element['#items'][$delta]->options['layout'];
     }
     if (!empty($element['#items'][$delta]->options['css_class'])) {
       $items[$delta]['#attributes']['class'][] = $element['#items'][$delta]->options['css_class'];
@@ -247,11 +271,20 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
     ),
   );
   if ($entity) {
+  if ($entity->bundle() == 'layout' && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+  $element['options']['layout'] = array(
+    '#type' => 'select',
+    '#options' => \Drupal::service('plugin.manager.core.layout')->getLayoutOptions(),
+    '#default_value' => !empty($item->options['layout']) ? $item->options['layout'] : NULL,
+  );
+  }
+  if ($entity->bundle() != 'layout') {
   $element['options']['view_mode'] = array(
     '#type' => 'select',
     '#options' => \Drupal::service('entity_display.repository')->getViewModeOptions($entity->getEntityTypeId()),
     '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : NULL,
   );
+  }
   }
   $element['options']['css_class'] = array(
     '#type' => 'textfield',
