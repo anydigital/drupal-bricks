@@ -64,8 +64,12 @@ function bricks_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterf
     $layoutInstance = $layoutPluginManager->createInstance($build['#layout']);
     $regionNames = $layoutInstance->getPluginDefinition()->getRegionNames();
 
+    // Adjust the lengths:
+    $count = min(count($regionNames), count($build['childs']));
+    $regionNames = array_slice($regionNames, 0, $count);
+    $build['childs'] = array_slice($build['childs'], 0, $count);
+
     // Build the content for your regions.
-    $regionNames = array_slice($regionNames, 0, count($build['childs']));
     $regions = array_combine($regionNames, $build['childs']);
 
     // This builds the render array.
