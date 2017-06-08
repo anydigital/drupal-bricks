@@ -230,7 +230,7 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
 /**
  * Helper function for widget's formElement().
  */
-function _bricks_form_element_alter(&$element, $item, $entity_type) {
+function _bricks_form_element_alter(&$element, $item, $entity) {
   $element['depth'] = array(
     '#type' => 'hidden', // @TODO: Other types break the correct indentations.
     '#default_value' => !empty($item->depth) ? $item->depth : 0,
@@ -246,11 +246,13 @@ function _bricks_form_element_alter(&$element, $item, $entity_type) {
       'class' => array('container-inline'),
     ),
   );
+  if ($entity) {
   $element['options']['view_mode'] = array(
     '#type' => 'select',
-    '#options' => \Drupal::service('entity_display.repository')->getViewModeOptions($entity_type),
+    '#options' => \Drupal::service('entity_display.repository')->getViewModeOptions($entity->getEntityTypeId()),
     '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : NULL,
   );
+  }
   $element['options']['css_class'] = array(
     '#type' => 'textfield',
     '#default_value' => !empty($item->options['css_class']) ? $item->options['css_class'] : '',

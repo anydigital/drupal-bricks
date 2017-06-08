@@ -21,7 +21,7 @@ class BricksTreeAutocompleteWidget extends EntityReferenceAutocompleteWidget {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
-    _bricks_form_element_alter($element, $items[$delta], $element['target_id']['#target_type']);
+    _bricks_form_element_alter($element, $items[$delta], $element['target_id']['#default_value']); // #default_value is en Entity or NULL
     hide($element['depth']);
 
     return $element;
