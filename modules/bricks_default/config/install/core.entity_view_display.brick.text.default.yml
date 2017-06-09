@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.brick.text
+    - field.field.brick.text.field_text
+  module:
+    - text
+id: brick.text.default
+targetEntityType: brick
+bundle: text
+mode: default
+content:
+  field_text:
+    weight: -4
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+hidden:
+  title: true

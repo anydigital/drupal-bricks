@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.brick.layout
+id: brick.layout.default
+targetEntityType: brick
+bundle: layout
+mode: default
+content: {  }
+hidden:
+  title: true

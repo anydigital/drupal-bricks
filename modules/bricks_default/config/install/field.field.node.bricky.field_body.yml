@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.brick.image
+    - eck.eck_type.brick.layout
+    - eck.eck_type.brick.text
+    - eck.eck_type.brick.wrapper
+    - field.storage.node.field_body
+    - node.type.bricky
+  module:
+    - bricks
+id: node.bricky.field_body
+field_name: field_body
+entity_type: node
+bundle: bricky
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:brick'
+  handler_settings:
+    target_bundles:
+      image: image
+      layout: layout
+      text: text
+      wrapper: wrapper
+    sort:
+      field: _none
+    auto_create: 0
+    auto_create_bundle: text
+field_type: bricks

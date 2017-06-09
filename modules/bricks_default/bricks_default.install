@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function bricks_default_install() {
+  $entity_manager = \Drupal::entityManager();
+
+  $layout = $entity_manager->getStorage('brick')->create([
+    'type' => 'layout',
+    'title' => 'Layout',
+  ]);
+  $layout->save();
+
+  $data = file_get_contents(drupal_get_path('theme', 'bartik') . '/screenshot.png');
+  $file = file_save_data($data, 'public://druplicon.png', FILE_EXISTS_REPLACE);
+  $image = $entity_manager->getStorage('brick')->create([
+    'type' => 'image',
+    'title' => 'Image',
+    'field_image' => [
+      'target_id' => $file->id(),
+    ],
+  ]);
+  $image->save();
+
+  $text = $entity_manager->getStorage('brick')->create([
+    'type' => 'text',
+    'title' => 'Text',
+    'field_text' => [
+      'value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      'format' => 'plain_text',
+    ],
+  ]);
+  $text->save();
+
+  $wrapper = $entity_manager->getStorage('brick')->create([
+    'type' => 'wrapper',
+    'title' => 'Wrapper',
+  ]);
+  $wrapper->save();
+
+  $page = $entity_manager->getStorage('node')->create([
+    'type' => 'bricky',
+    'title' =>  'Example page powered by Bricks',
+    'field_body' => [
+      [ 'depth' => 0, 'target_id' => $layout->id(), 'options' => ['layout' => 'layout_twocol'] ],
+        [ 'depth' => 1, 'target_id' => $text->id() ],
+        [ 'depth' => 1, 'target_id' => $image->id() ],
+        [ 'depth' => 1, 'target_id' => $text->id(), 'options' => ['css_class' => 'text-align-right'] ],
+        [ 'depth' => 1, 'target_id' => $text->id() ],
+    ],
+  ]);
+  $page->save();
+}

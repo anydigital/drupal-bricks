@@ -1,0 +1,19 @@
+name: 'Bricks Default'
+description: 'Set of default bricks powered by ECK.'
+package: Bricks
+type: module
+core: 8.x
+dependencies:
+  - bricks
+  - bricks_inline
+  - eck
+  - field
+  - file
+  - image
+  - inline_entity_form
+  - layout_discovery
+  - menu_ui
+  - node
+  - path
+  - text
+  - user

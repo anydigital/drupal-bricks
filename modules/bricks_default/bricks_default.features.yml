@@ -1,0 +1,5 @@
+excluded:
+  - node.type.page
+  - rdf.mapping.node.page
+  - core.base_field_override.node.page.promote
+required: true
