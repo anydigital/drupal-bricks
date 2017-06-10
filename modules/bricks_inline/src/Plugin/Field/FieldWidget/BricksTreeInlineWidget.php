@@ -35,10 +35,13 @@ class BricksTreeInlineWidget extends InlineEntityFormComplex {
 
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $field_name = $this->fieldDefinition->getName();
+    $field_value = $form_state->getValue($field_name);
 
     foreach ($values as $delta => $value) {
-      $values[$delta]['depth'] = $form_state->getValue($field_name)['entities'][$delta]['depth'];
-      $values[$delta]['options'] = $form_state->getValue($field_name)['entities'][$delta]['options'];
+      if (isset($field_value['entities'][$delta])) {
+      $values[$delta]['depth'] = $field_value['entities'][$delta]['depth'];
+      $values[$delta]['options'] = $field_value['entities'][$delta]['options'];
+      }
     }
 
     return $values;
