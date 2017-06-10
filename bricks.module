@@ -56,8 +56,7 @@ function bricks_theme($existing, $type, $theme, $path) {
  * Implements hook_entity_view_alter().
  */
 function bricks_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
-  // Check $build['childs']['#theme'] to prevent double-processing:
-  if ($entity->bundle() == 'layout' && empty($build['childs']['#theme']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+  if ($entity->bundle() == 'layout' && !empty($build['#layout']) && !isset($build['_bricks_layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
     $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
 
     // Provide any configuration to the layout plugin if necessary.
@@ -67,13 +66,14 @@ function bricks_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterf
     // Adjust the lengths:
     $count = min(count($regionNames), count($build['childs']));
     $regionNames = array_slice($regionNames, 0, $count);
-    $build['childs'] = array_slice($build['childs'], 0, $count);
+    $childs = array_slice($build['childs'], 0, $count);
 
     // Build the content for your regions.
-    $regions = array_combine($regionNames, $build['childs']);
+    $regions = array_combine($regionNames, $childs);
 
     // This builds the render array.
-    $build['childs'] = $layoutInstance->build($regions);
+    $build['_bricks_layout'] = $layoutInstance->build($regions);
+    unset($build['childs']);
   }
 }
 
