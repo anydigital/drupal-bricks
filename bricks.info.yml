@@ -6,4 +6,4 @@ type: module
 core: 8.x
 
 simplytest_dependencies:
-  - bricks_bootstrap
+  - bootstrap_kit
