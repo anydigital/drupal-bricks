@@ -145,6 +145,7 @@ function _bricks_nest_items($element, $items) {
     $prev_depth = $depth;
 
     $items[$delta] = $items[$delta]['content'];
+    $items[$delta]['#label'] = $element['#items'][$delta]->entity->label();
     $items[$delta]['#delta'] = $delta;
     $items[$delta]['#parent_delta'] = $parents[0];
 
