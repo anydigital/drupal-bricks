@@ -59,6 +59,10 @@ function bricks_theme($existing, $type, $theme, $path) {
 function bricks_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if ($entity->bundle() == 'layout' && !empty($build['#layout']) && !isset($build['_bricks_layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
     $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
+    if (!$layoutPluginManager->getDefinition($build['#layout'], FALSE)) {
+      drupal_set_message(t('Layout `%layout_id` is unknown.', ['%layout_id' => $build['#layout']]), 'warning');
+      return;
+    }
 
     // Provide any configuration to the layout plugin if necessary.
     $layoutInstance = $layoutPluginManager->createInstance($build['#layout']);
