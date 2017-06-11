@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * @file
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\TypedData\DataDefinition;
-
 
 /* BRICKS STORAGE */
 
@@ -35,7 +40,6 @@ function _bricks_field_schema_alter(&$schema) {
   );
 }
 
-
 /* BRICKS FORMATTING */
 
 /**
@@ -46,16 +50,13 @@ function bricks_theme($existing, $type, $theme, $path) {
     'eck_entity__brick' => [
       'base hook' => 'eck_entity',
     ],
-    'eck_entity__brick__columns' => [
-      'base hook' => 'eck_entity',
-    ],
   ];
 }
 
 /**
  * Implements hook_entity_view_alter().
  */
-function bricks_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function bricks_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if ($entity->bundle() == 'layout' && !empty($build['#layout']) && !isset($build['_bricks_layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
     $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
 
@@ -139,7 +140,7 @@ function _bricks_nest_items($element, $items) {
     if ($depth > $prev_depth) {
       array_unshift($parents, $delta - 1);
     }
-    else if ($depth < $prev_depth) {
+    elseif ($depth < $prev_depth) {
       array_splice($parents, 0, $prev_depth - $depth);
     }
     $prev_depth = $depth;
@@ -177,7 +178,6 @@ function _bricks_nest_items($element, $items) {
   return $items;
 }
 
-
 /* BRICKS EDITING */
 
 /**
@@ -209,8 +209,9 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
   $element = $variables[$element_key];
 
   if (isset($element['#widget']) && $element['#widget'] == $widget) {
-    $variables['table']['#header'][0]['style'] = 'min-width: 100px'; // @TODO: Tmp hack for the proper indent width calculation.
-      $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
+    // @TODO: Tmp hack for the proper indent width calculation.
+    $variables['table']['#header'][0]['style'] = 'min-width: 100px';
+    $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
 
     foreach (Element::children($element) as $row => $key) {
       if ($key !== 'add_more') {
@@ -226,12 +227,14 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
 
         $drag_cell = &$variables['table']['#rows'][$row]['data'][0];
         $drag_cell['data'] = !empty($indentation) ? drupal_render($indentation) : '' . $drag_cell['data'];
-        $drag_cell['style'] = 'width: initial'; // @TODO
+        // @TODO
+        $drag_cell['style'] = 'width: initial';
 
         show($element[$key]['depth']);
-          $variables['table']['#rows'][$row]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
+        $variables['table']['#rows'][$row]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
 
-        if ($render_options) { // @TODO: Get rid of $render_options hack.
+        // @TODO: Get rid of $render_options hack.
+        if ($render_options) {
           $element[$key]['options']['#prefix'] = $variables['table']['#rows'][$row]['data'][2]['data'];
           $variables['table']['#rows'][$row]['data'][2]['data'] = \Drupal::service('renderer')->render($element[$key]['options']);
         }
@@ -261,7 +264,8 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
  */
 function _bricks_form_element_alter(&$element, $item, $entity) {
   $element['depth'] = array(
-    '#type' => 'hidden', // @TODO: Other types break the correct indentations.
+  // @TODO: Other types break the correct indentations.
+    '#type' => 'hidden',
     '#default_value' => !empty($item->depth) ? $item->depth : 0,
     '#weight' => 10,
     '#attributes' => array(
@@ -276,20 +280,20 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
     ),
   );
   if ($entity) {
-  if ($entity->bundle() == 'layout' && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
-  $element['options']['layout'] = array(
-    '#type' => 'select',
-    '#options' => \Drupal::service('plugin.manager.core.layout')->getLayoutOptions(),
-    '#default_value' => !empty($item->options['layout']) ? $item->options['layout'] : NULL,
-  );
-  }
-  if ($entity->bundle() != 'layout') {
-  $element['options']['view_mode'] = array(
-    '#type' => 'select',
-    '#options' => \Drupal::service('entity_display.repository')->getViewModeOptions($entity->getEntityTypeId()),
-    '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : NULL,
-  );
-  }
+    if ($entity->bundle() == 'layout' && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+      $element['options']['layout'] = array(
+        '#type' => 'select',
+        '#options' => \Drupal::service('plugin.manager.core.layout')->getLayoutOptions(),
+        '#default_value' => !empty($item->options['layout']) ? $item->options['layout'] : NULL,
+      );
+    }
+    if ($entity->bundle() != 'layout') {
+      $element['options']['view_mode'] = array(
+        '#type' => 'select',
+        '#options' => \Drupal::service('entity_display.repository')->getViewModeOptions($entity->getEntityTypeId()),
+        '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : NULL,
+      );
+    }
   }
   $element['options']['css_class'] = array(
     '#type' => 'textfield',
@@ -300,7 +304,6 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
     ),
   );
 }
-
 
 /* MISC */
 

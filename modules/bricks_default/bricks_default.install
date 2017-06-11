@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @file
+ */
+
+/**
  * Implements hook_install().
  */
 function bricks_default_install() {
@@ -41,13 +45,13 @@ function bricks_default_install() {
 
   $page = $entity_manager->getStorage('node')->create([
     'type' => 'bricky',
-    'title' =>  'Example page powered by Bricks, ECK and Layout API',
+    'title' => 'Example page powered by Bricks, ECK and Layout API',
     'field_body' => [
-      [ 'depth' => 0, 'target_id' => $layout->id(), 'options' => ['layout' => 'layout_twocol'] ],
-        [ 'depth' => 1, 'target_id' => $text->id() ],
-        [ 'depth' => 1, 'target_id' => $image->id() ],
-        [ 'depth' => 1, 'target_id' => $text->id(), 'options' => ['css_class' => 'text-align-right'] ],
-        [ 'depth' => 1, 'target_id' => $text->id() ],
+      ['depth' => 0, 'target_id' => $layout->id(), 'options' => ['layout' => 'layout_twocol']],
+        ['depth' => 1, 'target_id' => $text->id()],
+        ['depth' => 1, 'target_id' => $image->id()],
+        ['depth' => 1, 'target_id' => $text->id(), 'options' => ['css_class' => 'text-align-right']],
+        ['depth' => 1, 'target_id' => $text->id()],
     ],
   ]);
   $page->save();

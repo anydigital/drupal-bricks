@@ -39,8 +39,8 @@ class BricksTreeInlineWidget extends InlineEntityFormComplex {
 
     foreach ($values as $delta => $value) {
       if (isset($field_value['entities'][$delta])) {
-      $values[$delta]['depth'] = $field_value['entities'][$delta]['depth'];
-      $values[$delta]['options'] = $field_value['entities'][$delta]['options'];
+        $values[$delta]['depth'] = $field_value['entities'][$delta]['depth'];
+        $values[$delta]['options'] = $field_value['entities'][$delta]['options'];
       }
     }
 

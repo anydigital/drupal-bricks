@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 use Drupal\Core\Render\Element;
 
 
@@ -26,7 +30,7 @@ function bricks_inline_preprocess_inline_entity_form_entity_table(&$variables) {
   _inline_entity_form_preprocess_inline_entity_form_entity_table($variables);
 
   if (!empty($variables['table']['#tabledrag'])) {
-  _bricks_preprocess_tabledrag_form($variables, 'form', 'bricks_tree_inline', 'ief-entity-delta', TRUE);
+    _bricks_preprocess_tabledrag_form($variables, 'form', 'bricks_tree_inline', 'ief-entity-delta', TRUE);
   }
 }
 
