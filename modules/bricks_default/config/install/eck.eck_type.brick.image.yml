@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.brick
 name: Image
 type: image
-description: ''
+description: 'Simple image brick.'

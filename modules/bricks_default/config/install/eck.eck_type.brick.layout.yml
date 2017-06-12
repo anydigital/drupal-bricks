@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.brick
 name: Layout
 type: layout
-description: ''
+description: 'Special brick which renders its children via Layout API.'

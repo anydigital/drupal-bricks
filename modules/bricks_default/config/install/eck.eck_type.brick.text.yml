@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.brick
 name: Text
 type: text
-description: ''
+description: 'Simple text brick.'

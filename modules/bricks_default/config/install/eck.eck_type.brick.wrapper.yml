@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.brick
 name: Wrapper
 type: wrapper
-description: ''
+description: 'Simple brick for wrapping or grouping other bricks.'
