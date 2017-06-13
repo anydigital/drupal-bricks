@@ -8,7 +8,7 @@ header: '
     <a class="btn btn-outline-info" href="https://www.drupal.org/project/bricks" target="_blank"><i class="fa fa-drupal"></i> Drupal.org</a>
     <a class="btn btn-outline-info" href="https://github.com/highweb/drupal-bricks" target="_blank"><i class="fa fa-github"></i> GitHub</a>
   </p>
-  <p>Currently 8.x-1.5</p>
+  <p>Currently 8.x-1.6</p>
 '
 ---
 
