@@ -12,140 +12,18 @@ header: '
 '
 ---
 
-**Bricks** — is a new way of building pages on top of Entity Reference, Display Modes, Layout API, tabledrag.js and [Flat Tables](http://evolt.org/node/4047#table). Everything is in Drupal core that makes Bricks ultra-lightweight and developer-friendly.
+{% include intro.md %}
 
-In terms of concept Bricks is a new generation of Paragraphs, an alternative to Panelizer and a good friend to ECK, Inline Entity Form and your favorite WYSIWYG. Shortly, it allows you to nest Entity Reference field items using Drupal drag & drop UI (exactly like for menu or taxonomy items).
+{% include demo.md %}
 
-<img src="https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-8.x-1.2.gif" width="608"/>
+{% include installation.md %}
 
+{% include submodules.md %}
 
-## Live demo
+{% include compatibility.md %}
 
-1. Open [pre-configured sandbox](https://simplytest.me/project/bricks).
-2. Click **Launch sandbox** and wait.
-3. Follow the installation (all settings should be pre-filled, don't change them).
-4. Go to **Extend** and enable **Bootstrap Kit Demo**.
-5. Go to **Appearance** and set **Tweme** as default theme.
-6. Find an auto-created node and go to **Edit** mode to check magic out!
-7. Finally go to **Content** and create your own first **Bricky** page!
-8. Like it? => Support by [★ starring on Drupal.org](https://www.drupal.org/project/bricks), [★ starring on GitHub](https://github.com/highweb/drupal-bricks) and/or [sharing on Twitter](https://twitter.com/highwebtech/status/841004866633842689).
-
-
-## Installation
-
-The most easy-to-use method:
-
-1. Download and install [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) with its dependencies.
-2. Download and enable [Tweme](https://www.drupal.org/project/tweme) (or any other Bootstrap 4 theme).
-3. **Done!**
-
-Now you can create **Bricky** pages (content type) using powerful preconfigured **Bricks** such as Text, Image, Accordion, Carousel, Tabs and others (ECK bundles). Use auto-created "All new AirPods" node as a live playground.
-
-Video tutorial: [vimeo.com/211714437](https://vimeo.com/211714437).
-
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-bootstrap-8.x-4.1-node.png)
-
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-bootstrap-8.x-4.1-node-edit.png)
-
-### Paragraphs setup <sup>8.x-1.3+, in Beta</sup>
-
-1. Download and install [Bootstrap Paragraphs](https://www.drupal.org/project/bootstrap_paragraphs) with its dependencies.
-2. Download and enable [Bootstrap](https://www.drupal.org/project/bootstrap) (or any other Bootstrap 3 theme).
-3. Download and install [Bricks](https://www.drupal.org/project/bricks) with its dependencies. Also enable **Bricks Inline** and **Bricks Revisions**.
-4. Go to **Structure** > **Content types** and create **Bricky** content type.
-5. Delete default **Body** field.
-6. Create new **Body** field of type **Bricks (revisioned)**:
-   - Name: *Body (field_body)*
-   - Type of item to reference: *Paragraph*
-   - Allowed number of values: *Unlimited*
-7. Go to **Manage form display** and set **Bricks tree (Inline entity form)** widget for **Body** field.
-8. Go to **Manage display** and hide label for **Body** field.
-9. **Done!**
-
-Now you can create **Bricky** pages (content type) using your favorite Paragraphs such as Simple, Image, Accordion, Carousel, Tabs and others (Paragraph types).
-
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-8.x-1.3-bootstrap-paragraphs-1.0-beta1-node.png)
-
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-8.x-1.3-bootstrap-paragraphs-1.0-beta1-node-edit.png)
-
-
-## Requirements
-
-All new Bricks for D8 has no requirements and works with ANY entity types!
-
-
-## Submodules
-
-**Bricks Core**
-
-- **Bricks** field type — An entity field containing a tree of entity reference bricks.
-- **Bricks tree (Autocomplete)** widget — A draggable tree of autocomplete text fields.
-- **Bricks (Nested)** formatter — Display the referenced entities recursively rendered by entity_view().
-- [Paragraphs](https://www.drupal.org/project/paragraphs) support.
-
-**Bricks Inline** <sup>8.x-1.1+</sup> — Integration with [Inline Entity Form](https://www.drupal.org/project/inline_entity_form):
-
-- **Bricks tree (Inline entity form)** widget — A draggable tree of inline entity forms.
-
-**Bricks Revisions** <sup>8.x-1.3+</sup> — Integration with [Entity Reference Revisions](https://www.drupal.org/project/entity_reference_revisions):
-
-- **Bricks (revisioned)** field type — An entity field containing a tree of revisioned entity reference bricks.
-
-
-## Compatibility
-
-| Drupal | Bricks | Layout API | [ECK](https://www.drupal.org/project/eck) | [IEF](https://www.drupal.org/project/inline_entity_form) | [ERR](https://www.drupal.org/project/entity_reference_revisions) | [Paragraphs](https://www.drupal.org/project/paragraphs) |
-| --- | --- | --- | --- | --- | --- | --- |
-| 8.3.3 | 1.6 | ✔ | 1.0-alpha3 | 1.0-beta1 | 1.3 | 1.1 |
-| 8.3.2 | 1.5 | — | 1.0-alpha3 | 1.0-beta1 | 1.3 | 1.1 |
-| 8.2.6 | 1.2 | — | 1.0-alpha3 | 1.0-beta1 | — | — |
-
-### Upgrading from 8.x-1.5
-
-1. Upgrade as usual.
-2. Create **Layout** bundle manually to be able to use the newest Layout API integration:
-   - ECK: Structure > ECK > Bundle list > Add bundle.
-   - Paragraphs: Structure > Paragraphs > Add type.
-3. Don't forget to allow this bundle in your Bricks field settings!
-
-
-## Resources
-
-- Project page: [drupal.org/project/bricks](https://www.drupal.org/project/bricks).
-- Source code: [github.com/highweb/drupal-bricks](https://github.com/highweb/drupal-bricks).
-- Issue board: [contribkanban.com/board/bricks](https://contribkanban.com/board/bricks).
-- Working group: [groups.drupal.org/bricks](https://groups.drupal.org/bricks).
-- Team: [timezone.io/team/drupal-bricks](https://timezone.io/team/drupal-bricks).
-- Video tutorial: https://vimeo.com/211714437 by [Hans Riemenschneider](https://www.drupal.org/u/nonprofit).
-- Tutorial: https://drupal8.support/en/modules/bricks-bootstrap by Dirk Bernaert.
-
+{% include resources.md %}
 
 {% include events.md %}
 
-
-## FAQ
-
-<dl>
-
-<dt>Are brick bundles translatable?</dt>
-<dd>100% translatable (thanks Entity Translation and ECK). Just mark them as translatable at /admin/config/regional/content-language.</dd>
-
-<dt>Which entity types are supported?</dt>
-<dd>Bricks can hold references to any entities - ECK or Paragraphs, doesn’t matter. And Bricks Bootstrap is just an example of using ECK.</dd>
-
-<dt>Does bricks support revisions of the parent entity?</dt>
-<dd>Internally Bricks field is a multi-value Entity Reference field => standard revisioning mechanism works. Moreover, Bricks Revisions (core submodule) allows you to revision referenced entities.</dd>
-
-<dt>Is there a reason why i can not just use bricks form widget for the normal paragraphs field?</dt>
-<dd>Paragraphs couldn’t be nested using drag and drop! Bricks field allows you to do (like on gif).</dd>
-
-<dt>How to get non-equal column layout, 4-8 in example?</dt>
-<dd>Use universal Wrapper brick with custom CSS classes on it. Bootstrap example:
-<pre><code>
-Wrapper (.row)
-|-- Image (.col-sm-4)
-|-- Text (.col-sm-8)
-</code></pre>
-</dd>
-
-</dl>
+{% include faq.md %}
