@@ -6,6 +6,10 @@
 | 8.3.2 | 1.5 | — | 1.0-alpha3 | 1.0-beta1 | 1.3 | 1.1 |
 | 8.2.6 | 1.2 | — | 1.0-alpha3 | 1.0-beta1 | — | — |
 
+<!--h2>
+<a href="https://uibricks.com/">Documentation</a> • <a href="https://uibricks.com/#faq">FAQ</a>
+</h2-->
+
 ### Upgrading from 8.x-1.5
 
 1. Upgrade as usual.

@@ -10,6 +10,8 @@ Theming with Bootstrap 3/4:
 1. Additionally install [Bootstrap Kit](https://www.drupal.org/project/bootstrap_kit) and its dependencies.
 3. **Done!** Now you can use Columns, Accordion, Carousel and Tabs components via Layout brick. Install **Bootstrap Kit Demo** (shipped with Bootstrap Kit) to get a sample node.
 
+<!--p><a href="https://uibricks.com/#installation">Using with Paragraphs</a> is also natively supported.</p-->
+
 Using with Paragraphs:
 
 1. Additionally install **Paragraphs Demo** (shipped with [Paragraphs](https://www.drupal.org/project/paragraphs)) and its dependencies.
