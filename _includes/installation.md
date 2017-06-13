@@ -1,39 +1,28 @@
 ## Installation
 
-The most easy-to-use method:
+Default setup (Bricks/ECK/IEF):
 
-1. Download and install [Bricks Bootstrap](https://www.drupal.org/project/bricks_bootstrap) with its dependencies.
-2. Download and enable [Tweme](https://www.drupal.org/project/tweme) (or any other Bootstrap 4 theme).
-3. **Done!**
+1. Install **Bricks Default** (shipped with Bricks) and its dependencies.
+2. **Done!** Now you can create **Bricky** pages (content type) using simple pre-configured ECK bricks like Text, Image, Wrapper and special Layout brick (which can render other bricks via [Layout API](https://www.drupal.org/docs/8/api/layout-api)). Use an auto-created node as a live playground.
 
-Now you can create **Bricky** pages (content type) using powerful preconfigured **Bricks** such as Text, Image, Accordion, Carousel, Tabs and others (ECK bundles). Use auto-created "All new AirPods" node as a live playground.
+Theming with Bootstrap 3/4:
 
-Video tutorial: [vimeo.com/211714437](https://vimeo.com/211714437).
+1. Additionally install [Bootstrap Kit](https://www.drupal.org/project/bootstrap_kit) and its dependencies.
+3. **Done!** Now you can use Columns, Accordion, Carousel and Tabs components via Layout brick. Install **Bootstrap Kit Demo** (shipped with Bootstrap Kit) to get a sample node.
 
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-bootstrap-8.x-4.1-node.png)
+Using with Paragraphs:
 
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-bootstrap-8.x-4.1-node-edit.png)
-
-### Paragraphs setup <sup>8.x-1.3+, in Beta</sup>
-
-1. Download and install [Bootstrap Paragraphs](https://www.drupal.org/project/bootstrap_paragraphs) with its dependencies.
-2. Download and enable [Bootstrap](https://www.drupal.org/project/bootstrap) (or any other Bootstrap 3 theme).
-3. Download and install [Bricks](https://www.drupal.org/project/bricks) with its dependencies. Also enable **Bricks Inline** and **Bricks Revisions**.
-4. Go to **Structure** > **Content types** and create **Bricky** content type.
-5. Delete default **Body** field.
-6. Create new **Body** field of type **Bricks (revisioned)**:
-   - Name: *Body (field_body)*
+1. Additionally install **Paragraphs Demo** (shipped with [Paragraphs](https://www.drupal.org/project/paragraphs)) and its dependencies.
+2. Also install **Bricks Revisions** (shipped with **Bricks**) to be able to reference revisionable entities like Paragraphs.
+3. Go to **Structure** > **Content types** > **Paragraphed article** > **Manage fields**.
+4. Delete default **Paragraphs** field.
+5. Create new **Paragraphs** field of type **Bricks (revisioned)**:
+   - Name: *Paragraphs (field_paragraphs)*
    - Type of item to reference: *Paragraph*
    - Allowed number of values: *Unlimited*
-7. Go to **Manage form display** and set **Bricks tree (Inline entity form)** widget for **Body** field.
-8. Go to **Manage display** and hide label for **Body** field.
-9. **Done!**
-
-Now you can create **Bricky** pages (content type) using your favorite Paragraphs such as Simple, Image, Accordion, Carousel, Tabs and others (Paragraph types).
-
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-8.x-1.3-bootstrap-paragraphs-1.0-beta1-node.png)
-
-![](https://cdn.rawgit.com/highweb/drupal-bricks/media/bricks-8.x-1.3-bootstrap-paragraphs-1.0-beta1-node-edit.png)
+6. Go to **Manage form display** and set **Bricks tree (Inline entity form)** widget for **Paragraphs** field.
+7. Go to **Structure** > **Paragraphs types** and create **Layout** type.
+8. **Done!** Now you can create **Paragraphed** pages (content type) using default Paragraphs as bricks: Text, Images, Image + Text, User and special Layout brick (which can render other bricks via [Layout API](https://www.drupal.org/docs/8/api/layout-api)).
 
 
 ## Requirements
