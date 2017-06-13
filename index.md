@@ -16,6 +16,8 @@ header: '
 
 {% include demo.md %}
 
+<!--break-->
+
 {% include installation.md %}
 
 {% include submodules.md %}
