@@ -112,6 +112,9 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 - Team: [timezone.io/team/drupal-bricks](https://timezone.io/team/drupal-bricks).
 
 
+{% include events.md %}
+
+
 ## FAQ
 
 <dl>
