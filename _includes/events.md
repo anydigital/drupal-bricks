@@ -1,5 +1,6 @@
 ## Events
 
+- June 23, 2017: [Session: Entity Reference as a Component-based Site Builder at Design 4 Drupal Boston 2017](https://www.design4drupal.org/sessions/site-building/entity-reference-component-based-site-builder) by [Anton Staroverov](https://www.drupal.org/u/tonystar)
 - June 11, 2017: [Code sprint: Bricks Team at DrupalCamp Kyiv 2017](http://camp17.drupal.ua/en/codesprint)
 - June 10, 2017: [Session: Drupal theming & all the things at DrupalCamp Kyiv 2017](http://camp17.drupal.ua/en/speakers/drupal-theming-all-things) by [Vlad Moyseenko](https://www.drupal.org/u/vladdancer)
 - May 3, 2017: [BoF: Bricks as an Entity-based Site Builder at New York Meetup](https://www.meetup.com/drupalnyc/events/239330721/) by [Anton Staroverov](https://www.drupal.org/u/tonystar)
