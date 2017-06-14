@@ -45,7 +45,7 @@ function bricks_default_install() {
 
   $page = $entity_manager->getStorage('node')->create([
     'type' => 'bricky',
-    'title' => 'Example page powered by Bricks, ECK and Layout API',
+    'title' => 'Bricks = Entities + Layouts',
     'field_body' => [
       ['depth' => 0, 'target_id' => $layout->id(), 'options' => ['layout' => 'layout_twocol']],
         ['depth' => 1, 'target_id' => $text->id()],
