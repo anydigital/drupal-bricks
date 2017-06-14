@@ -1,6 +1,5 @@
 # Bricks
 
-[![Gitter](https://img.shields.io/gitter/room/highweb/drupal-bricks.svg)](https://gitter.im/highweb/drupal-bricks)
 [![Timezone](https://img.shields.io/badge/time-zone-4682b4.svg)](https://timezone.io/team/drupal-bricks)
 [![retweet](https://img.shields.io/badge/re-tweet-00bfff.svg)](https://twitter.com/highwebtech/status/841004866633842689)
 
