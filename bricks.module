@@ -54,32 +54,6 @@ function bricks_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Helper function for layout handling in _bricks_nest_items().
- */
-function _bricks_build_layout_from_items($layout, $items) {
-    $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
-    if (!$layoutPluginManager->hasDefinition($layout)) {
-      drupal_set_message(t('Layout `%layout_id` is unknown.', ['%layout_id' => $layout]), 'warning');
-      return;
-    }
-
-    // Provide any configuration to the layout plugin if necessary.
-    $layoutInstance = $layoutPluginManager->createInstance($layout);
-    $regionNames = $layoutInstance->getPluginDefinition()->getRegionNames();
-
-    // Adjust the lengths:
-    $count = min(count($regionNames), count($items));
-    $regionNames = array_slice($regionNames, 0, $count);
-    $items = array_slice($items, 0, $count);
-
-    // Build the content for your regions.
-    $regions = array_combine($regionNames, $items);
-
-    // This builds the render array.
-    return $layoutInstance->build($regions);
-}
-
-/**
  * Prepares variables for `eck-entity.html.twig`.
  */
 function bricks_preprocess_eck_entity(&$variables) {
@@ -182,6 +156,32 @@ function _bricks_nest_items($element, $items) {
   }
 
   return $items;
+}
+
+/**
+ * Helper function for layout handling in _bricks_nest_items().
+ */
+function _bricks_build_layout_from_items($layout, $items) {
+    $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
+    if (!$layoutPluginManager->hasDefinition($layout)) {
+      drupal_set_message(t('Layout `%layout_id` is unknown.', ['%layout_id' => $layout]), 'warning');
+      return;
+    }
+
+    // Provide any configuration to the layout plugin if necessary.
+    $layoutInstance = $layoutPluginManager->createInstance($layout);
+    $regionNames = $layoutInstance->getPluginDefinition()->getRegionNames();
+
+    // Adjust the lengths:
+    $count = min(count($regionNames), count($items));
+    $regionNames = array_slice($regionNames, 0, $count);
+    $items = array_slice($items, 0, $count);
+
+    // Build the content for your regions.
+    $regions = array_combine($regionNames, $items);
+
+    // This builds the render array.
+    return $layoutInstance->build($regions);
 }
 
 /* BRICKS EDITING */
