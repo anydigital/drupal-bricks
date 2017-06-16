@@ -54,10 +54,12 @@ function bricks_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_entity_view_alter().
+ * Helper function for layout handling in _bricks_nest_items().
  */
-function bricks_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  if ($entity->bundle() == 'layout' && !empty($build['#layout']) && !isset($build['_bricks_layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+function _bricks_build_layout_from_items($layout, $items) {
+    // Emulate $build:
+    $build = ['#layout' => $layout, 'childs' => $items];
+
     $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
     // @TODO: replace by hasDefinition().
     if (!$layoutPluginManager->getDefinition($build['#layout'], FALSE)) {
@@ -78,9 +80,7 @@ function bricks_entity_view_alter(array &$build, EntityInterface $entity, Entity
     $regions = array_combine($regionNames, $childs);
 
     // This builds the render array.
-    $build['_bricks_layout'] = $layoutInstance->build($regions);
-    unset($build['childs']);
-  }
+    return $layoutInstance->build($regions);
 }
 
 /**
@@ -174,6 +174,11 @@ function _bricks_nest_items($element, $items) {
   $rdeltas = array_reverse(array_keys($items));
   foreach ($rdeltas as $delta) {
     $parent_delta = $items[$delta]['#parent_delta'];
+
+    if (!empty($items[$delta]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+      $items[$delta] = _bricks_build_layout_from_items($items[$delta]['#layout'], $items[$delta]['childs']);
+    }
+
     if ($parent_delta != -1) {
       array_unshift($items[$parent_delta]['childs'], $items[$delta]);
       unset($items[$delta]);
