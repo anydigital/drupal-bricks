@@ -43,17 +43,6 @@ function _bricks_field_schema_alter(&$schema) {
 /* BRICKS FORMATTING */
 
 /**
- * Implements hook_theme().
- */
-function bricks_theme($existing, $type, $theme, $path) {
-  return [
-    'eck_entity__brick' => [
-      'base hook' => 'eck_entity',
-    ],
-  ];
-}
-
-/**
  * Helper function: returns a name of the first field of type entity_reference(_revisions).
  */
 function _bricks_first_entity_reference_field_name($entity) {
