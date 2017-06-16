@@ -54,28 +54,6 @@ function bricks_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Prepares variables for `eck-entity.html.twig`.
- */
-function bricks_preprocess_eck_entity(&$variables) {
-  if (!empty($variables['entity']['field_childs']) && Element::children($variables['entity']['field_childs'])) {
-    $variables['entity']['childs'] = array_intersect_key($variables['entity']['field_childs'], Element::children($variables['entity']['field_childs']));
-  }
-}
-
-/**
- * Prepares variables for `paragraph.html.twig`.
- */
-function bricks_preprocess_paragraph(&$variables) {
-  if (isset($variables['content']['childs'])) {
-    $paragraph = $variables['elements']['#paragraph'];
-    if ($field_name = _bricks_first_entity_reference_field_name($paragraph)) {
-      $variables['content'][$field_name] = $variables['content']['childs'];
-      unset($variables['content']['childs']);
-    }
-  }
-}
-
-/**
  * Helper function: returns a name of the first field of type entity_reference(_revisions).
  */
 function _bricks_first_entity_reference_field_name($entity) {
