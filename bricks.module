@@ -43,18 +43,6 @@ function _bricks_field_schema_alter(&$schema) {
 /* BRICKS FORMATTING */
 
 /**
- * Helper function: returns a name of the first field of type entity_reference(_revisions).
- */
-function _bricks_first_entity_reference_field_name($entity) {
-  foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
-    if (!$field_definition->getFieldStorageDefinition()->isBaseField()
-      && in_array($field_definition->getType(), ['entity_reference', 'entity_reference_revisions'])) {
-      return $field_name;
-    }
-  }
-}
-
-/**
  * Prepares variables for `field.html.twig`.
  */
 function bricks_preprocess_field(&$variables) {
