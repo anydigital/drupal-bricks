@@ -113,7 +113,8 @@ function _bricks_nest_items($element, $items) {
     $parent_delta = $items[$delta]['#parent_delta'];
 
     if (!empty($items[$delta]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
-      $items[$delta] = _bricks_build_layout_from_items($items[$delta]['#layout'], $items[$delta]['childs']);
+      $items[$delta] = array_intersect_key($items[$delta], array_flip(['#label', '#attributes'])) +
+        _bricks_build_layout_from_items($items[$delta]['#layout'], $items[$delta]['childs']);
     }
 
     if ($parent_delta != -1) {
