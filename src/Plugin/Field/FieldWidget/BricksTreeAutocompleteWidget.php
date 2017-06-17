@@ -12,7 +12,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Bricks tree (Autocomplete)"),
  *   description = @Translation("A tree of autocomplete text fields."),
  *   field_types = {
- *     "bricks"
+ *     "bricks",
+ *     "bricks_revisioned"
  *   }
  * )
  */
