@@ -4,9 +4,9 @@ dependencies:
   module:
     - eck
     - text
-id: brick.field_text
+id: basic.field_text
 field_name: field_text
-entity_type: brick
+entity_type: basic
 type: text_long
 settings: {  }
 module: text

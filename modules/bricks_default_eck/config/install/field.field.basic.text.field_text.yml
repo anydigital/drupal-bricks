@@ -2,13 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.brick.text
-    - field.storage.brick.field_text
+    - eck.eck_type.basic.text
+    - field.storage.basic.field_text
   module:
     - text
-id: brick.text.field_text
+id: basic.text.field_text
 field_name: field_text
-entity_type: brick
+entity_type: basic
 bundle: text
 label: Text
 description: ''

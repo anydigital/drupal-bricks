@@ -8,8 +8,8 @@ third_party_settings:
     available_menus:
       - main
     parent: 'main:'
-name: Bricky
-type: bricky
+name: Bricky ECK
+type: bricky_eck
 description: 'Use <em>bricky pages</em> for your flexible content, such as ''Home'' or ''Company'' pages.'
 help: ''
 new_revision: true

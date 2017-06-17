@@ -2,14 +2,14 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.bricky.field_body
-    - node.type.bricky
+    - field.field.node.bricky_eck.field_body_eck
+    - node.type.bricky_eck
   module:
     - bricks_inline
     - path
-id: node.bricky.default
+id: node.bricky_eck.default
 targetEntityType: node
-bundle: bricky
+bundle: bricky_eck
 mode: default
 content:
   created:
@@ -17,7 +17,7 @@ content:
     weight: 3
     settings: {  }
     third_party_settings: {  }
-  field_body:
+  field_body_eck:
     weight: 1
     settings:
       form_mode: default

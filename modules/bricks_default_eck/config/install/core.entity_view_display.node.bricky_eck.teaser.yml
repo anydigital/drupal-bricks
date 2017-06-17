@@ -3,17 +3,17 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.bricky.field_body
-    - node.type.bricky
+    - field.field.node.bricky_eck.field_body_eck
+    - node.type.bricky_eck
   module:
     - bricks
     - user
-id: node.bricky.teaser
+id: node.bricky_eck.teaser
 targetEntityType: node
-bundle: bricky
+bundle: bricky_eck
 mode: teaser
 content:
-  field_body:
+  field_body_eck:
     type: bricks_nested
     weight: 0
     label: hidden

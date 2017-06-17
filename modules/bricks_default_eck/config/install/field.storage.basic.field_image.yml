@@ -5,9 +5,9 @@ dependencies:
     - eck
     - file
     - image
-id: brick.field_image
+id: basic.field_image
 field_name: field_image
-entity_type: brick
+entity_type: basic
 type: image
 settings:
   uri_scheme: public

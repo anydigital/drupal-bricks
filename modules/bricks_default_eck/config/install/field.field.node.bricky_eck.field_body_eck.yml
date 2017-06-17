@@ -2,18 +2,18 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.brick.image
-    - eck.eck_type.brick.layout
-    - eck.eck_type.brick.text
-    - eck.eck_type.brick.wrapper
-    - field.storage.node.field_body
-    - node.type.bricky
+    - eck.eck_type.basic.image
+    - eck.eck_type.basic.layout
+    - eck.eck_type.basic.text
+    - eck.eck_type.basic.wrapper
+    - field.storage.node.field_body_eck
+    - node.type.bricky_eck
   module:
     - bricks
-id: node.bricky.field_body
-field_name: field_body
+id: node.bricky_eck.field_body_eck
+field_name: field_body_eck
 entity_type: node
-bundle: bricky
+bundle: bricky_eck
 label: Body
 description: ''
 required: false
@@ -21,7 +21,7 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:brick'
+  handler: 'default:basic'
   handler_settings:
     target_bundles:
       image: image

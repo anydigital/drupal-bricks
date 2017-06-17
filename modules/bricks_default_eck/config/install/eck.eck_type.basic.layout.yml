@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_entity_type.brick
+    - eck.eck_entity_type.basic
 name: Layout
 type: layout
-description: 'Special brick which renders its children via Layout API.'
+description: 'Special basic which renders its children via Layout API.'

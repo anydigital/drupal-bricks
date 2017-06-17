@@ -1,8 +1,8 @@
 langcode: en
 status: true
 dependencies: {  }
-id: brick
-label: Brick
+id: basic
+label: Basic
 created: false
 changed: false
 uid: false

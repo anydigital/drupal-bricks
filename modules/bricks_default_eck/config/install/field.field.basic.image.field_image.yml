@@ -2,13 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.brick.image
-    - field.storage.brick.field_image
+    - eck.eck_type.basic.image
+    - field.storage.basic.field_image
   module:
     - image
-id: brick.image.field_image
+id: basic.image.field_image
 field_name: field_image
-entity_type: brick
+entity_type: basic
 bundle: image
 label: Image
 description: ''

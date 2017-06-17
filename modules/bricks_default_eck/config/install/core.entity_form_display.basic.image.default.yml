@@ -2,13 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.brick.image
-    - field.field.brick.image.field_image
+    - eck.eck_type.basic.image
+    - field.field.basic.image.field_image
     - image.style.thumbnail
   module:
     - image
-id: brick.image.default
-targetEntityType: brick
+id: basic.image.default
+targetEntityType: basic
 bundle: image
 mode: default
 content:

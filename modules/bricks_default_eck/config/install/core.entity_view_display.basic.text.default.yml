@@ -2,12 +2,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.brick.text
-    - field.field.brick.text.field_text
+    - eck.eck_type.basic.text
+    - field.field.basic.text.field_text
   module:
     - text
-id: brick.text.default
-targetEntityType: brick
+id: basic.text.default
+targetEntityType: basic
 bundle: text
 mode: default
 content:

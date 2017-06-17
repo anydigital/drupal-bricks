@@ -5,12 +5,12 @@ dependencies:
     - bricks
     - eck
     - node
-id: node.field_body
-field_name: field_body
+id: node.field_body_eck
+field_name: field_body_eck
 entity_type: node
 type: bricks
 settings:
-  target_type: brick
+  target_type: basic
 module: bricks
 locked: false
 cardinality: -1

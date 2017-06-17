@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_entity_type.brick
+    - eck.eck_entity_type.basic
 name: Wrapper
 type: wrapper
-description: 'Simple brick for wrapping or grouping other bricks.'
+description: 'Simple basic for wrapping or grouping other bricks.'

@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.brick.wrapper
-id: brick.wrapper.default
-targetEntityType: brick
+    - eck.eck_type.basic.wrapper
+id: basic.wrapper.default
+targetEntityType: basic
 bundle: wrapper
 mode: default
 content: {  }

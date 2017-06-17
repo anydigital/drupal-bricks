@@ -7,10 +7,10 @@
 /**
  * Implements hook_install().
  */
-function bricks_default_install() {
+function bricks_default_eck_install() {
   $entity_manager = \Drupal::entityManager();
 
-  $layout = $entity_manager->getStorage('brick')->create([
+  $layout = $entity_manager->getStorage('basic')->create([
     'type' => 'layout',
     'title' => 'Layout',
   ]);
@@ -18,7 +18,7 @@ function bricks_default_install() {
 
   $data = file_get_contents(drupal_get_path('theme', 'bartik') . '/screenshot.png');
   $file = file_save_data($data, 'public://druplicon.png', FILE_EXISTS_REPLACE);
-  $image = $entity_manager->getStorage('brick')->create([
+  $image = $entity_manager->getStorage('basic')->create([
     'type' => 'image',
     'title' => 'Image',
     'field_image' => [
@@ -27,7 +27,7 @@ function bricks_default_install() {
   ]);
   $image->save();
 
-  $text = $entity_manager->getStorage('brick')->create([
+  $text = $entity_manager->getStorage('basic')->create([
     'type' => 'text',
     'title' => 'Text',
     'field_text' => [
@@ -37,16 +37,16 @@ function bricks_default_install() {
   ]);
   $text->save();
 
-  $wrapper = $entity_manager->getStorage('brick')->create([
+  $wrapper = $entity_manager->getStorage('basic')->create([
     'type' => 'wrapper',
     'title' => 'Wrapper',
   ]);
   $wrapper->save();
 
   $page = $entity_manager->getStorage('node')->create([
-    'type' => 'bricky',
-    'title' => 'Bricks = Entities + Layouts',
-    'field_body' => [
+    'type' => 'bricky_eck',
+    'title' => 'Bricks + ECK = ♥',
+    'field_body_eck' => [
       ['depth' => 0, 'target_id' => $layout->id(), 'options' => ['layout' => 'layout_twocol']],
         ['depth' => 1, 'target_id' => $text->id()],
         ['depth' => 1, 'target_id' => $image->id()],
