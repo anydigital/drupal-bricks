@@ -60,7 +60,7 @@ function _bricks_first_entity_reference_field_name($entity) {
 function bricks_preprocess_field(&$variables) {
   $element = $variables['element'];
 
-  if ($element['#formatter'] == 'bricks_nested') {
+  if (in_array($element['#formatter'], ['bricks_nested', 'bricks_nested_dynamic'])) {
     $variables['items'] = [
       [
         'content' => _bricks_nest_items($element, $variables['items']),
