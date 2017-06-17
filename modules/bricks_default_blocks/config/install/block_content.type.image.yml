@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: image
+label: Image
+revision: 0
+description: 'Basic image entity.'

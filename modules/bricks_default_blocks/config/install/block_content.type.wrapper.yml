@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: wrapper
+label: Wrapper
+revision: 0
+description: 'Special entity for wrapping or grouping other entities.'

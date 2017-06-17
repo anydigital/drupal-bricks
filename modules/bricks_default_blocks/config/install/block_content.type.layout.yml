@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: layout
+label: Layout
+revision: 0
+description: 'Special bundle to use Layout API in Bricks.'

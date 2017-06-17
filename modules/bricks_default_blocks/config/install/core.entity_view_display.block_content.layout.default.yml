@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.layout
+id: block_content.layout.default
+targetEntityType: block_content
+bundle: layout
+mode: default
+content: {  }
+hidden: {  }

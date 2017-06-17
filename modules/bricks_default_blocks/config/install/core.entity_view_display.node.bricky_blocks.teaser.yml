@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.bricky_blocks.field_body_blocks
+    - node.type.bricky_blocks
+  module:
+    - bricks
+    - user
+id: node.bricky_blocks.teaser
+targetEntityType: node
+bundle: bricky_blocks
+mode: teaser
+content:
+  field_body_blocks:
+    type: bricks_nested
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
