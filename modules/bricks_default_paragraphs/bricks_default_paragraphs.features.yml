@@ -1,0 +1,4 @@
+excluded:
+  - core.base_field_override.node.bricky_paragraphs.promote
+  - language.content_settings.node.bricky_paragraphs
+required: true

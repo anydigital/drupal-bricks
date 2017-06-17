@@ -1,0 +1,56 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_body_paragraphs
+    - node.type.bricky_paragraphs
+    - paragraphs.paragraphs_type.images
+    - paragraphs.paragraphs_type.layout
+    - paragraphs.paragraphs_type.text
+    - paragraphs.paragraphs_type.wrapper
+  module:
+    - bricks_revisions
+id: node.bricky_paragraphs.field_body_paragraphs
+field_name: field_body_paragraphs
+entity_type: node
+bundle: bricky_paragraphs
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      images: images
+      layout: layout
+      text: text
+      wrapper: wrapper
+    target_bundles_drag_drop:
+      image_text:
+        weight: '9'
+        enabled: 0
+      images:
+        enabled: '1'
+        weight: '10'
+      layout:
+        enabled: '1'
+        weight: '11'
+      nested_paragraph:
+        weight: '12'
+        enabled: 0
+      text:
+        enabled: '1'
+        weight: '13'
+      text_image:
+        weight: '14'
+        enabled: 0
+      user:
+        weight: '15'
+        enabled: 0
+      wrapper:
+        enabled: '1'
+        weight: '16'
+field_type: bricks_revisioned

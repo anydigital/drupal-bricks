@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.bricky_paragraphs.field_body_paragraphs
+    - node.type.bricky_paragraphs
+  module:
+    - bricks
+    - user
+id: node.bricky_paragraphs.teaser
+targetEntityType: node
+bundle: bricky_paragraphs
+mode: teaser
+content:
+  field_body_paragraphs:
+    type: bricks_nested
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

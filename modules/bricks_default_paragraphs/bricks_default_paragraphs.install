@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_install().
+ */
+function bricks_default_paragraphs_install() {
+  $entity_manager = \Drupal::entityManager();
+
+  $layout = $entity_manager->getStorage('paragraph')->create([
+    'type' => 'layout',
+  ]);
+  $layout->save();
+
+  $data = file_get_contents(drupal_get_path('theme', 'bartik') . '/screenshot.png');
+  $file = file_save_data($data, 'public://bartik.png');
+  $image = $entity_manager->getStorage('paragraph')->create([
+    'type' => 'images',
+    'field_images_demo' => [
+      'target_id' => $file->id(),
+    ],
+  ]);
+  $image->save();
+
+  $text = $entity_manager->getStorage('paragraph')->create([
+    'type' => 'text',
+    'field_text_demo' => [
+      'value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      'format' => 'basic_html',
+    ],
+  ]);
+  $text->save();
+
+  $wrapper = $entity_manager->getStorage('paragraph')->create([
+    'type' => 'wrapper',
+  ]);
+  $wrapper->save();
+
+  $page = $entity_manager->getStorage('node')->create([
+    'type' => 'bricky_paragraphs',
+    'title' => 'Bricks + Paragraphs = ♥',
+    'field_body_paragraphs' => [
+      ['depth' => 0, 'target_id' => $layout->id(), 'target_revision_id' => $layout->getRevisionId(), 'options' => ['layout' => 'layout_twocol']],
+        ['depth' => 1, 'target_id' => $text->id(), 'target_revision_id' => $text->getRevisionId()],
+        ['depth' => 1, 'target_id' => $image->id(), 'target_revision_id' => $image->getRevisionId()],
+        ['depth' => 1, 'target_id' => $text->id(), 'target_revision_id' => $text->getRevisionId(), 'options' => ['css_class' => 'text-align-right']],
+        ['depth' => 1, 'target_id' => $text->id(), 'target_revision_id' => $text->getRevisionId()],
+    ],
+  ]);
+  $page->save();
+}

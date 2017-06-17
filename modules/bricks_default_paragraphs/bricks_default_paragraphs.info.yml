@@ -1,0 +1,16 @@
+name: 'Bricks Default Paragraphs'
+description: 'Defaut setup for Bricks + Paragraphs.'
+type: module
+core: 8.x
+dependencies:
+  - bricks
+  - bricks_inline
+  - bricks_revisions
+  - field
+  - language
+  - menu_ui
+  - node
+  - paragraphs
+  - paragraphs_demo
+  - path
+  - user
