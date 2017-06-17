@@ -20,5 +20,6 @@ content:
       link: false
     third_party_settings: {  }
     type: bricks_nested
+    region: content
 hidden:
   links: true

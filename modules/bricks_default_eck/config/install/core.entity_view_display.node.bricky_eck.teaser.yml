@@ -21,5 +21,6 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
+    region: content
 hidden:
   links: true
