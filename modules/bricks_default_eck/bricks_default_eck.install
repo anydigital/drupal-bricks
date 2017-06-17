@@ -17,7 +17,7 @@ function bricks_default_eck_install() {
   $layout->save();
 
   $data = file_get_contents(drupal_get_path('theme', 'bartik') . '/screenshot.png');
-  $file = file_save_data($data, 'public://druplicon.png', FILE_EXISTS_REPLACE);
+  $file = file_save_data($data, 'public://bartik.png');
   $image = $entity_manager->getStorage('basic')->create([
     'type' => 'image',
     'title' => 'Image',

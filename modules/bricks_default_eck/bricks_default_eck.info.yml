@@ -1,5 +1,5 @@
 name: 'Bricks Default ECK'
-description: 'Defaut Bricks + ECK setup.'
+description: 'Defaut setup for Bricks + ECK.'
 package: Bricks
 type: module
 core: 8.x

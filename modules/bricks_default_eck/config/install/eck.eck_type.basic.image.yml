@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.basic
 name: Image
 type: image
-description: 'Simple image basic.'
+description: 'Basic image entity.'

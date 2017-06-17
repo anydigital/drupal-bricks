@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.basic
 name: Text
 type: text
-description: 'Simple text basic.'
+description: 'Basic text entity.'

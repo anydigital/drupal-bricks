@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.basic
 name: Wrapper
 type: wrapper
-description: 'Simple basic for wrapping or grouping other bricks.'
+description: 'Special entity for wrapping or grouping other entities.'

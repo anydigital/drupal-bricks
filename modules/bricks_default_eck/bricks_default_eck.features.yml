@@ -2,4 +2,5 @@ excluded:
   - node.type.page
   - rdf.mapping.node.page
   - core.base_field_override.node.page.promote
+  - core.base_field_override.node.bricky_eck.promote
 required: true

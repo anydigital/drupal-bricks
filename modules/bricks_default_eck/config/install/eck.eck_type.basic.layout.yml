@@ -5,4 +5,4 @@ dependencies:
     - eck.eck_entity_type.basic
 name: Layout
 type: layout
-description: 'Special basic which renders its children via Layout API.'
+description: 'Special bundle to use Layout API in Bricks.'
