@@ -5,8 +5,25 @@
  */
 
 /**
+ * Implements hook_field_formatter_info_alter().
+ */
+function bricks_dynamic_field_formatter_info_alter(array &$info) {
+  $info['dynamic_entity_reference_entity_view']['field_types'][] = 'bricks_dynamic';
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `dynamic_entity_reference_default`.
+ */
+function bricks_dynamic_field_widget_dynamic_entity_reference_default_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  // @TODO: check that this is a Bricks field!!!
+  // #default_value is en Entity or NULL.
+  _bricks_form_element_alter($element, $context['items'][$context['delta']], $element['target_id']['#default_value']);
+  hide($element['depth']);
+}
+
+/**
  * Prepares variables for `field-multiple-value-form.html.twig`.
  */
 function bricks_dynamic_preprocess_field_multiple_value_form(&$variables) {
- _bricks_preprocess_tabledrag_form($variables, 'element', 'bricks_tree_dynamic', $variables['element']['#field_name'] . '-delta-order');
+ _bricks_preprocess_tabledrag_form($variables, 'element', 'dynamic_entity_reference_default', $variables['element']['#field_name'] . '-delta-order');
 }

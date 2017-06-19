@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function bricks_revisions_field_formatter_info_alter(array &$info) {
+  $info['entity_reference_revisions_entity_view']['field_types'][] = 'bricks_revisioned';
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `entity_reference_revisions_autocomplete`.
+ */
+function bricks_revisions_field_widget_entity_reference_revisions_autocomplete_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  // #default_value is en Entity or NULL.
+  _bricks_form_element_alter($element, $context['items'][$context['delta']], $element['target_id']['#default_value']);
+  hide($element['depth']);
+}
+
+/**
+ * Prepares variables for `field-multiple-value-form.html.twig`.
+ */
+function bricks_revisions_preprocess_field_multiple_value_form(&$variables) {
+  _bricks_preprocess_tabledrag_form($variables, 'element', 'entity_reference_revisions_autocomplete', $variables['element']['#field_name'] . '-delta-order');
+}

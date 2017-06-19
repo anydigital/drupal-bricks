@@ -7,12 +7,50 @@
 use Drupal\Core\Render\Element;
 
 
+function bricks_inline_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if (isset($form['#entity_builders'])) {
+    $form['#entity_builders'][] = '_copy_bricks_values_to_entity';
+  }
+}
+
+function _copy_bricks_values_to_entity($entity_type_id, \Drupal\Core\Entity\EntityInterface $entity, array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  foreach ($form_state->get('inline_entity_form') as $iefId => $widget_state) {
+    $field_name = $widget_state['instance']->getName();
+    $field_value = $form_state->getValue($field_name);
+    usort($field_value['entities'], function($a, $b) {
+      return \Drupal\Component\Utility\SortArray::sortByKeyInt($a, $b, 'delta');
+    });
+
+    $values = $entity->get($field_name)->getValue();
+    foreach ($values as $delta => $value) {
+      if (isset($field_value['entities'][$delta])) {
+        $values[$delta]['depth'] = $field_value['entities'][$delta]['depth'];
+        $values[$delta]['options'] = $field_value['entities'][$delta]['options'];
+      }
+    }
+    $entity->set($field_name, $values);
+  }
+}
+
 /**
  * Implements hook_theme_registry_alter().
  */
 function bricks_inline_theme_registry_alter(&$theme_registry) {
+  // @TODO: base hook?
   $theme_registry['inline_entity_form_entity_table']['theme path'] = drupal_get_path('module', 'bricks_inline');
   $theme_registry['inline_entity_form_entity_table']['function'] = 'bricks_inline_inline_entity_form_entity_table';
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function bricks_inline_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  if (in_array($element['#widget'], ['inline_entity_form_complex', 'bricks_tree_inline'])) {
+    $entities = $form_state->get(['inline_entity_form', $element['#ief_id'], 'entities']);
+    foreach ($entities as $delta => $value) {
+      _bricks_form_element_alter($element['entities'][$delta], $context['items'][$delta], $value['entity']);
+    }
+  }
 }
 
 /**
@@ -26,10 +64,11 @@ function bricks_inline_inline_entity_form_reference_form_alter(&$reference_form,
 /**
  * Prepares variables for theme_inline_entity_form_entity_table().
  */
-function bricks_inline_preprocess_inline_entity_form_entity_table(&$variables) {
+function bricks_inline_preprocess_inline_entity_form_entity_table(&$variables) {ksm($variables);
   _inline_entity_form_preprocess_inline_entity_form_entity_table($variables);
 
   if (!empty($variables['table']['#tabledrag'])) {
+    _bricks_preprocess_tabledrag_form($variables, 'form', 'inline_entity_form_complex', 'ief-entity-delta', TRUE);
     _bricks_preprocess_tabledrag_form($variables, 'form', 'bricks_tree_inline', 'ief-entity-delta', TRUE);
   }
 }

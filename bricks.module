@@ -43,12 +43,20 @@ function _bricks_field_schema_alter(&$schema) {
 /* BRICKS FORMATTING */
 
 /**
+ * Implements hook_field_formatter_info_alter().
+ */
+function bricks_field_formatter_info_alter(array &$info) {
+  $info['entity_reference_entity_view']['field_types'][] = 'bricks';
+}
+
+/**
  * Prepares variables for `field.html.twig`.
  */
 function bricks_preprocess_field(&$variables) {
   $element = $variables['element'];
 
-  if (in_array($element['#formatter'], ['bricks_nested', 'bricks_nested_dynamic'])) {
+  // @TODO: Replace by 'Nested bricks' formatter setting.
+  if (in_array($element['#field_type'], ['bricks', 'bricks_revisioned', 'bricks_dynamic'])) {
     $variables['items'] = [
       [
         'content' => _bricks_nest_items($element, $variables['items']),
@@ -154,6 +162,27 @@ function bricks_field_widget_info_alter(array &$info) {
     if (in_array('entity_reference_revisions', $widget_info['field_types'])) {
       $widget_info['field_types'][] = 'bricks_revisioned';
     }
+    if (in_array('dynamic_entity_reference', $widget_info['field_types'])) {
+      $widget_info['field_types'][] = 'bricks_dynamic';
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function bricks_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  // @TODO: Replace by 'Nested bricks' widget setting.
+  $field_type = $context['items']->getFieldDefinition()->getType();
+  $element['#bricks'] = in_array($field_type, ['bricks', 'bricks_revisioned', 'bricks_dynamic']);
+
+  $widget_type = $context['widget']->getPluginId();
+  $element['#widget'] = $widget_type;
+
+  if ($element['#bricks'] && in_array($widget_type, ['entity_reference_autocomplete', 'bricks_tree_autocomplete'])) {
+    // #default_value is en Entity or NULL.
+    _bricks_form_element_alter($element, $context['items'][$context['delta']], $element['target_id']['#default_value']);
+    hide($element['depth']);
   }
 }
 
@@ -161,18 +190,18 @@ function bricks_field_widget_info_alter(array &$info) {
  * Prepares variables for `field-multiple-value-form.html.twig`.
  */
 function bricks_preprocess_field_multiple_value_form(&$variables) {
-  _bricks_preprocess_tabledrag_form($variables, 'element', 'bricks_tree_autocomplete', $variables['element']['#field_name'] . '-delta-order');
+  // _bricks_preprocess_tabledrag_form($variables, 'element', 'entity_reference_autocomplete', $variables['element']['#field_name'] . '-delta-order');
+  // _bricks_preprocess_tabledrag_form($variables, 'element', 'bricks_tree_autocomplete', $variables['element']['#field_name'] . '-delta-order');
 }
 
 /**
  * Helper function for hook_preprocess_field_multiple_value_form().
  */
-function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $order_class, $render_options = FALSE) {
+function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $order_class, $render_options = FALSE) {
   $element = $variables[$element_key];
 
-  if (isset($element['#widget']) && $element['#widget'] == $widget) {
     // @TODO: Tmp hack for the proper indent width calculation.
-    $variables['table']['#header'][0]['style'] = 'min-width: 100px';
+    $variables['table']['#header'][0]['style'] = 'min-width: 150px';
     $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
 
     foreach (Element::children($element) as $row => $key) {
@@ -190,7 +219,7 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
         $drag_cell = &$variables['table']['#rows'][$row]['data'][0];
         $drag_cell['data'] = !empty($indentation) ? drupal_render($indentation) : '' . $drag_cell['data'];
         // @TODO
-        $drag_cell['style'] = 'width: initial';
+        $drag_cell['style'] = 'width: initial; min-width: 150px';
 
         show($element[$key]['depth']);
         $variables['table']['#rows'][$row]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
@@ -218,7 +247,6 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
     );
 
     $variables['table']['#attached']['library'][] = 'bricks/tabledrag.relationship-all';
-  }
 }
 
 /**
