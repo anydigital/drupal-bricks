@@ -1,5 +1,6 @@
 name: 'Bricks Default Paragraphs'
 description: 'Defaut setup for Bricks + Paragraphs.'
+package: Bricks
 type: module
 core: 8.x
 dependencies:
