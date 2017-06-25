@@ -26,18 +26,18 @@ function _bricks_field_properties_alter(&$properties) {
  * Helper function for FieldItemInterface::schema().
  */
 function _bricks_field_schema_alter(&$schema) {
-  $schema['columns']['depth'] = array(
+  $schema['columns']['depth'] = [
     'type' => 'int',
     'size' => 'tiny',
     'unsigned' => TRUE,
-  );
+  ];
 
-  $schema['columns']['options'] = array(
+  $schema['columns']['options'] = [
     'type' => 'blob',
     'size' => 'normal',
     'not null' => FALSE,
     'serialize' => TRUE,
-  );
+  ];
 }
 
 /* BRICKS FORMATTING */
@@ -63,7 +63,7 @@ function bricks_preprocess_field(&$variables) {
 function _bricks_nest_items($element, $items) {
 
   // Prepare items:
-  $parents = array(-1);
+  $parents = [-1];
   $prev_depth = 0;
   foreach ($items as $delta => $item) {
     $depth = $element['#items'][$delta]->depth;
@@ -80,7 +80,7 @@ function _bricks_nest_items($element, $items) {
     $items[$delta]['#delta'] = $delta;
     $items[$delta]['#parent_delta'] = $parents[0];
 
-    $items[$delta]['childs'] = array();
+    $items[$delta]['childs'] = [];
     if (!empty($element['#items'][$delta]->options['view_mode'])) {
       $items[$delta]['#view_mode'] = $element['#items'][$delta]->options['view_mode'];
     }
@@ -92,7 +92,7 @@ function _bricks_nest_items($element, $items) {
     }
 
     // Disable entity render cache, rely on field cache:
-    $items[$delta]['#cache'] = array('disabled' => TRUE);
+    $items[$delta]['#cache'] = ['disabled' => TRUE];
   }
 
   // Process items in reverse order (without recursion):
@@ -179,12 +179,12 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
       if ($key !== 'add_more') {
         $depth = $element[$key]['depth']['#value'];
 
-        $indentation = array();
+        $indentation = [];
         if ($depth > 0) {
-          $indentation = array(
+          $indentation = [
             '#theme' => 'indentation',
             '#size' => $depth,
-          );
+          ];
         }
 
         $drag_cell = &$variables['table']['#rows'][$row]['data'][0];
@@ -205,17 +205,17 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
 
     $tabledrag_options = &$variables['table']['#tabledrag'];
     $tabledrag_options[0]['relationship'] = 'all';
-    $tabledrag_options[] = array(
+    $tabledrag_options[] = [
       'action' => 'depth',
       'relationship' => 'group',
       'group' => 'bricks-depth',
-    );
+    ];
     // Fake option to enable indentation:
-    $tabledrag_options[] = array(
+    $tabledrag_options[] = [
       'action' => 'match',
       'relationship' => 'parent',
       'group' => $order_class,
-    );
+    ];
 
     $variables['table']['#attached']['library'][] = 'bricks/tabledrag.relationship-all';
   }
