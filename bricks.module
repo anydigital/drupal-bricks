@@ -230,16 +230,16 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
     '#type' => 'hidden',
     '#default_value' => !empty($item->depth) ? $item->depth : 0,
     '#weight' => 10,
-    '#attributes' => array(
-      'class' => array('bricks-depth'),
-    ),
+    '#attributes' => [
+      'class' => ['bricks-depth'],
+],
   ];
   $element['options'] = [
     '#type' => 'container',
     '#weight' => 100,
-    '#attributes' => array(
-      'class' => array('container-inline'),
-    ),
+    '#attributes' => [
+      'class' => ['container-inline'],
+    ],
   ];
   if ($entity) {
     if ($entity->bundle() == 'layout' && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
@@ -261,9 +261,9 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
     '#type' => 'textfield',
     '#default_value' => !empty($item->options['css_class']) ? $item->options['css_class'] : '',
     '#size' => 10,
-    '#attributes' => array(
+    '#attributes' => [
       'placeholder' => t('CSS class(-es)'),
-    ),
+    ],
   ];
 }
 
