@@ -28,4 +28,6 @@ header: '
 
 {% include events.md %}
 
+{% include showcase.md %}
+
 {% include faq.md %}
