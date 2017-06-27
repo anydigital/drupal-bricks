@@ -2,10 +2,10 @@
 
 /**
  * @file
+ * {@inheritdoc}
  */
 
 use Drupal\Core\Render\Element;
-
 
 /**
  * Implements hook_theme_registry_alter().
@@ -19,7 +19,8 @@ function bricks_inline_theme_registry_alter(&$theme_registry) {
  * Implements hook_inline_entity_form_reference_form_alter().
  */
 function bricks_inline_inline_entity_form_reference_form_alter(&$reference_form, &$form_state) {
-  // Skip standard IEF validation to allow multiple references to the same entity:
+  // Skip standard IEF validation to allow multiple references to
+  // the same entity:
   $reference_form['#element_validate'] = array_diff($reference_form['#element_validate'], ['inline_entity_form_reference_form_validate']);
 }
 
@@ -35,7 +36,8 @@ function bricks_inline_preprocess_inline_entity_form_entity_table(&$variables) {
 }
 
 /**
- * Overrides theme_inline_entity_form_entity_table() with a help from hook_theme_registry_alter().
+ * Overrides theme_inline_entity_form_entity_table()
+ * with a help from hook_theme_registry_alter().
  */
 function bricks_inline_inline_entity_form_entity_table($variables) {
   if (!empty($variables['table'])) {
@@ -129,7 +131,11 @@ function _inline_entity_form_preprocess_inline_entity_form_entity_table(&$variab
       $row = [
         ['data' => $renderer->render($form[$key]['form']), 'colspan' => count($fields) + 1],
       ];
-      $rows[] = ['data' => $row, 'class' => ['ief-row-form'], 'no_striping' => TRUE];
+      $rows[] = [
+        'data' => $row,
+        'class' => ['ief-row-form'],
+        'no_striping' => TRUE,
+      ];
     }
   }
 

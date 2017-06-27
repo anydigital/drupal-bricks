@@ -5,6 +5,8 @@ namespace Drupal\bricks\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
 
 /**
+ * {@inheritdoc}
+ *
  * @FieldFormatter(
  *   id = "bricks_nested",
  *   label = @Translation("Bricks (Nested)"),

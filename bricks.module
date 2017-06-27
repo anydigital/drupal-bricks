@@ -2,10 +2,9 @@
 
 /**
  * @file
+ * {@inheritdoc}
  */
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -118,26 +117,26 @@ function _bricks_nest_items($element, $items) {
  * Helper function for layout handling in _bricks_nest_items().
  */
 function _bricks_build_layout_from_items($layout, $items) {
-    $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
-    if (!$layoutPluginManager->hasDefinition($layout)) {
-      drupal_set_message(t('Layout `%layout_id` is unknown.', ['%layout_id' => $layout]), 'warning');
-      return;
-    }
+  $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
+  if (!$layoutPluginManager->hasDefinition($layout)) {
+    drupal_set_message(t('Layout `%layout_id` is unknown.', ['%layout_id' => $layout]), 'warning');
+    return;
+  }
 
-    // Provide any configuration to the layout plugin if necessary.
-    $layoutInstance = $layoutPluginManager->createInstance($layout);
-    $regionNames = $layoutInstance->getPluginDefinition()->getRegionNames();
+  // Provide any configuration to the layout plugin if necessary.
+  $layoutInstance = $layoutPluginManager->createInstance($layout);
+  $regionNames = $layoutInstance->getPluginDefinition()->getRegionNames();
 
-    // Adjust the lengths:
-    $count = min(count($regionNames), count($items));
-    $regionNames = array_slice($regionNames, 0, $count);
-    $items = array_slice($items, 0, $count);
+  // Adjust the lengths:
+  $count = min(count($regionNames), count($items));
+  $regionNames = array_slice($regionNames, 0, $count);
+  $items = array_slice($items, 0, $count);
 
-    // Build the content for your regions.
-    $regions = array_combine($regionNames, $items);
+  // Build the content for your regions.
+  $regions = array_combine($regionNames, $items);
 
-    // This builds the render array.
-    return $layoutInstance->build($regions);
+  // This builds the render array.
+  return $layoutInstance->build($regions);
 }
 
 /* BRICKS EDITING */
@@ -232,7 +231,7 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
     '#weight' => 10,
     '#attributes' => [
       'class' => ['bricks-depth'],
-],
+    ],
   ];
   $element['options'] = [
     '#type' => 'container',

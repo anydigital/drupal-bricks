@@ -6,6 +6,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 
 /**
+ * {@inheritdoc}
+ *
  * @FieldType(
  *   id = "bricks",
  *   label = @Translation("Bricks"),
@@ -18,6 +20,9 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
  */
 class BricksTreeItem extends EntityReferenceItem {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties = parent::propertyDefinitions($field_definition);
 
@@ -26,6 +31,9 @@ class BricksTreeItem extends EntityReferenceItem {
     return $properties;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
 

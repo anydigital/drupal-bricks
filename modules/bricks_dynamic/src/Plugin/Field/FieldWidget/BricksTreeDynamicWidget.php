@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\dynamic_entity_reference\Plugin\Field\FieldWidget\DynamicEntityReferenceWidget;
 
 /**
+ * {@inheritdoc}
+ *
  * @FieldWidget(
  *   id = "bricks_tree_dynamic",
  *   label = @Translation("Bricks tree (Dynamic)"),
@@ -18,6 +20,9 @@ use Drupal\dynamic_entity_reference\Plugin\Field\FieldWidget\DynamicEntityRefere
  */
 class BricksTreeDynamicWidget extends DynamicEntityReferenceWidget {
 
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
@@ -28,6 +33,9 @@ class BricksTreeDynamicWidget extends DynamicEntityReferenceWidget {
     return $element;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 

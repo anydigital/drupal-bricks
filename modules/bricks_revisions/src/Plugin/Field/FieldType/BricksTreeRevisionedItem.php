@@ -6,6 +6,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem;
 
 /**
+ * {@inheritdoc}
+ *
  * @FieldType(
  *   id = "bricks_revisioned",
  *   label = @Translation("Bricks (revisioned)"),
@@ -18,6 +20,9 @@ use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevi
  */
 class BricksTreeRevisionedItem extends EntityReferenceRevisionsItem {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties = parent::propertyDefinitions($field_definition);
 
@@ -26,6 +31,9 @@ class BricksTreeRevisionedItem extends EntityReferenceRevisionsItem {
     return $properties;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
 

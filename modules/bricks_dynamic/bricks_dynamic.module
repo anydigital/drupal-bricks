@@ -2,11 +2,12 @@
 
 /**
  * @file
+ * {@inheritdoc}
  */
 
 /**
  * Prepares variables for `field-multiple-value-form.html.twig`.
  */
 function bricks_dynamic_preprocess_field_multiple_value_form(&$variables) {
- _bricks_preprocess_tabledrag_form($variables, 'element', 'bricks_tree_dynamic', $variables['element']['#field_name'] . '-delta-order');
+  _bricks_preprocess_tabledrag_form($variables, 'element', 'bricks_tree_dynamic', $variables['element']['#field_name'] . '-delta-order');
 }

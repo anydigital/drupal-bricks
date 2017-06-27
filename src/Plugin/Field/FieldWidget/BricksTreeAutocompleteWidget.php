@@ -7,6 +7,8 @@ use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * {@inheritdoc}
+ *
  * @FieldWidget(
  *   id = "bricks_tree_autocomplete",
  *   label = @Translation("Bricks tree (Autocomplete)"),
@@ -19,6 +21,9 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class BricksTreeAutocompleteWidget extends EntityReferenceAutocompleteWidget {
 
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
@@ -29,6 +34,9 @@ class BricksTreeAutocompleteWidget extends EntityReferenceAutocompleteWidget {
     return $element;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 

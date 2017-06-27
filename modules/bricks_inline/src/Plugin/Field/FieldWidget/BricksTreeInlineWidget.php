@@ -7,6 +7,8 @@ use Drupal\inline_entity_form\Plugin\Field\FieldWidget\InlineEntityFormComplex;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * {@inheritdoc}
+ *
  * @FieldWidget(
  *   id = "bricks_tree_inline",
  *   label = @Translation("Bricks tree (Inline entity form)"),
@@ -20,6 +22,9 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class BricksTreeInlineWidget extends InlineEntityFormComplex {
 
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
@@ -33,6 +38,9 @@ class BricksTreeInlineWidget extends InlineEntityFormComplex {
     return $element;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $field_name = $this->fieldDefinition->getName();
     $field_value = $form_state->getValue($field_name);
