@@ -2,9 +2,7 @@
 
 namespace Drupal\bricks\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * {@inheritdoc}
@@ -20,29 +18,6 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class BricksTreeAutocompleteWidget extends EntityReferenceAutocompleteWidget {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $element = parent::formElement($items, $delta, $element, $form, $form_state);
-
-    // #default_value is en Entity or NULL.
-    _bricks_form_element_alter($element, $items[$delta], $element['target_id']['#default_value']);
-    hide($element['depth']);
-
-    return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
-    $elements = parent::formMultipleElements($items, $form, $form_state);
-
-    $elements['#widget'] = 'bricks_tree_autocomplete';
-
-    return $elements;
-  }
-
+  // DEPRECATED in favor of generic `entity_reference_autocomplete`.
+  // Kept for backward compatibility.
 }
