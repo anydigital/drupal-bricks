@@ -179,10 +179,27 @@ function bricks_field_widget_bricks_tree_autocomplete_form_alter(&$element, \Dru
 }
 
 /**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `paragraphs`.
+ */
+function bricks_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  $field_type = $context['items']->getFieldDefinition()->getType();
+
+  // @TODO: Replace by 'Nested bricks' widget setting.
+  if (in_array($field_type, ['bricks_revisioned'])) {
+    // @TODO: Find a better way to be used in _bricks_preprocess_tabledrag_form().
+    $element['#widget'] = 'paragraphs';
+    $item = $context['items'][$context['delta']];
+    _bricks_form_element_alter($element, $item, entity_load('paragraph', $item->target_id));
+    hide($element['depth']);
+  }
+}
+
+/**
  * Prepares variables for `field-multiple-value-form.html.twig`.
  */
 function bricks_preprocess_field_multiple_value_form(&$variables) {
   _bricks_preprocess_tabledrag_form($variables, 'element', 'entity_reference_autocomplete', $variables['element']['#field_name'] . '-delta-order');
+  _bricks_preprocess_tabledrag_form($variables, 'element', 'paragraphs', $variables['element']['#field_name'] . '-delta-order');
 }
 
 /**
@@ -198,8 +215,9 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
     $variables['table']['#header'][0]['style'] = 'min-width: 150px';
     $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
 
-    foreach (Element::children($element) as $row => $key) {
-      if ($key !== 'add_more') {
+    $row = 0;
+    foreach (Element::children($element) as $i => $key) {
+      if ($key !== 'add_more' && $key !== 'header_actions') {
         $depth = $element[$key]['depth']['#value'];
 
         $indentation = [];
@@ -223,6 +241,10 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
           $element[$key]['options']['#prefix'] = $variables['table']['#rows'][$row]['data'][2]['data'];
           $variables['table']['#rows'][$row]['data'][2]['data'] = \Drupal::service('renderer')->render($element[$key]['options']);
         }
+
+      }
+      if ($key !== 'add_more') {
+        $row++;
       }
     }
 
