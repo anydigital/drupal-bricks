@@ -1,7 +1,11 @@
 ## Events
 
 - Nov 04, 2017: [Session] *[Design-driven Drupal with Paragraphs, Bricks, and other metaphors](https://www.drupalcampatlanta.com/2017/sessions/design-driven-drupal-paragraphs-bricks-and-other-metaphors)* by [Derek DeRaps](https://www.drupal.org/u/derekderaps) @ **DrupalCamp Atlanta 2017**
-- Oct 07, 2017: [Session] *[Widgets + Bricks + Layouts - Easy way to edit rich content](https://twitter.com/LutskDrupalcamp/status/912947850010660864)* by [Anton Faibyshev](https://www.drupal.org/u/faibyshev) @ **DrupalCamp Lutsk 2017**
+- Oct 26, 2017: [Talk] *[Bricks with Paragraphs and without them](https://wondrous.slides.com/wondrousllc/bricks-paragraphs)* by [Anton Staroverov](https://www.drupal.org/u/tonystar) @ **Zurich Meetup**
+- Oct 19, 2017: [Talk] *[Atomic — Drupal distribution baked by Atomic Design](https://wondrous.slides.com/wondrousllc/drupal-atomic)* by [Anton Staroverov](https://www.drupal.org/u/tonystar) @ **Basel Meetup**
+- Oct 14, 2017: [Session] *[Widget engine vs Paragraphs. Widget Engine with Layouts and Bricks.](http://moldcamp.com/sessions/widget-engine-vs-paragraphs-widget-engine-layouts-and-bricks)* by [Vitalii Zinenko](https://www.drupal.org/u/vitalyos) @ **MoldCamp 2017**
+- Oct 07, 2017: [Session] *Widgets + Bricks + Layouts - Easy way to edit rich content* by [Anton Faibyshev](https://www.drupal.org/u/faibyshev) @ **DrupalCamp Lutsk 2017**
+- Sep 26, 2017: [Session] *[How to Content Model in Drupal 8](https://events.drupal.org/vienna2017/sessions/how-content-model-drupal-8)* by [Anton Staroverov](https://www.drupal.org/u/tonystar) @ **DrupalCon Vienna 2017**
 - Sep 23, 2017: [Session] *[Site Building with ECK and Bricks](https://2017.drupalstl.org/sessions/site-building-eck-and-bricks)* by [Karl Kedrovsky](https://www.drupal.org/u/karlkedrovsky) @ **DrupalCamp St. Louis**
 - Jun 29, 2017: [Talk] *Using of Bricks* by [Gábor Tompa](https://www.drupal.org/u/tompagabor) @ **Budapest Meetup**
 - Jun 25, 2017: [Sprint] *[Bricks, Paragraphs, Pattern Lab and Fractal](https://groups.drupal.org/node/517029)* @ **Design 4 Drupal Boston 2017**
