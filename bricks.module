@@ -7,6 +7,7 @@
 
 use Drupal\Core\Render\Element;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Component\Utility\Html;
 
 /* BRICKS STORAGE */
 
@@ -78,6 +79,9 @@ function _bricks_nest_items($element, $items) {
     $items[$delta]['#label'] = $element['#items'][$delta]->entity->label();
     $items[$delta]['#delta'] = $delta;
     $items[$delta]['#parent_delta'] = $parents[0];
+    $items[$delta]['#attributes']['class'][] = 'brick';
+    $items[$delta]['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($element['#items'][$delta]->entity->bundle());
+    $items[$delta]['#attributes']['class'][] = 'brick--id--' . $element['#items'][$delta]->entity->id();
 
     $items[$delta]['childs'] = [];
     if (!empty($element['#items'][$delta]->options['view_mode'])) {
