@@ -193,7 +193,8 @@ function bricks_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\Form\
     // @TODO: Find a better way to be used in _bricks_preprocess_tabledrag_form().
     $element['#widget'] = 'paragraphs';
     $item = $context['items'][$context['delta']];
-    _bricks_form_element_alter($element, $item, entity_load('paragraph', $item->target_id));
+    $entity = $item->target_id ? entity_load('paragraph', $item->target_id) : entity_create('paragraph', array('type' => $element['subform']['#process'][0][0]->getTargetBundle()));
+    _bricks_form_element_alter($element, $item, $entity);
     hide($element['depth']);
   }
 }
