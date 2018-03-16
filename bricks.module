@@ -302,7 +302,7 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
     if ($entity->bundle() != 'layout') {
       $element['options']['view_mode'] = [
         '#type' => 'select',
-        '#options' => \Drupal::service('entity_display.repository')->getViewModeOptions($entity->getEntityTypeId()),
+        '#options' => \Drupal::service('entity_display.repository')->getViewModeOptionsByBundle($entity->getEntityTypeId(), $entity->bundle()),
         '#default_value' => !empty($item->options['view_mode']) ? $item->options['view_mode'] : NULL,
       ];
     }
