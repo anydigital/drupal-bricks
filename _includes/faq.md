@@ -9,6 +9,8 @@
 
   2. Bricks is designed to control entity reference FIELD layout (per entity per field).
 
+  Layout Builder and Bricks follow different goals and have different approaches as a result. They work well together and one could not replace other one.
+
   IE: You can create Article ENTITY and create Content FIELD on it. then you can control whole entity layout via LB and Content field layout via Bricks. the whole Content field rendered by Bricks will be available then for LB as a block.
 </dd>
 
