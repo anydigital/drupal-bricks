@@ -2,6 +2,16 @@
 
 <dl>
 
+<dt>What is a difference with Layout Builder?</dt>
+<dd>
+
+  1. Layout Builder (LB) is designed to control any ENTITY layout (per view mode, or per entity).
+
+  2. Bricks is designed to control entity reference FIELD layout (per entity per field).
+
+  IE: You can create Article ENTITY and create Content FIELD on it. then you can control whole entity layout via LB and Content field layout via Bricks. the whole Content field rendered by Bricks will be available then for LB as a block.
+</dd>
+
 <dt>Are brick bundles translatable?</dt>
 <dd>100% translatable (thanks Entity Translation and ECK). Just mark them as translatable at /admin/config/regional/content-language.</dd>
 
