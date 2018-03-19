@@ -109,6 +109,9 @@ function _bricks_nest_items($element, $items) {
     }
 
     if ($parent_delta != -1) {
+      if (count($items[$parent_delta]['childs']) <= 0) {
+        $items[$parent_delta]['childs'] = [];
+      }
       array_unshift($items[$parent_delta]['childs'], $items[$delta]);
       unset($items[$delta]);
     }
