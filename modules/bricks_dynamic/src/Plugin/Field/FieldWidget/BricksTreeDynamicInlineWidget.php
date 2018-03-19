@@ -28,187 +28,187 @@ use Drupal\Component\Utility\NestedArray;
 class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
 
 
-    /**
-     * Module handler service.
-     *
-     * @var \Drupal\Core\Extension\ModuleHandlerInterface
-     */
-    protected $moduleHandler;
+  /**
+   * Module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
-    protected $entityType;
+  protected $entityType;
 
-    /**
-     * Constructs a InlineEntityFormBase object.
-     *
-     * @param array $plugin_id
-     *   The plugin_id for the widget.
-     * @param mixed $plugin_definition
-     *   The plugin implementation definition.
-     * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-     *   The definition of the field to which the widget is associated.
-     * @param array $settings
-     *   The widget settings.
-     * @param array $third_party_settings
-     *   Any third party settings.
-     * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-     *   The entity type bundle info.
-     * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-     *   The entity type manager.
-     * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-     *   The entity display repository.
-     * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-     *   Module handler service.
-     */
-    public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, ModuleHandlerInterface $module_handler) {
-        parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $entity_type_bundle_info, $entity_type_manager, $entity_display_repository, $module_handler);
-        $this->moduleHandler = $module_handler;
+  /**
+   * Constructs a InlineEntityFormBase object.
+   *
+   * @param array $plugin_id
+   *   The plugin_id for the widget.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the widget is associated.
+   * @param array $settings
+   *   The widget settings.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   *   The entity display repository.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   Module handler service.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, ModuleHandlerInterface $module_handler) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $entity_type_bundle_info, $entity_type_manager, $entity_display_repository, $module_handler);
+    $this->moduleHandler = $module_handler;
+  }
+
+
+  /**
+   * Creates an instance of the inline form handler for the current entity type.
+   */
+  protected function createInlineFormHandler() {
+    if (!isset($this->inlineFormHandler)) {
+      $this->inlineFormHandler = $this->entityTypeManager->getHandler($this->getEntityType(), 'inline_form');
+    }
+  }
+
+  protected function getEntityType() {
+    $name = $this->fieldDefinition->getName();
+
+    // TODO explain why this is used.
+    if (isset($_POST[$name]['actions']['entity_type'])) {
+      return $_POST[$name]['actions']['entity_type'];
+    }
+    $field_settings = $this->fieldDefinition->getSettings();
+    $entity_types = array_values($field_settings['entity_type_ids']);
+    return $entity_types[0];
+  }
+
+
+  /**
+   * Returns the array of field settings.
+   *
+   * @return array
+   *   The array of settings.
+   */
+  protected function getFieldSettings() {
+    $settings = $this->fieldDefinition->getSettings();
+    $settings['target_type'] = $this->getEntityType();
+    return $settings;
+  }
+
+  /**
+   * Returns the value of a field setting.
+   *
+   * @param string $setting_name
+   *   The setting name.
+   *
+   * @return mixed
+   *   The setting value.
+   */
+  protected function getFieldSetting($setting_name) {
+    if ($setting_name == 'target_type') {
+      return $this->getEntityType();
     }
 
+    return $this->fieldDefinition->getSetting($setting_name);
+  }
 
-    /**
-     * Creates an instance of the inline form handler for the current entity type.
-     */
-    protected function createInlineFormHandler() {
-        if (!isset($this->inlineFormHandler)) {
-            $this->inlineFormHandler = $this->entityTypeManager->getHandler($this->getEntityType(), 'inline_form');
+
+  /**
+   * Gets the target bundles for the current field.
+   *
+   * @return string[]
+   *   A list of bundles.
+   */
+  protected function getTargetBundles() {
+    $entity_type = $this->getEntityType();
+    $entity_type_settings = $this->getFieldSettings()[$entity_type];
+    $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
+    return $target_bundles;
+  }
+
+  /**
+   * Gets the access handler for the target entity type.
+   *
+   * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface
+   *   The access handler.
+   */
+  protected function getAccessHandler() {
+    return $this->entityTypeManager->getAccessControlHandler($this->getEntityType());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $element = parent::formElement($items, $delta, $element, $form, $form_state);
+
+    $element['entities']['#widget'] = 'bricks_tree_inline';
+
+    $allowed_entity_types = $this->getFieldSetting('entity_type_ids');
+
+    $entity_type_definitions = \Drupal::entityTypeManager()->getDefinitions();
+
+    foreach ($allowed_entity_types as $allowed_entity_type => &$label) {
+      $label = $entity_type_definitions[$allowed_entity_type]->getLabel();
+    }
+
+    $element['actions']['entity_type'] = [
+      '#type' => 'select',
+      '#options' => $allowed_entity_types,
+      '#default_value' => $this->getEntityType(),
+      '#weight' => -9,
+      '#ajax' => [
+        'callback' => [$this, 'rebuild'],
+        'wrapper' => 'inline-entity-form-' . $element['#ief_id']
+      ]
+    ];
+
+    $element['actions']['bundle']['#element_validate'] = [[$this, 'correctBundle']];
+
+    $entities = $form_state->get(['inline_entity_form', $this->getIefId(), 'entities']);
+    foreach ($entities as $delta => $value) {
+      _bricks_form_element_alter($element['entities'][$delta], $items[$delta], $value['entity']);
+    }
+
+    return $element;
+  }
+
+  public function rebuild(array &$form, FormStateInterface $form_state) {
+    $parents = $form_state->getTriggeringElement()['#parents'];
+    array_pop($parents);
+    array_pop($parents);
+    $fieldset = NestedArray::getValue($form, $parents);
+
+    return $fieldset;
+  }
+
+  public function correctBundle(array &$element, FormStateInterface $form_state) {
+    if (!isset($element['#options'][$element['#value']])) {
+      $form_state->clearErrors();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    $field_name = $this->fieldDefinition->getName();
+    $field_value = $form_state->getValue($field_name);
+
+    foreach ($values as $delta => $value) {
+      if (isset($field_value['entities'][$delta])) {
+        $values[$delta]['depth'] = $field_value['entities'][$delta]['depth'];
+        if (isset($field_value['entities'][$delta]['options'])) {
+          $values[$delta]['options'] = $field_value['entities'][$delta]['options'];
         }
+      }
     }
 
-    protected function getEntityType() {
-        $name = $this->fieldDefinition->getName();
+    return $values;
 
-        // TODO explain why this is used.
-        if (isset($_POST[$name]['actions']['entity_type'])) {
-            return $_POST[$name]['actions']['entity_type'];
-        }
-        $field_settings = $this->fieldDefinition->getSettings();
-        $entity_types = array_values($field_settings['entity_type_ids']);
-        return $entity_types[0];
-    }
-
-
-    /**
-     * Returns the array of field settings.
-     *
-     * @return array
-     *   The array of settings.
-     */
-    protected function getFieldSettings() {
-        $settings = $this->fieldDefinition->getSettings();
-        $settings['target_type'] = $this->getEntityType();
-        return $settings;
-    }
-
-    /**
-     * Returns the value of a field setting.
-     *
-     * @param string $setting_name
-     *   The setting name.
-     *
-     * @return mixed
-     *   The setting value.
-     */
-    protected function getFieldSetting($setting_name) {
-        if ($setting_name == 'target_type') {
-            return $this->getEntityType();
-        }
-
-        return $this->fieldDefinition->getSetting($setting_name);
-    }
-
-
-    /**
-     * Gets the target bundles for the current field.
-     *
-     * @return string[]
-     *   A list of bundles.
-     */
-    protected function getTargetBundles() {
-        $entity_type = $this->getEntityType();
-        $entity_type_settings = $this->getFieldSettings()[$entity_type];
-        $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
-        return $target_bundles;
-    }
-
-    /**
-     * Gets the access handler for the target entity type.
-     *
-     * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface
-     *   The access handler.
-     */
-    protected function getAccessHandler() {
-        return $this->entityTypeManager->getAccessControlHandler($this->getEntityType());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-        $element = parent::formElement($items, $delta, $element, $form, $form_state);
-
-        $element['entities']['#widget'] = 'bricks_tree_inline';
-
-        $allowed_entity_types = $this->getFieldSetting('entity_type_ids');
-
-        $entity_type_definitions = \Drupal::entityTypeManager()->getDefinitions();
-
-        foreach ($allowed_entity_types as $allowed_entity_type => &$label) {
-            $label = $entity_type_definitions[$allowed_entity_type]->getLabel();
-        }
-
-        $element['actions']['entity_type'] = [
-            '#type' => 'select',
-            '#options' => $allowed_entity_types,
-            '#default_value' => $this->getEntityType(),
-            '#weight' => -9,
-            '#ajax' => [
-                'callback' => [$this, 'rebuild'],
-                'wrapper' => 'inline-entity-form-' . $element['#ief_id']
-            ]
-        ];
-
-        $element['actions']['bundle']['#element_validate'] = [[$this, 'correctBundle']];
-
-        $entities = $form_state->get(['inline_entity_form', $this->getIefId(), 'entities']);
-        foreach ($entities as $delta => $value) {
-            _bricks_form_element_alter($element['entities'][$delta], $items[$delta], $value['entity']);
-        }
-
-        return $element;
-    }
-
-    public function rebuild(array &$form, FormStateInterface $form_state) {
-        $parents = $form_state->getTriggeringElement()['#parents'];
-        array_pop($parents);
-        array_pop($parents);
-        $fieldset = NestedArray::getValue($form, $parents);
-
-        return $fieldset;
-    }
-
-    public function correctBundle(array &$element, FormStateInterface $form_state) {
-        if (!isset($element['#options'][$element['#value']])) {
-            $form_state->clearErrors();
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-        $field_name = $this->fieldDefinition->getName();
-        $field_value = $form_state->getValue($field_name);
-
-        foreach ($values as $delta => $value) {
-            if (isset($field_value['entities'][$delta])) {
-                $values[$delta]['depth'] = $field_value['entities'][$delta]['depth'];
-                if (isset($field_value['entities'][$delta]['options'])) {
-                    $values[$delta]['options'] = $field_value['entities'][$delta]['options'];
-                }
-            }
-        }
-
-        return $values;
-
-    }
+  }
 }
