@@ -83,7 +83,13 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
     }
     $field_settings = $this->fieldDefinition->getSettings();
     $entity_types = array_values($field_settings['entity_type_ids']);
-    return $entity_types[0];
+
+    if (isset($entity_types[0])) {
+      return $entity_types[0];
+    }
+    else {
+      return 'node';
+    }
   }
 
 
@@ -125,9 +131,12 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
    */
   protected function getTargetBundles() {
     $entity_type = $this->getEntityType();
-    $entity_type_settings = $this->getFieldSettings()[$entity_type];
-    $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
-    return $target_bundles;
+
+    if ($entity_type) {
+      $entity_type_settings = $this->getFieldSettings()[$entity_type];
+      $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
+      return $target_bundles;
+    }
   }
 
   /**
