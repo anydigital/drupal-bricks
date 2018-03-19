@@ -131,12 +131,9 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
    */
   protected function getTargetBundles() {
     $entity_type = $this->getEntityType();
-
-    if ($entity_type) {
-      $entity_type_settings = $this->getFieldSettings()[$entity_type];
-      $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
-      return $target_bundles;
-    }
+    $entity_type_settings = $this->getFieldSettings()[$entity_type];
+    $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
+    return $target_bundles;
   }
 
   /**
