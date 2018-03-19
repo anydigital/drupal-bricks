@@ -20,15 +20,12 @@ use Drupal\Component\Utility\NestedArray;
  *   label = @Translation("Bricks tree Dynamic (Inline entity form)"),
  *   description = @Translation("A tree of inline entity forms."),
  *   field_types = {
- *     "bricks",
- *     "bricks_revisioned",
  *     "bricks_dynamic"
  *   },
  *   multiple_values = true
  * )
  */
-class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
-{
+class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
 
 
     /**
@@ -62,8 +59,7 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
      * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
      *   Module handler service.
      */
-    public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, ModuleHandlerInterface $module_handler)
-    {
+    public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, ModuleHandlerInterface $module_handler) {
         parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $entity_type_bundle_info, $entity_type_manager, $entity_display_repository, $module_handler);
         $this->moduleHandler = $module_handler;
     }
@@ -72,17 +68,16 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
     /**
      * Creates an instance of the inline form handler for the current entity type.
      */
-    protected function createInlineFormHandler()
-    {
+    protected function createInlineFormHandler() {
         if (!isset($this->inlineFormHandler)) {
             $this->inlineFormHandler = $this->entityTypeManager->getHandler($this->getEntityType(), 'inline_form');
         }
     }
 
-    protected function getEntityType()
-    {
+    protected function getEntityType() {
         $name = $this->fieldDefinition->getName();
 
+        // TODO explain why this is used.
         if (isset($_POST[$name]['actions']['entity_type'])) {
             return $_POST[$name]['actions']['entity_type'];
         }
@@ -98,8 +93,7 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
      * @return array
      *   The array of settings.
      */
-    protected function getFieldSettings()
-    {
+    protected function getFieldSettings() {
         $settings = $this->fieldDefinition->getSettings();
         $settings['target_type'] = $this->getEntityType();
         return $settings;
@@ -114,8 +108,7 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
      * @return mixed
      *   The setting value.
      */
-    protected function getFieldSetting($setting_name)
-    {
+    protected function getFieldSetting($setting_name) {
         if ($setting_name == 'target_type') {
             return $this->getEntityType();
         }
@@ -130,8 +123,7 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
      * @return string[]
      *   A list of bundles.
      */
-    protected function getTargetBundles()
-    {
+    protected function getTargetBundles() {
         $entity_type = $this->getEntityType();
         $entity_type_settings = $this->getFieldSettings()[$entity_type];
         $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
@@ -144,16 +136,14 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
      * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface
      *   The access handler.
      */
-    protected function getAccessHandler()
-    {
+    protected function getAccessHandler() {
         return $this->entityTypeManager->getAccessControlHandler($this->getEntityType());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
-    {
+    public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
         $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
         $element['entities']['#widget'] = 'bricks_tree_inline';
@@ -187,8 +177,7 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
         return $element;
     }
 
-    public function rebuild(array &$form, FormStateInterface $form_state)
-    {
+    public function rebuild(array &$form, FormStateInterface $form_state) {
         $parents = $form_state->getTriggeringElement()['#parents'];
         array_pop($parents);
         array_pop($parents);
@@ -197,19 +186,16 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex
         return $fieldset;
     }
 
-    public function correctBundle(array &$element, FormStateInterface $form_state)
-    {
+    public function correctBundle(array &$element, FormStateInterface $form_state) {
         if (!isset($element['#options'][$element['#value']])) {
             $form_state->clearErrors();
         }
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function massageFormValues(array $values, array $form, FormStateInterface $form_state)
-    {
+    public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
         $field_name = $this->fieldDefinition->getName();
         $field_value = $form_state->getValue($field_name);
 
