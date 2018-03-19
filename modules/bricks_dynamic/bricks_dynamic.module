@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * @file
  * {@inheritdoc}
@@ -10,4 +12,34 @@
  */
 function bricks_dynamic_preprocess_field_multiple_value_form(&$variables) {
   _bricks_preprocess_tabledrag_form($variables, 'element', 'bricks_tree_dynamic', $variables['element']['#field_name'] . '-delta-order');
+}
+
+/**
+ * Adds the entity type to the inline entity form element.
+ */
+function bricks_dynamic_inline_entity_form_reference_form_alter(&$reference_form, $form_state) {
+  $triggering_element = $form_state->getTriggeringElement();
+  $parents = $triggering_element['#parents'];
+  array_pop($parents);
+  array_pop($parents);
+  $parents[] = 'actions';
+  $parents[] = 'entity_type';
+
+  $entity_type = NestedArray::getValue($_POST, $parents);
+
+  $labels = $reference_form['#ief_labels'];
+  $ief_id = $reference_form['#ief_id'];
+  /** @var \Drupal\field\Entity\FieldConfig $instance */
+  $instance = $form_state->get(['inline_entity_form', $ief_id, 'instance']);
+  $settings = $instance->getSettings();
+
+  $reference_form['entity_id'] = [
+    '#type' => 'entity_autocomplete',
+    '#title' => t('@label', ['@label' => ucwords($labels['singular'])]),
+    '#target_type' => $entity_type,
+    '#selection_handler' => $settings[$entity_type]['handler'],
+    '#selection_settings' => $settings[$entity_type]['handler_settings'],
+    '#required' => TRUE,
+    '#maxlength' => 255,
+  ];
 }
