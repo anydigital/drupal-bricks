@@ -40,6 +40,20 @@ function _bricks_field_schema_alter(&$schema) {
   ];
 }
 
+
+/**
+ * Implements hook_views_data_alter().
+ */
+
+function bricks_field_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field_storage) {
+  if($field_storage->getType() == 'bricks') {
+    $field_name = $field_storage->getName();
+    foreach($data as &$item) {
+      $item[$field_name . '_depth']['field']['id'] = 'bricksdepth';
+    }
+  }
+}
+
 /* BRICKS FORMATTING */
 
 /**
