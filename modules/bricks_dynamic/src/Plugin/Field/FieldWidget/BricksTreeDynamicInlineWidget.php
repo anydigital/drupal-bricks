@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceItem;
 
 /**
  * {@inheritdoc}
@@ -69,8 +70,9 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
    * Creates an instance of the inline form handler for the current entity type.
    */
   protected function createInlineFormHandler() {
-    if (!isset($this->inlineFormHandler)) {
-      $this->inlineFormHandler = $this->entityTypeManager->getHandler($this->getEntityType(), 'inline_form');
+    if (!isset($this->inlineFormHandler) && $this->getEntityType()) {
+      $entity_type = $this->getEntityType();
+      $this->inlineFormHandler = $this->entityTypeManager->getHandler($entity_type, 'inline_form');
     }
   }
 
@@ -81,14 +83,10 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
     if (isset($_POST[$name]['actions']['entity_type'])) {
       return $_POST[$name]['actions']['entity_type'];
     }
-    $field_settings = $this->fieldDefinition->getSettings();
-    $entity_types = array_values($field_settings['entity_type_ids']);
+    $entity_types = DynamicEntityReferenceItem::getTargetTypes($this->fieldDefinition->getSettings());
 
     if (isset($entity_types[0])) {
       return $entity_types[0];
-    }
-    else {
-      return 'node';
     }
   }
 
@@ -130,9 +128,14 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
    *   A list of bundles.
    */
   protected function getTargetBundles() {
+    $target_bundles = [];
     $entity_type = $this->getEntityType();
-    $entity_type_settings = $this->getFieldSettings()[$entity_type];
-    $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
+    $field_settings = $this->getFieldSettings();
+    if (isset($field_settings[$entity_type]) && isset($field_settings[$entity_type]['handler_settings']['target_bundles'])) {
+      $entity_type_settings = $field_settings[$entity_type];
+      $target_bundles = array_values($entity_type_settings['handler_settings']['target_bundles']);
+    }
+
     return $target_bundles;
   }
 
@@ -154,17 +157,21 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
 
     $element['entities']['#widget'] = 'bricks_tree_inline';
 
-    $allowed_entity_types = $this->getFieldSetting('entity_type_ids');
+    $allowed_entity_types = DynamicEntityReferenceItem::getTargetTypes($this->getFieldSettings());
 
     $entity_type_definitions = \Drupal::entityTypeManager()->getDefinitions();
 
-    foreach ($allowed_entity_types as $allowed_entity_type => &$label) {
-      $label = $entity_type_definitions[$allowed_entity_type]->getLabel();
+    $entity_type_options = [];
+
+    foreach ($allowed_entity_types as $allowed_entity_type) {
+      if (isset($entity_type_definitions[$allowed_entity_type])) {
+        $entity_type_options[$allowed_entity_type] = $entity_type_definitions[$allowed_entity_type]->getLabel();
+      }
     }
 
     $element['actions']['entity_type'] = [
       '#type' => 'select',
-      '#options' => $allowed_entity_types,
+      '#options' => $entity_type_options,
       '#default_value' => $this->getEntityType(),
       '#weight' => -9,
       '#ajax' => [
