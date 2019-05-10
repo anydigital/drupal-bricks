@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Primarily Drupal hooks.
+ */
+
+/**
+ * Implements hook_layout_alter().
+ */
+function bricks_layout_layout_alter(&$definitions) {
+  // Enable Layout Builder Styles for `layout_onecol` sections
+  // ("currently requires that the layout you select for the section already has a configuration form"):
+  $definitions['layout_onecol']->setClass('Drupal\bricks_layout\Plugin\Layout\DefaultConfigLayout');
+}

@@ -1,0 +1,9 @@
+name: Bricks Layout Builder
+description: Empowers Layout Builder from Drupal core.
+package: Bricks
+
+core: 8.x
+type: module
+dependencies:
+  - bricks:bricks
+  - drupal:layout_builder
