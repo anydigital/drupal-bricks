@@ -1,46 +1,7 @@
 <?php
 
-/**
- * @file
- * {@inheritdoc}
- */
-
 use Drupal\Core\Render\Element;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Component\Utility\Html;
-
-/* BRICKS STORAGE */
-
-/**
- * Helper function for FieldItemInterface::propertyDefinitions().
- */
-function _bricks_field_properties_alter(&$properties) {
-  $properties['depth'] = DataDefinition::create('integer')
-    ->setLabel(t('Depth'));
-
-  $properties['options'] = DataDefinition::create('any')
-    ->setLabel(t('Options'));
-}
-
-/**
- * Helper function for FieldItemInterface::schema().
- */
-function _bricks_field_schema_alter(&$schema) {
-  $schema['columns']['depth'] = [
-    'type' => 'int',
-    'size' => 'tiny',
-    'unsigned' => TRUE,
-  ];
-
-  $schema['columns']['options'] = [
-    'type' => 'blob',
-    'size' => 'normal',
-    'not null' => FALSE,
-    'serialize' => TRUE,
-  ];
-}
-
-/* BRICKS FORMATTING */
 
 /**
  * Prepares variables for `field.html.twig`.

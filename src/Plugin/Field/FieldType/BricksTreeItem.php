@@ -2,7 +2,7 @@
 
 namespace Drupal\bricks\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\bricks_revisions\BricksFieldTypeTrait;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 
 /**
@@ -20,26 +20,6 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
  */
 class BricksTreeItem extends EntityReferenceItem {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties = parent::propertyDefinitions($field_definition);
-
-    _bricks_field_properties_alter($properties);
-
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    $schema = parent::schema($field_definition);
-
-    _bricks_field_schema_alter($schema);
-
-    return $schema;
-  }
+  use BricksFieldTypeTrait;
 
 }
