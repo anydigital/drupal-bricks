@@ -1,0 +1,20 @@
+uuid: cb4ddcd5-f499-4445-9b14-8f8aff151e18
+langcode: en
+status: true
+dependencies:
+  module:
+    - bricks_revisions
+    - paragraphs
+id: paragraph.brickstest
+field_name: brickstest
+entity_type: paragraph
+type: bricks_revisioned
+settings:
+  target_type: paragraph
+module: bricks_revisions
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

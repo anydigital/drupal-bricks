@@ -1,0 +1,31 @@
+uuid: c358830f-80bc-499a-8443-d96fcc55ea2a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.test
+    - node.type.test
+    - paragraphs.paragraphs_type.test
+  module:
+    - bricks_revisions
+id: node.test.test
+field_name: test
+entity_type: node
+bundle: test
+label: test
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      test: test
+    target_bundles_drag_drop:
+      test:
+        enabled: true
+        weight: 0
+field_type: bricks_revisioned

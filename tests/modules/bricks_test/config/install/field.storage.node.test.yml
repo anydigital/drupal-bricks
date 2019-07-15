@@ -1,0 +1,21 @@
+uuid: 78b080f8-5752-4783-822f-8fb5a80fcafa
+langcode: en
+status: true
+dependencies:
+  module:
+    - bricks_revisions
+    - node
+    - paragraphs
+id: node.test
+field_name: test
+entity_type: node
+type: bricks_revisioned
+settings:
+  target_type: paragraph
+module: bricks_revisions
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,30 @@
+uuid: a3fdd95b-f8c5-4622-9035-68f7eb442eb9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.brickstest
+    - paragraphs.paragraphs_type.test
+  module:
+    - bricks_revisions
+id: paragraph.test.brickstest
+field_name: brickstest
+entity_type: paragraph
+bundle: test
+label: brickstest
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      test: test
+    target_bundles_drag_drop:
+      test:
+        enabled: true
+        weight: 0
+field_type: bricks_revisioned

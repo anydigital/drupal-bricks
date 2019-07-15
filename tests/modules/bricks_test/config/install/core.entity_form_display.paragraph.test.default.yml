@@ -1,0 +1,50 @@
+uuid: 12c0942d-6e50-4ed5-80e1-88cf97dd657d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.test.brickstest
+    - field.field.paragraph.test.test
+    - field.field.paragraph.test.testplain
+    - paragraphs.paragraphs_type.test
+  module:
+    - bricks
+    - paragraphs
+id: paragraph.test.default
+targetEntityType: paragraph
+bundle: test
+mode: default
+content:
+  brickstest:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  test:
+    type: entity_reference_paragraphs
+    weight: 0
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
+  testplain:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true

@@ -1,0 +1,30 @@
+uuid: 1a9d6427-0fb5-4824-ae7a-2bcce68ea934
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.test
+    - paragraphs.paragraphs_type.test
+  module:
+    - entity_reference_revisions
+id: paragraph.test.test
+field_name: test
+entity_type: paragraph
+bundle: test
+label: test
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      test: test
+    target_bundles_drag_drop:
+      test:
+        enabled: true
+        weight: 44
+field_type: entity_reference_revisions

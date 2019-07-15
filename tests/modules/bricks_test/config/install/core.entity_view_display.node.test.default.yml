@@ -1,0 +1,31 @@
+uuid: ba389515-4ef7-4c78-a533-604f60632b49
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.test.test
+    - node.type.test
+  module:
+    - bricks
+    - user
+id: node.test.default
+targetEntityType: node
+bundle: test
+mode: default
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  test:
+    weight: 102
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: bricks_nested
+    region: content
+hidden:
+  langcode: true

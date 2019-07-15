@@ -1,0 +1,19 @@
+uuid: 4c4fd94b-85af-4e50-a468-ba9154872220
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.testplain
+    - paragraphs.paragraphs_type.test
+id: paragraph.test.testplain
+field_name: testplain
+entity_type: paragraph
+bundle: test
+label: 'Test plain'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
