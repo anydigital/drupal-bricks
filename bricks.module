@@ -66,6 +66,10 @@ function _bricks_nest_items($element, $items) {
   $parents = [-1];
   $prev_depth = 0;
   foreach ($items as $delta => $item) {
+    if (!$element['#items'][$delta]->entity) {
+      unset($element['#items'][$delta]);
+      continue;
+    }
     $depth = $element['#items'][$delta]->depth;
     if ($depth > $prev_depth) {
       array_unshift($parents, $delta - 1);
