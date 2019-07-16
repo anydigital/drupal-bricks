@@ -1,0 +1,16 @@
+{
+  "name": "drupal/bricks",
+  "type": "drupal-module",
+  "description": "Allows to create bricky content.",
+  "keywords": ["Drupal", "bricks", "layout", "blocks"],
+  "homepage": "https://www.drupal.org/project/bricks",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/bricks",
+    "irc": "irc://irc.freenode.org/drupal-contribute",
+    "source": "http://cgit.drupalcode.org/bricks"
+  },
+  "license": "GPL-2.0+",
+  "require-dev": {
+    "querypath/QueryPath": "^3.0"
+  }
+}
