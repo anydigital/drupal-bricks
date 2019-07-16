@@ -11,6 +11,11 @@ use Drupal\user\Entity\User;
 use PHPUnit\Framework\ExpectationFailedException;
 use QueryPath;
 
+/**
+ * Class BricksTest
+ *
+ * @group bricks
+ */
 class BricksTest extends KernelTestBase {
 
   protected static $modules = [
