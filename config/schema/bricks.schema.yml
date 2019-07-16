@@ -1,0 +1,5 @@
+field.storage_settings.bricks:
+  type: field.storage_settings.entity_reference
+
+field.field_settings.bricks:
+  type: field.field_settings.entity_reference

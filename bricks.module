@@ -26,8 +26,16 @@ function _bricks_nest_items($element, $items) {
   // Prepare items:
   $parents = [-1];
   $prev_depth = 0;
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
   foreach ($items as $delta => $item) {
-    if (!$element['#items'][$delta]->entity) {
+    if ($element['#items'][$delta]->entity) {
+      $entity = $element['#items'][$delta]->entity;
+      if ($entity instanceof TranslatableInterface && $entity->hasTranslation($language)) {
+        $entity = $entity->getTranslation($language);
+      }
+      $items[$delta]['#label'] = $entity->label();
+    }
+    else {
       unset($element['#items'][$delta]);
       continue;
     }
