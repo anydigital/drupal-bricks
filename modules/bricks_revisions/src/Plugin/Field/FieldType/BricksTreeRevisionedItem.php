@@ -2,7 +2,7 @@
 
 namespace Drupal\bricks_revisions\Plugin\Field\FieldType;
 
-use Drupal\bricks_revisions\BricksFieldTypeTrait;
+use Drupal\bricks\Plugin\Field\FieldType\BricksFieldTypeTrait;
 use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem;
 
 /**

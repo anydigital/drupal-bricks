@@ -2,7 +2,6 @@
 
 namespace Drupal\bricks\Plugin\Field\FieldType;
 
-use Drupal\bricks_revisions\BricksFieldTypeTrait;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 
 /**
