@@ -1,11 +1,11 @@
-field.storage_settings.bricks:
+field.storage_settings.bricks_revisioned:
   type: field.storage_settings.entity_reference
 
-field.field_settings.bricks:
+field.field_settings.bricks_revisioned:
   type: field.field_settings.entity_reference
-
-field.widget.settings.bricks_tree_autocomplete:
-  type: field.widget.settings.entity_reference_autocomplete
 
 field.formatter.settings.bricks_nested:
   type: field.formatter.settings.entity_reference_revisions_entity_view
+
+field.widget.settings.bricks_tree_autocomplete:
+  type: field.widget.settings.entity_reference_autocomplete
