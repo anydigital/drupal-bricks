@@ -3,3 +3,9 @@ field.storage_settings.bricks:
 
 field.field_settings.bricks:
   type: field.field_settings.entity_reference
+
+field.widget.settings.bricks_tree_autocomplete:
+  type: field.widget.settings.entity_reference_autocomplete
+
+field.formatter.settings.bricks_nested:
+  type: field.formatter.settings.entity_reference_entity_view
