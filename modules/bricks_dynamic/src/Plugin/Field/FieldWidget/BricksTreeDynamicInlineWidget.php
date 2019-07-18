@@ -152,6 +152,19 @@ class BricksTreeDynamicInlineWidget extends InlineEntityFormComplex {
   /**
    * {@inheritdoc}
    */
+  public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL) {
+    $elements = parent::form($items, $form, $form_state, $get_delta);
+
+    // Signal to content_translation that this field should be treated as
+    // multilingual and not be hidden, see
+    // \Drupal\content_translation\ContentTranslationHandler::entityFormSharedElements().
+    $elements['#multilingual'] = TRUE;
+    return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
