@@ -8,4 +8,4 @@ field.widget.settings.bricks_tree_autocomplete:
   type: field.widget.settings.entity_reference_autocomplete
 
 field.formatter.settings.bricks_nested:
-  type: field.formatter.settings.entity_reference_revisions_entity_view
+  type: field.formatter.settings.entity_reference_entity_view

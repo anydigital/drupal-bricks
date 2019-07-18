@@ -19,9 +19,7 @@ class BricksTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field_ui', 'block', 'node', 'taxonomy', 'bricks',
-    // This shouldn't be forced
-    'entity_reference_revisions'];
+  public static $modules = ['field_ui', 'block', 'node', 'taxonomy', 'bricks'];
 
   /**
    * @var \Drupal\taxonomy\VocabularyInterface
