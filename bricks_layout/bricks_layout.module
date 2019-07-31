@@ -12,4 +12,16 @@ function bricks_layout_layout_alter(&$definitions) {
   // Enable Layout Builder Styles for `layout_onecol` sections
   // ("currently requires that the layout you select for the section already has a configuration form"):
   $definitions['layout_onecol']->setClass('Drupal\bricks_layout\Plugin\Layout\DefaultConfigLayout');
+
+  // Enhance multicolumn layouts by top and bottom regions:
+  $definitions['layout_twocol_section']->setRegions($definitions['layout_twocol_section']->getRegions() + [
+    'top' => ['label' => 'Top'],
+    'bottom' => ['label' => 'Bottom'],
+  ]);
+  $definitions['layout_twocol_section']->setIconMap([['top'], ['first', 'second'], ['bottom']]);
+  $definitions['layout_threecol_section']->setRegions($definitions['layout_threecol_section']->getRegions() + [
+    'top' => ['label' => 'Top'],
+    'bottom' => ['label' => 'Bottom'],
+  ]);
+  $definitions['layout_threecol_section']->setIconMap([['top'], ['first', 'second', 'third'], ['bottom']]);
 }
