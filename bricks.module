@@ -29,6 +29,7 @@ function _bricks_nest_items($element, $items) {
   foreach ($items as $delta => $item) {
     if (!$element['#items'][$delta]->entity) {
       unset($element['#items'][$delta]);
+      unset($items[$delta]);
       continue;
     }
     $depth = $element['#items'][$delta]->depth;
