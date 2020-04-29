@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  config:
-    - eck.eck_entity_type.basic
-name: Image
-type: image
-description: 'Basic image entity.'
