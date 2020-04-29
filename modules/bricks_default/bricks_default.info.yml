@@ -3,3 +3,4 @@ description: 'Dummy module for backward-compatibility.'
 package: Bricks
 type: module
 core: 8.x
+core_version_requirement: ^8 || ^9
