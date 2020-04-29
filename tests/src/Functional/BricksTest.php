@@ -76,8 +76,7 @@ class BricksTest extends BrowserTestBase {
     $edit = [];
     $edit['title[0][value]'] = 'Llamas are cool';
     $edit['field_brick[0][target_id]'] = 'Camelid';
-    $this->drupalPostForm("node/add/article", $edit, t('Save'));
-
+    $this->drupalPostForm("node/add/article", $edit, 'Save');
     $this->assertText('Article Llamas are cool has been created.');
   }
 
