@@ -27,6 +27,11 @@ class BricksTest extends BrowserTestBase {
   protected $vocabulary;
 
   /**
+   * @var string
+   */
+  protected $defaultTheme = 'minimal';
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
