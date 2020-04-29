@@ -29,7 +29,7 @@ class BricksTest extends BrowserTestBase {
   /**
    * @var string
    */
-  protected $defaultTheme = 'minimal';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
