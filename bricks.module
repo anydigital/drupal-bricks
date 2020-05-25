@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
 use Drupal\paragraphs\Entity\Paragraph;
@@ -130,7 +131,7 @@ function bricks_field_widget_info_alter(array &$info) {
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `entity_reference_autocomplete`.
  */
-function bricks_field_widget_entity_reference_autocomplete_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function bricks_field_widget_entity_reference_autocomplete_form_alter(&$element, FormStateInterface $form_state, $context) {
   $field_type = $context['items']->getFieldDefinition()->getType();
 
   // @TODO: Replace by 'Nested bricks' widget setting.
@@ -145,14 +146,14 @@ function bricks_field_widget_entity_reference_autocomplete_form_alter(&$element,
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `bricks_tree_autocomplete`.
  */
-function bricks_field_widget_bricks_tree_autocomplete_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function bricks_field_widget_bricks_tree_autocomplete_form_alter(&$element, FormStateInterface $form_state, $context) {
   bricks_field_widget_entity_reference_autocomplete_form_alter($element, $form_state, $context);
 }
 
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `paragraphs`.
  */
-function bricks_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function bricks_field_widget_paragraphs_form_alter(&$element, FormStateInterface $form_state, $context) {
   $field_type = $context['items']->getFieldDefinition()->getType();
 
   // @TODO: Replace by 'Nested bricks' widget setting.
