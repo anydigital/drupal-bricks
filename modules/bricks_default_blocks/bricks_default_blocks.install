@@ -9,9 +9,9 @@
  * Implements hook_install().
  */
 function bricks_default_blocks_install() {
-  $entity_manager = \Drupal::entityManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
 
-  $layout = $entity_manager->getStorage('block_content')->create([
+  $layout = $entity_type_manager->getStorage('block_content')->create([
     'type' => 'layout',
     'info' => 'Layout',
   ]);
@@ -19,7 +19,7 @@ function bricks_default_blocks_install() {
 
   $data = file_get_contents(drupal_get_path('theme', 'bartik') . '/screenshot.png');
   $file = file_save_data($data, 'public://bartik.png');
-  $image = $entity_manager->getStorage('block_content')->create([
+  $image = $entity_type_manager->getStorage('block_content')->create([
     'type' => 'image',
     'info' => 'Image',
     'field_image' => [
@@ -28,7 +28,7 @@ function bricks_default_blocks_install() {
   ]);
   $image->save();
 
-  $text = $entity_manager->getStorage('block_content')->create([
+  $text = $entity_type_manager->getStorage('block_content')->create([
     'type' => 'basic',
     'info' => 'Text',
     'body' => [
@@ -38,13 +38,13 @@ function bricks_default_blocks_install() {
   ]);
   $text->save();
 
-  $wrapper = $entity_manager->getStorage('block_content')->create([
+  $wrapper = $entity_type_manager->getStorage('block_content')->create([
     'type' => 'wrapper',
     'info' => 'Wrapper',
   ]);
   $wrapper->save();
 
-  $page = $entity_manager->getStorage('node')->create([
+  $page = $entity_type_manager->getStorage('node')->create([
     'type' => 'bricky_blocks',
     'title' => 'Bricks + Blocks = ♥',
     'field_body_blocks' => [
