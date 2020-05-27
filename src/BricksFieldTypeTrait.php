@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\bricks\Plugin\Field\FieldType;
+namespace Drupal\bricks;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
