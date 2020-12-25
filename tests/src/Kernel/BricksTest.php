@@ -2,14 +2,11 @@
 
 namespace Drupal\Tests\bricks\Kernel;
 
-
-use Drupal\Component\Utility\Html;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\ExpectationFailedException;
-use QueryPath;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Class BricksTest
@@ -48,21 +45,20 @@ class BricksTest extends KernelTestBase {
   /**
    * @dataProvider getTrees
    */
-  public function testBricks($tree) {
+  public function testBricks(array $tree) {
     $paragraphs = [];
-    $strings = [];
-    for ($i = 0; $i <= max(array_keys($tree)); $i++) {
-      // Fighting escape rules of both QueryPath and PhpUnit is not fun and is
-      // not a goal of this test so $this->>randomString() is not used.
-      $string = $this->randomMachineName();
+    $n = max(array_keys($tree));
+    for ($i = 1; $i <= $n; $i++) {
+      $string = "testplain $i";
       $paragraph = Paragraph::create([
         'type' => 'test',
         'testplain' => $string,
-        'test' => array_intersect_key($paragraphs, array_flip($tree[$i] ?? [])),
+        'test' => array_intersect_key($paragraphs, $tree[$i] ?? []),
+        'id' => $i,
       ]);
+      $paragraph->enforceIsNew();
       $paragraph->save();
       $paragraphs[$i] = $paragraph;
-      $strings[] = $string;
     }
     $node = Node::create([
       'type' => 'test',
@@ -72,34 +68,38 @@ class BricksTest extends KernelTestBase {
     $node->save();
     $build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node);
     $contents = (string) \Drupal::service('renderer')->renderPlain($build);
-    $keys = array_keys($tree);
-    /** @var \QueryPath\DOMQuery $qp */
-    $qp = QueryPath::withHTML5($contents);
-    /** @var \QueryPath\DOMQuery $paragraphElement*/
-    foreach ($qp->firstChild()->lastChild()->firstChild()->lastChild()->lastChild()->children() as $paragraphElement) {
-      $key = array_shift($keys);
-      $this->assertTrue($paragraphElement->hasClass('brick--id--' . $paragraphs[$key]->id()));
-      $this->assertSame($strings[$key], $paragraphElement->lastChild()->lastChild()->lastChild()->text());
-      unset($strings[$key]);
-      /** @var \QueryPath\DOMQuery $childElement */
-      foreach ($paragraphElement->firstChild()->children()->children()->children('.paragraph') as $childElement) {
-        $childKey = array_shift($tree[$key]);
-        $this->assertSame($strings[$childKey], $childElement->lastChild()->lastChild()->lastChild()->text());
-        unset($strings[$childKey]);
-      }
-    }
-    $this->assertEmpty($keys);
-    $this->assertEmpty(array_filter($tree));
-    $this->assertEmpty($strings);
+    $crawler = new Crawler($contents);
+    $bricks = $crawler->filter('.brick--id--1')->parents()->children();
+    $total = $this->recurseBricks($tree, $bricks);
+    $this->assertSame($n, $total);
   }
 
-  public function getTrees() {
-    // Keys are parents, values are child indexes.
+  /**
+   * @param array $tree
+   * @param \Symfony\Component\DomCrawler\Crawler $bricks
+   * @return int
+   */
+  protected function recurseBricks(array $tree, Crawler $bricks): int {
+    $total = count($tree);
+    foreach (array_keys($tree) as $delta => $paragraph_id) {
+      $brick = $bricks->eq($delta);
+      // This is just <div><div> but DOM is clumsy.
+      $content = $brick
+        ->children()->first()
+        ->children()->first();
+      $this->assertSame("testplain $paragraph_id", $content->text());
+      $total += $this->recurseBricks($tree[$paragraph_id], $brick->children()->filter('.paragraph'));
+    }
+    return $total;
+  }
+
+  public function getTrees(): array {
+    // Keys are the paragraph ID of parents, the values are subtrees.
     return [
       [[
-        0 => [],
-        3 => [1, 2],
-        5 => [4],
+        1 => [],
+        4 => [2 => [], 3 => []],
+        6 => [5 => []],
       ]],
     ];
   }

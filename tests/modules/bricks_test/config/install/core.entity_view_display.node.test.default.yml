@@ -20,7 +20,7 @@ content:
     region: content
   test:
     weight: 102
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: ''
