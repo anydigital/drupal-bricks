@@ -98,14 +98,25 @@ function _bricks_build_layout_from_items($layout, $items) {
   // Provide any configuration to the layout plugin if necessary.
   $layoutInstance = $layoutPluginManager->createInstance($layout);
   $regionNames = $layoutInstance->getPluginDefinition()->getRegionNames();
+  $defaultRegion = $layoutInstance->getPluginDefinition()->getDefaultRegion();
 
-  // Adjust the lengths:
-  $count = min(count($regionNames), count($items));
-  $regionNames = array_slice($regionNames, 0, $count);
-  $items = array_slice($items, 0, $count);
+  // If there is just one region and is the default one,
+  // add all items inside the default region.
+  $use_default_region = count($regionNames) == 1 && !empty($defaultRegion);
+  $regions = [];
 
-  // Build the content for your regions.
-  $regions = array_combine($regionNames, $items);
+  if ($use_default_region) {
+    $regions[$defaultRegion] = $items;
+  }
+  else {
+    // Adjust the lengths.
+    $count = min(count($regionNames), count($items));
+    $regionNamesSlice = array_slice($regionNames, 0, $count);
+    $items = array_slice($items, 0, $count);
+
+    // Build the content for your regions.
+    $regions = array_combine($regionNamesSlice, $items);
+  }
 
   // This builds the render array.
   return $layoutInstance->build($regions);
