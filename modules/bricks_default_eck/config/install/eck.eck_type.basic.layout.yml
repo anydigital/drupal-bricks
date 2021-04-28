@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_entity_type.basic
+name: Layout
+type: layout
+description: 'Special bundle to use Layout API in Bricks.'
