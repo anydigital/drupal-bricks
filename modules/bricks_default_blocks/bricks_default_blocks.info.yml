@@ -5,15 +5,15 @@ type: module
 core: 8.x
 core_version_requirement: ^8 || ^9
 dependencies:
-  - block_content
-  - bricks
-  - bricks_inline
-  - field
-  - file
-  - image
-  - layout_discovery
-  - menu_ui
-  - node
-  - path
-  - text
-  - user
+  - drupal:block_content
+  - bricks:bricks
+  - bricks:bricks_inline
+  - drupal:field
+  - drupal:file
+  - drupal:image
+  - drupal:layout_discovery
+  - drupal:menu_ui
+  - drupal:node
+  - drupal:path
+  - drupal:text
+  - drupal:user
