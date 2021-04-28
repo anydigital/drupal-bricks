@@ -72,7 +72,7 @@ function _bricks_nest_items($element, $items) {
     $parent_delta = $items[$delta]['#parent_delta'];
 
     if (!empty($items[$delta]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
-      $items[$delta] = array_intersect_key($items[$delta], array_flip(['#label', '#attributes'])) +
+      $items[$delta] = array_intersect_key($items[$delta], array_flip(['#label', '#attributes', '#paragraph'])) +
         _bricks_build_layout_from_items($items[$delta]['#layout'], $items[$delta]['childs']);
     }
 
