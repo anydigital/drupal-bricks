@@ -61,9 +61,6 @@ function _bricks_nest_items($element, $items) {
     if (!empty($element['#items'][$delta]->options['css_class'])) {
       $items[$delta]['#attributes']['class'][] = $element['#items'][$delta]->options['css_class'];
     }
-
-    // Disable entity render cache, rely on field cache:
-    $items[$delta]['#cache'] = ['disabled' => TRUE];
   }
 
   // Process items in reverse order (without recursion):
