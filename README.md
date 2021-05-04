@@ -46,9 +46,7 @@ All new Bricks for D8 has no requirements and works with ANY entity types!
 
 ## Resources
 
-- Home page: https://uibricks.com
 - Project page: https://www.drupal.org/project/bricks
-- Source code: https://github.com/highweb/drupal-bricks
-- Issue board: https://contribkanban.com/board/bricks
+- Issue board: https://www.drupal.org/project/issues/bricks
 - Working group: https://groups.drupal.org/bricks
-- Team: http://timezone.io/team/drupal-bricks
+- Team: https://www.drupal.org/node/2579611/committers
