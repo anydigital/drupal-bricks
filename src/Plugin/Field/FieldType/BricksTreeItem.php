@@ -22,4 +22,11 @@ class BricksTreeItem extends EntityReferenceItem {
 
   use BricksFieldTypeTrait;
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPreconfiguredOptions() {
+    return [];
+  }
+
 }

@@ -22,4 +22,11 @@ class BricksTreeRevisionedItem extends EntityReferenceRevisionsItem {
 
   use BricksFieldTypeTrait;
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPreconfiguredOptions() {
+    return [];
+  }
+
 }
