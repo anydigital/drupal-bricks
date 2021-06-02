@@ -75,7 +75,10 @@ function _inline_entity_form_preprocess_inline_entity_form_entity_table(&$variab
     }
     $header[] = $column;
   }
-  $header[] = t('Operations');
+  $header[] = [
+    'data' => t('Operations'),
+    'is_operation' => TRUE,
+  ];
 
   // Build an array of entity rows for the table.
   $rows = [];

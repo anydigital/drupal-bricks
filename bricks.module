@@ -196,6 +196,7 @@ function bricks_preprocess_field_multiple_value_form(&$variables) {
  */
 function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $order_class, $render_options = FALSE) {
   $element = $variables[$element_key];
+  $operation_key = NULL;
 
   // @TODO: Replace by 'Nested bricks' widget setting.
   if (isset($element['#widget']) && $element['#widget'] == $widget ||
@@ -203,6 +204,19 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
     // @TODO: Tmp hack for the proper indent width calculation.
     $variables['table']['#header'][0]['style'] = 'min-width: 150px';
     $variables['table']['#header'][] = ['data' => t('Depth'), 'class' => ['bricks-depth-header']];
+    if ($render_options) {
+      // Find Operations column
+      $operation_key = array_filter($variables['table']['#header'], function($item) {
+        return isset($item['is_operation']);
+      });
+
+      if (!empty($operation_key) && is_array($operation_key)) {
+        $operation_key = array_keys($operation_key);
+        $operation_key = array_pop($operation_key);
+        // Insert new options column before operations.
+        array_splice($variables['table']['#header'], $operation_key, 0, [['data' => t('Options')]]);
+      }
+    }
 
     $row = 0;
     foreach (Element::children($element) as $i => $key) {
@@ -225,10 +239,9 @@ function _bricks_preprocess_tabledrag_form(&$variables, $element_key, $widget, $
         show($element[$key]['depth']);
         $variables['table']['#rows'][$row]['data'][] = \Drupal::service('renderer')->render($element[$key]['depth']);
 
-        // @TODO: Get rid of $render_options hack.
-        if ($render_options) {
-          $element[$key]['options']['#prefix'] = $variables['table']['#rows'][$row]['data'][2]['data'];
-          $variables['table']['#rows'][$row]['data'][2]['data'] = \Drupal::service('renderer')->render($element[$key]['options']);
+        if ($render_options && !is_null($operation_key)) {
+          // Insert data row in options column.
+          array_splice($variables['table']['#rows'][$row]['data'], $operation_key, 0,[['data' => \Drupal::service('renderer')->render($element[$key]['options']), 'class' => 'inline-entity-form-brick-options']]);
         }
 
       }
