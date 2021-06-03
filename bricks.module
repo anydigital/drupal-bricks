@@ -4,6 +4,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\Core\Entity\TranslatableInterface;
 
 /**
  * Prepares variables for `field.html.twig`.
