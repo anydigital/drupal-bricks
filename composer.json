@@ -11,6 +11,6 @@
   },
   "license": "GPL-2.0+",
   "require-dev": {
-    "querypath/QueryPath": "^3.0"
+    "querypath/querypath": "^3.0"
   }
 }
