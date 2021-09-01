@@ -126,7 +126,7 @@ function _bricks_build_layout_from_items($layout, $items) {
   $layoutPluginManager = \Drupal::service('plugin.manager.core.layout');
   if (!$layoutPluginManager->hasDefinition($layout)) {
     \Drupal::messenger()->addWarning(t('Layout `%layout_id` is unknown.', ['%layout_id' => $layout]));
-    return;
+    return [];
   }
 
   // Provide any configuration to the layout plugin if necessary.
