@@ -12,7 +12,7 @@ use Drupal\Core\Entity\TranslatableInterface;
 function bricks_preprocess_field(&$variables) {
   $element = $variables['element'];
 
-  if (in_array($element['#formatter'], ['bricks_nested', 'bricks_nested_dynamic'])) {
+  if (substr($element['#formatter'], 0,  7) === 'bricks_') {
     $variables['items'] = [
       [
         'content' => _bricks_nest_items($element, $variables['items']),
@@ -25,70 +25,98 @@ function bricks_preprocess_field(&$variables) {
  * Helper function: converts element's items to a tree structure.
  */
 function _bricks_nest_items($element, $items) {
-
   // Prepare items:
   $parents = [-1];
   $prev_depth = 0;
-  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
-  foreach ($items as $delta => $item) {
-    if ($element['#items'][$delta]->entity) {
-      $entity = $element['#items'][$delta]->entity;
-      if ($entity instanceof TranslatableInterface && $entity->hasTranslation($language)) {
-        $entity = $entity->getTranslation($language);
+  $delta_map = [];
+
+  // EntityReferenceEntityFormatter::viewElements() and
+  // EntityReferenceRevisionsEntityFormatter::viewElements() all set up
+  // $items to be an array indexed by the field delta containing only access
+  // checked elements, the $elements = array_merge($info, $elements); call in
+  // FormatterBase::view() will renumber it with incrementing keys starting
+  // from zero. A mapping is necessary from the render items to the field
+  // items.
+  if (count($items) === count($element['#items'])) {
+    // In the most common case the mapping is the identity mapping.
+    $delta_map = range(0, count($items));
+  }
+  else {
+    // Otherwise, the revision id of the relevant paragraph provides an
+    // adequate mapping.
+    foreach ($items as $item_delta => $item) {
+      // Sanity check.
+      if (!isset($item['content']['#paragraph'])) {
+        continue;
       }
-      $items[$delta]['#label'] = $entity->label();
+      foreach ($element['#items'] as $field_delta => $field_item) {
+        // Sanity check.
+        if (!$field_item->entity) {
+          continue;
+        }
+        if ($field_item->target_revision_id === $item['content']['#paragraph']->getRevisionId()) {
+          $delta_map[$item_delta] = $field_delta;
+          continue 2;
+        }
+      }
     }
-    else {
-      unset($element['#items'][$delta]);
-      unset($items[$delta]);
+  }
+  foreach ($items as $item_delta => $item) {
+    if (!isset($delta_map[$item_delta])) {
       continue;
     }
-    $depth = $element['#items'][$delta]->depth;
+    $field_item = $element['#items'][$delta_map[$item_delta]];
+    $depth = $field_item->depth;
     if ($depth > $prev_depth) {
-      array_unshift($parents, $delta - 1);
+      array_unshift($parents, $prev_item_delta);
     }
     elseif ($depth < $prev_depth) {
       array_splice($parents, 0, $prev_depth - $depth);
     }
     $prev_depth = $depth;
+    $prev_item_delta = $item_delta;
 
-    $items[$delta] = $items[$delta]['content'];
-    $items[$delta]['#label'] = $element['#items'][$delta]->entity->label();
-    $items[$delta]['#delta'] = $delta;
-    $items[$delta]['#parent_delta'] = $parents[0];
-    $items[$delta]['#attributes']['class'][] = 'brick';
-    $items[$delta]['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($element['#items'][$delta]->entity->bundle());
-    $items[$delta]['#attributes']['class'][] = 'brick--id--' . $element['#items'][$delta]->entity->id();
+    $new_item  = $items[$item_delta]['content'];;
+    $new_item['#label'] = $field_item->entity->label();
+    $new_item['#delta'] = $item_delta;
+    $new_item['#parent_delta'] = $parents[0];
+    $new_item['#attributes']['class'][] = 'brick';
+    $new_item['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($field_item->entity->bundle());
+    $new_item['#attributes']['class'][] = 'brick--id--' . $field_item->entity->id();
 
-    $items[$delta]['childs'] = [];
-    if (!empty($element['#items'][$delta]->options['view_mode'])) {
-      $items[$delta]['#view_mode'] = $element['#items'][$delta]->options['view_mode'];
+    $new_item['layout_children'] = [];
+    if (!empty($field_item->options['view_mode'])) {
+      $new_item['#view_mode'] = $field_item->options['view_mode'];
     }
-    if (!empty($element['#items'][$delta]->options['layout'])) {
-      $items[$delta]['#layout'] = $element['#items'][$delta]->options['layout'];
+    if (!empty($field_item->options['layout'])) {
+      $new_item['#layout'] = $field_item->options['layout'];
     }
-    if (!empty($element['#items'][$delta]->options['css_class'])) {
-      $items[$delta]['#attributes']['class'][] = $element['#items'][$delta]->options['css_class'];
+    if (!empty($field_item->options['css_class'])) {
+      $new_item['#attributes']['class'][] = $field_item->options['css_class'];
     }
+
+    $new_items[$item_delta] = $new_item;
   }
 
   // Process items in reverse order (without recursion):
-  $rdeltas = array_reverse(array_keys($items));
+  $rdeltas = array_reverse(array_keys($new_items));
   foreach ($rdeltas as $delta) {
-    $parent_delta = $items[$delta]['#parent_delta'];
+    $parent_delta = $new_items[$delta]['#parent_delta'];
 
-    if (!empty($items[$delta]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
-      $items[$delta] = array_intersect_key($items[$delta], array_flip(['#label', '#attributes', '#paragraph'])) +
-        _bricks_build_layout_from_items($items[$delta]['#layout'], $items[$delta]['childs']);
+    if (!empty($new_items[$delta]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+      $new_items[$delta] = array_intersect_key($new_items[$delta], array_flip(['#label', '#attributes'])) +
+        _bricks_build_layout_from_items($new_items[$delta]['#layout'], $new_items[$delta]['layout_children']);
     }
 
     if ($parent_delta != -1) {
-      array_unshift($items[$parent_delta]['childs'], $items[$delta]);
-      unset($items[$delta]);
+      if (isset($new_items[$parent_delta])) {
+        array_unshift($new_items[$parent_delta]['layout_children'], $new_items[$delta]);
+      }
+      unset($new_items[$delta]);
     }
   }
 
-  return $items;
+  return $new_items;
 }
 
 /**
