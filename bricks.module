@@ -1,21 +1,21 @@
 <?php
 
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\RevisionableInterface;
+use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
-use Drupal\paragraphs\Entity\Paragraph;
-use Drupal\Core\Entity\TranslatableInterface;
 
 /**
  * Prepares variables for `field.html.twig`.
  */
 function bricks_preprocess_field(&$variables) {
   $element = $variables['element'];
-
   if (substr($element['#formatter'], 0,  7) === 'bricks_') {
     $variables['items'] = [
       [
-        'content' => _bricks_nest_items($element, $variables['items']),
+        'content' => _bricks_nest_items($variables['items']),
       ],
     ];
   }
@@ -23,100 +23,136 @@ function bricks_preprocess_field(&$variables) {
 
 /**
  * Helper function: converts element's items to a tree structure.
+ *
+ * To understand how this function converts a flat list of render elements
+ * into a tree, search this function and _bricks_nested_get_new_elements for
+ * magic.
  */
-function _bricks_nest_items($element, $items) {
+function _bricks_nest_items($render_elements) {
+  // Every element in $new_elements is a render array to view an entity plus a
+  // few bricks specific extras: some CSS are classes are added, the entity
+  // label is surfaced and most importantly #bricks_parent_key points to the
+  // parent in the $new_elements array and #layout is extracted from the field
+  // item options.
+  $new_elements = _bricks_nested_get_new_elements($render_elements);
+
+  // Process the elements in reverse order: See magic #3 why.
+  foreach (array_reverse(array_keys($new_elements)) as $key) {
+    // Save the parent key because moving into a layout loses it.
+    $parent_key = $new_elements[$key]['#bricks_parent_key'];
+
+    // If this is a layout paragraph, move the children of it into a layout.
+    if (!empty($new_elements[$key]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
+      $keep = array_intersect_key($new_elements[$key], array_flip(['#label', '#attributes', '#paragraph']));
+      $new_elements[$key] = $keep + _bricks_build_layout_from_items($new_elements[$key]['#layout'], $new_elements[$key]['layout_children']);
+    }
+
+    // Magic #3. If this is not a root element, move it under the parent.
+    // By processing the elements from the bottom, by the time the parent is
+    // reached, all the children is moved under it.
+    if ($parent_key != -1) {
+      array_unshift($new_elements[$parent_key]['layout_children'], $new_elements[$key]);
+      unset($new_elements[$key]);
+    }
+  }
+
+  return $new_elements;
+}
+
+/**
+ * @param array $render_elements
+ *
+ * @return array
+ */
+function _bricks_nested_get_new_elements(array $render_elements): array {
   // Prepare items:
   $parents = [-1];
-  $prev_depth = 0;
-  $delta_map = [];
-
-  // EntityReferenceEntityFormatter::viewElements() and
-  // EntityReferenceRevisionsEntityFormatter::viewElements() all set up
-  // $items to be an array indexed by the field delta containing only access
-  // checked elements, the $elements = array_merge($info, $elements); call in
-  // FormatterBase::view() will renumber it with incrementing keys starting
-  // from zero. A mapping is necessary from the render items to the field
-  // items.
-  if (count($items) === count($element['#items'])) {
-    // In the most common case the mapping is the identity mapping.
-    $delta_map = range(0, count($items));
-  }
-  else {
-    // Otherwise, the revision id of the relevant paragraph provides an
-    // adequate mapping.
-    foreach ($items as $item_delta => $item) {
-      // Sanity check.
-      if (!isset($item['content']['#paragraph'])) {
-        continue;
-      }
-      foreach ($element['#items'] as $field_delta => $field_item) {
-        // Sanity check.
-        if (!$field_item->entity) {
-          continue;
-        }
-        if ($field_item->target_revision_id === $item['content']['#paragraph']->getRevisionId()) {
-          $delta_map[$item_delta] = $field_delta;
-          continue 2;
-        }
-      }
-    }
-  }
-  foreach ($items as $item_delta => $item) {
-    if (!isset($delta_map[$item_delta])) {
+  $previous_depth = 0;
+  foreach ($render_elements as $key => $render_element) {
+    // At this point, the element contains a 'content' key containing a render
+    // array to view an entity and an empty attributes object. Remove this
+    // layer.
+    $content = $render_element['content'] ?? [];
+    // First, find the field item this render element was made from.
+    $field_item = _bricks_nest_get_field_item($content);
+    // Sanity check.
+    if (!$field_item) {
       continue;
     }
-    $field_item = $element['#items'][$delta_map[$item_delta]];
     $depth = $field_item->depth;
-    if ($depth > $prev_depth) {
-      array_unshift($parents, $prev_item_delta);
+    // Magic #1a. if the current depth is higher than the previous one then the
+    // previous key is the current parent. This is the equivalent of dragging
+    // an element in the widget to the right. The current parent is always at
+    // index 0, the grandparent is at index 1 etc.
+    if ($depth > $previous_depth) {
+      array_unshift($parents, $previous_key);
     }
-    elseif ($depth < $prev_depth) {
-      array_splice($parents, 0, $prev_depth - $depth);
+    // // Magic #1b. On the other hand, if the current element is to the left
+    // of the previous one then the previous parents are no longer needed.
+    elseif ($depth < $previous_depth) {
+      array_splice($parents, 0, $previous_depth - $depth);
     }
-    $prev_depth = $depth;
-    $prev_item_delta = $item_delta;
-
-    $new_item  = $items[$item_delta]['content'];;
-    $new_item['#label'] = $field_item->entity->label();
-    $new_item['#delta'] = $item_delta;
-    $new_item['#parent_delta'] = $parents[0];
-    $new_item['#attributes']['class'][] = 'brick';
-    $new_item['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($field_item->entity->bundle());
-    $new_item['#attributes']['class'][] = 'brick--id--' . $field_item->entity->id();
-
-    $new_item['layout_children'] = [];
-    if (!empty($field_item->options['view_mode'])) {
-      $new_item['#view_mode'] = $field_item->options['view_mode'];
-    }
-    if (!empty($field_item->options['layout'])) {
-      $new_item['#layout'] = $field_item->options['layout'];
-    }
-    if (!empty($field_item->options['css_class'])) {
-      $new_item['#attributes']['class'][] = $field_item->options['css_class'];
-    }
-
-    $new_items[$item_delta] = $new_item;
+    $previous_depth = $depth;
+    $previous_key = $key;
+    // Magic #2. Put $parents[0] in #bricks_parent_key (and add the other
+    // extras). The function itself is not doing anything magical.
+    $new_elements[$key] = _bricks_nest_get_new_element($content, $key, $field_item, $parents[0]);
   }
+  return $new_elements ?? [];
+}
 
-  // Process items in reverse order (without recursion):
-  $rdeltas = array_reverse(array_keys($new_items));
-  foreach ($rdeltas as $delta) {
-    $parent_delta = $new_items[$delta]['#parent_delta'];
+/**
+ * Assemble a render element based on existing content and field item data.
+ */
+function _bricks_nest_get_new_element($content, int $item_delta, FieldItemInterface $field_item, $parent): array {
+  $element = $content;;
+  $element['#label'] = $field_item->entity->label();
+  $element['#delta'] = $item_delta;
+  $element['#bricks_parent_key'] = $parent;
+  $element['#attributes']['class'][] = 'brick';
+  $element['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($field_item->entity->bundle());
+  $element['#attributes']['class'][] = 'brick--id--' . $field_item->entity->id();
 
-    if (!empty($new_items[$delta]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
-      $new_items[$delta] = array_intersect_key($new_items[$delta], array_flip(['#label', '#attributes'])) +
-        _bricks_build_layout_from_items($new_items[$delta]['#layout'], $new_items[$delta]['layout_children']);
-    }
+  $element['layout_children'] = [];
+  if (!empty($field_item->options['view_mode'])) {
+    $element['#view_mode'] = $field_item->options['view_mode'];
+  }
+  if (!empty($field_item->options['layout'])) {
+    $element['#layout'] = $field_item->options['layout'];
+  }
+  if (!empty($field_item->options['css_class'])) {
+    $element['#attributes']['class'][] = $field_item->options['css_class'];
+  }
+  return $element;
+}
 
-    if ($parent_delta != -1) {
-      if (isset($new_items[$parent_delta])) {
-        array_unshift($new_items[$parent_delta]['layout_children'], $new_items[$delta]);
+/**
+ * Helper to get the field item list a render array is made from.
+ *
+ * @param $content
+ *   A render array to view an entity.
+ */
+function _bricks_nest_get_field_item(array $content) {
+  $entity = NULL;
+  // The default is the same #theme and entity type id, see
+  // EntityViewBuilder::getBuildDefaults().
+  if ($theme = ($content['#theme'] ?? '')) {
+    $entity = $content["#$theme"] ?? NULL;
+  }
+  if (!$entity) {
+    // If that didn't work out, try to fish for it among the properties. If
+    // there is only one entity sure it is the one. If there is more than one,
+    // give up.
+    foreach (Element::properties($content) as $property) {
+      if ($content[$property] instanceof EntityInterface) {
+        if ($entity) {
+          throw new \LogicException(sprintf('Unsupported render array with entity types %s %s', $entity->getEntityTypeId(), $content[$property]->getEntityTypeId()));
+        }
+        $entity = $content[$property];
       }
-      unset($new_items[$delta]);
     }
   }
-
-  return $new_items;
+  return $entity ? $entity->_referringItem : FALSE;
 }
 
 /**
