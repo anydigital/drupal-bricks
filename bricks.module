@@ -8,6 +8,13 @@ use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
 
 /**
+ * When rearranging a list of entity view render arrays into layouts, a list
+ * of parents are kept and those parents are nonnegative integers so the root
+ * is an index which can't occur otherwise.
+ */
+const BRICKS_TREE_ROOT = -1;
+
+/**
  * Prepares variables for `field.html.twig`.
  */
 function bricks_preprocess_field(&$variables) {
@@ -50,7 +57,7 @@ function _bricks_nest_items($render_elements) {
     // Magic #3. If this is not a root element, move it under the parent.
     // By processing the elements from the bottom, by the time the parent is
     // reached, all the children is moved under it.
-    if ($parent_key != -1) {
+    if ($parent_key !== BRICKS_TREE_ROOT) {
       array_unshift($new_elements[$parent_key]['layout_children'], $new_elements[$key]);
       unset($new_elements[$key]);
     }
@@ -65,21 +72,23 @@ function _bricks_nest_items($render_elements) {
  * @return array
  */
 function _bricks_nested_get_new_elements(array $render_elements): array {
-  // Prepare items:
-  $parents = [-1];
+  // A stack of parents, it contains a flat list of parents (also called
+  // ancestors).
+  $parents = [BRICKS_TREE_ROOT];
   $previous_depth = 0;
   foreach ($render_elements as $key => $render_element) {
     // At this point, the element contains a 'content' key containing a render
     // array to view an entity and an empty attributes object. Remove this
-    // layer.
+    // layer and keep only content.
     $content = $render_element['content'] ?? [];
-    // First, find the field item this render element was made from.
+    // Now, find the field reference item referencing the entity in content.
     $field_item = _bricks_nest_get_field_item($content);
     // Sanity check.
     if (!$field_item) {
       continue;
     }
-    $depth = $field_item->depth;
+    // The bricks tree widget records the indentation of the item as depth.
+    $depth = $field_item->getDepth();
     // Magic #1a. if the current depth is higher than the previous one then the
     // previous key is the current parent. This is the equivalent of dragging
     // an element in the widget to the right. The current parent is always at
@@ -90,7 +99,9 @@ function _bricks_nested_get_new_elements(array $render_elements): array {
     // // Magic #1b. On the other hand, if the current element is to the left
     // of the previous one then the previous parents are no longer needed.
     elseif ($depth < $previous_depth) {
-      array_splice($parents, 0, $previous_depth - $depth);
+      for ($i = 0; $i < $previous_depth - $depth; $i++) {
+        array_shift($parents);
+      }
     }
     $previous_depth = $depth;
     $previous_key = $key;
@@ -105,10 +116,9 @@ function _bricks_nested_get_new_elements(array $render_elements): array {
  * Assemble a render element based on existing content and field item data.
  */
 function _bricks_nest_get_new_element($content, int $item_delta, BricksFieldItemInterface $field_item, $parent): array {
-  $element = $content;;
+  $element = $content;
   $entity = $field_item->entity;
   $element['#label'] = $entity->label();
-  $element['#delta'] = $item_delta;
   $element['#bricks_parent_key'] = $parent;
   $element['#attributes']['class'][] = 'brick';
   $element['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($entity->bundle());
