@@ -37,10 +37,10 @@ function bricks_preprocess_field(&$variables) {
  */
 function _bricks_nest_items($render_elements) {
   // Every element in $new_elements is a render array to view an entity plus a
-  // few bricks specific extras: some CSS are classes are added, the entity
-  // label is surfaced and most importantly #bricks_parent_key points to the
-  // parent in the $new_elements array and #layout is extracted from the field
-  // item options.
+  // few bricks specific extras: some CSS classes are added, the entity label
+  // is surfaced and most importantly #bricks_parent_key points to the parent
+  // in the $new_elements array and #layout is extracted from the field item
+  // options.
   $new_elements = _bricks_nested_get_new_elements($render_elements);
 
   // Process the elements in reverse order: See magic #3 why.
