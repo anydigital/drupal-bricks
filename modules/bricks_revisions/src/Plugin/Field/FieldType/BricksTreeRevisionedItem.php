@@ -2,6 +2,7 @@
 
 namespace Drupal\bricks_revisions\Plugin\Field\FieldType;
 
+use Drupal\bricks\BricksFieldItemInterface;
 use Drupal\bricks\BricksFieldTypeTrait;
 use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem;
 
@@ -18,7 +19,7 @@ use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevi
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  * )
  */
-class BricksTreeRevisionedItem extends EntityReferenceRevisionsItem {
+class BricksTreeRevisionedItem extends EntityReferenceRevisionsItem implements BricksFieldItemInterface {
 
   use BricksFieldTypeTrait;
 

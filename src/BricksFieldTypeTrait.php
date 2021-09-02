@@ -51,4 +51,12 @@ trait BricksFieldTypeTrait {
     return $options;
   }
 
+  public function getDepth() {
+    return $this->depth;
+  }
+
+  public function getOption($option, $default = NULL) {
+    return $this->options[$option] ?? $default;
+  }
+
 }

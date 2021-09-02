@@ -1,8 +1,8 @@
 <?php
 
+use Drupal\bricks\BricksFieldItemInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\RevisionableInterface;
-use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
@@ -104,7 +104,7 @@ function _bricks_nested_get_new_elements(array $render_elements): array {
 /**
  * Assemble a render element based on existing content and field item data.
  */
-function _bricks_nest_get_new_element($content, int $item_delta, FieldItemInterface $field_item, $parent): array {
+function _bricks_nest_get_new_element($content, int $item_delta, BricksFieldItemInterface $field_item, $parent): array {
   $element = $content;;
   $element['#label'] = $field_item->entity->label();
   $element['#delta'] = $item_delta;
@@ -114,14 +114,14 @@ function _bricks_nest_get_new_element($content, int $item_delta, FieldItemInterf
   $element['#attributes']['class'][] = 'brick--id--' . $field_item->entity->id();
 
   $element['layout_children'] = [];
-  if (!empty($field_item->options['view_mode'])) {
-    $element['#view_mode'] = $field_item->options['view_mode'];
+  if ($view_mode = $field_item->getOption('view_mode')) {
+    $element['#view_mode'] = $view_mode;
   }
-  if (!empty($field_item->options['layout'])) {
-    $element['#layout'] = $field_item->options['layout'];
+  if ($layout = $field_item->getOption('layout')) {
+    $element['#layout'] = $layout;
   }
-  if (!empty($field_item->options['css_class'])) {
-    $element['#attributes']['class'][] = $field_item->options['css_class'];
+  if ($css_class = $field_item->getOption('css_class')) {
+    $element['#attributes']['class'][] = $css_class;
   }
   return $element;
 }
@@ -131,8 +131,11 @@ function _bricks_nest_get_new_element($content, int $item_delta, FieldItemInterf
  *
  * @param $content
  *   A render array to view an entity.
+ *
+ * @return
+ *   The bricks field item.
  */
-function _bricks_nest_get_field_item(array $content) {
+function _bricks_nest_get_field_item(array $content): ?BricksFieldItemInterface {
   $entity = NULL;
   // The default is the same #theme and entity type id, see
   // EntityViewBuilder::getBuildDefaults().
@@ -152,7 +155,7 @@ function _bricks_nest_get_field_item(array $content) {
       }
     }
   }
-  return $entity ? $entity->_referringItem : FALSE;
+  return $entity ? $entity->_referringItem : NULL;
 }
 
 /**

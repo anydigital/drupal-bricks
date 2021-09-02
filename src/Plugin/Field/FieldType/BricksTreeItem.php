@@ -2,6 +2,7 @@
 
 namespace Drupal\bricks\Plugin\Field\FieldType;
 
+use Drupal\bricks\BricksFieldItemInterface;
 use Drupal\bricks\BricksFieldTypeTrait;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 
@@ -18,7 +19,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  * )
  */
-class BricksTreeItem extends EntityReferenceItem {
+class BricksTreeItem extends EntityReferenceItem implements BricksFieldItemInterface {
 
   use BricksFieldTypeTrait;
 
