@@ -106,12 +106,13 @@ function _bricks_nested_get_new_elements(array $render_elements): array {
  */
 function _bricks_nest_get_new_element($content, int $item_delta, BricksFieldItemInterface $field_item, $parent): array {
   $element = $content;;
-  $element['#label'] = $field_item->entity->label();
+  $entity = $field_item->entity;
+  $element['#label'] = $entity->label();
   $element['#delta'] = $item_delta;
   $element['#bricks_parent_key'] = $parent;
   $element['#attributes']['class'][] = 'brick';
-  $element['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($field_item->entity->bundle());
-  $element['#attributes']['class'][] = 'brick--id--' . $field_item->entity->id();
+  $element['#attributes']['class'][] = 'brick--type--' . Html::cleanCssIdentifier($entity->bundle());
+  $element['#attributes']['class'][] = 'brick--id--' . $entity->id();
 
   $element['layout_children'] = [];
   if ($view_mode = $field_item->getOption('view_mode')) {
