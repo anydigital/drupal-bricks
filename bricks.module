@@ -2,8 +2,7 @@
 
 use Drupal\bricks\BricksFieldItemInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\RevisionableInterface;
-use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
 
