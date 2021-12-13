@@ -49,7 +49,7 @@ function _bricks_nest_items($render_elements) {
 
     // If this is a layout paragraph, move the children of it into a layout.
     if (!empty($new_elements[$key]['#layout']) && \Drupal::service('module_handler')->moduleExists('layout_discovery')) {
-      $keep = array_intersect_key($new_elements[$key], array_flip(['#label', '#attributes', '#paragraph']));
+      $keep = array_intersect_key($new_elements[$key], array_flip(['#label', '#attributes', '#paragraph', '#parent_paragraph']));
       $new_elements[$key] = $keep + _bricks_build_layout_from_items($new_elements[$key]['#layout'], $new_elements[$key]['layout_children']);
     }
 
@@ -57,6 +57,9 @@ function _bricks_nest_items($render_elements) {
     // By processing the elements from the bottom, by the time the parent is
     // reached, all the children is moved under it.
     if ($parent_key !== BRICKS_TREE_ROOT) {
+      if (isset($new_elements[$parent_key]['#paragraph'])) {
+        $new_elements[$parent_key]['#parent_paragraph'] = $new_elements[$parent_key]['#paragraph'];
+      }
       array_unshift($new_elements[$parent_key]['layout_children'], $new_elements[$key]);
       unset($new_elements[$key]);
     }
@@ -75,6 +78,8 @@ function _bricks_nested_get_new_elements(array $render_elements): array {
   // ancestors).
   $parents = [BRICKS_TREE_ROOT];
   $previous_depth = 0;
+  $previous_delta = -1;
+  $denied_subtree = FALSE;
   foreach ($render_elements as $key => $render_element) {
     // At this point, the element contains a 'content' key containing a render
     // array to view an entity and an empty attributes object. Remove this
@@ -86,6 +91,9 @@ function _bricks_nested_get_new_elements(array $render_elements): array {
     if (!$field_item) {
       continue;
     }
+    // \Drupal\Core\TypedData\Plugin\DataType\ItemList::rekey()
+    // notes the name property holds the delta.
+    $delta = $field_item->getName();
     // The bricks tree widget records the indentation of the item as depth.
     $depth = $field_item->getDepth();
     // Magic #1a. if the current depth is higher than the previous one then the
@@ -93,20 +101,38 @@ function _bricks_nested_get_new_elements(array $render_elements): array {
     // an element in the widget to the right. The current parent is always at
     // index 0, the grandparent is at index 1 etc.
     if ($depth > $previous_depth) {
-      array_unshift($parents, $previous_key);
+      // ItemList::preSave() calls ItemList::filter() which in turn calls
+      // ItemList::rekey(). So deltas are always consecutive in the database.
+      // If at this some are skipped, then an entity was access denied and all
+      // of its children must be access denied, too.
+      if ($delta === $previous_delta + 1) {
+        if (!$denied_subtree) {
+          array_unshift($parents, $previous_key);
+        }
+      }
+      else {
+        $denied_subtree = TRUE;
+      }
     }
     // // Magic #1b. On the other hand, if the current element is to the left
     // of the previous one then the previous parents are no longer needed.
-    elseif ($depth < $previous_depth) {
-      for ($i = 0; $i < $previous_depth - $depth; $i++) {
-        array_shift($parents);
+    else {
+      // The tree returned to the last known non-denied depth, stop denying.
+      $denied_subtree = FALSE;
+      if ($depth < $previous_depth) {
+        for ($i = 0; $i < $previous_depth - $depth; $i++) {
+          array_shift($parents);
+        }
       }
     }
-    $previous_depth = $depth;
-    $previous_key = $key;
-    // Magic #2. Put $parents[0] in #bricks_parent_key (and add the other
-    // extras). The function itself is not doing anything magical.
-    $new_elements[$key] = _bricks_nest_get_new_element($content, $key, $field_item, $parents[0]);
+    $previous_delta = $delta;
+    if (!$denied_subtree) {
+      $previous_depth = $depth;
+      $previous_key = $key;
+      // Magic #2. Put $parents[0] in #bricks_parent_key (and add the other
+      // extras). The function itself is not doing anything magical.
+      $new_elements[$key] = _bricks_nest_get_new_element($content, $key, $field_item, $parents[0]);
+    }
   }
   return $new_elements ?? [];
 }
