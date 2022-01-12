@@ -58,7 +58,7 @@ function _bricks_nest_items($render_elements) {
     // reached, all the children is moved under it.
     if ($parent_key !== BRICKS_TREE_ROOT) {
       if (isset($new_elements[$parent_key]['#paragraph'])) {
-        $new_elements[$parent_key]['#parent_paragraph'] = $new_elements[$parent_key]['#paragraph'];
+        $new_elements[$key]['#parent_paragraph'] = $new_elements[$parent_key]['#paragraph'];
       }
       array_unshift($new_elements[$parent_key]['layout_children'], $new_elements[$key]);
       unset($new_elements[$key]);
