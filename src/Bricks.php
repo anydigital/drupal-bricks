@@ -130,8 +130,13 @@ class Bricks {
     $parent_items = new \SplObjectStorage();
     $parent_for_depth[0] = $root_object;
     foreach ($items as $item) {
-      $depth = (int) $item->getDepth();
+      $depth = $item->getDepth();
+      if (!isset($depth)) {
+        $depth = 0;
+        drupal_register_shutdown_function([$items->getEntity(), 'save']);
+      }
       $parent_items[$item] = $parent_for_depth[$depth];
+      // Thanks to ::correctDepths() we know the children are exactly 1 deeper.
       $parent_for_depth[$depth + 1] = $item;
     }
     return $parent_items;
@@ -234,6 +239,57 @@ class Bricks {
 
     // This builds the render array.
     return $layoutInstance->build($regions);
+  }
+
+  /**
+   * Renumber depths.
+   *
+   * The increment from one item to the next must be 1. The widget enforces
+   * this and so clicking an item with the wrong depth will jump around,
+   * confusing users. It is also a major hassle to do this runtime so rather
+   * enforce a uniform structure save time.
+   */
+  public static function correctDepths(\Traversable $items): void {
+    $root_object = new class {
+      // Top level elements have a depth of 0, the helper root object must have
+      // a depth of -1.
+      public function getDepth(): int {
+        return -1;
+      }
+    };
+    $parent_stack = new \SplStack();
+    $parent_stack->push($root_object);
+    $uncorrected_depths = new \SplObjectStorage();
+    $uncorrected_depths[$root_object] = $root_object->getDepth();
+    $expected_child_depth = fn () => $uncorrected_depths[$parent_stack->top()] + 1;
+    // The tree starts with the root.
+    $previous_item = $root_object;
+    /** @var \Drupal\bricks\BricksFieldItemInterface $item */
+    foreach ($items as $item) {
+      // One of the broken cases is a NULL depth which doesn't work with the
+      // comparisons below.
+      $item_depth = (int) $item->getDepth();
+      $uncorrected_depths[$item] = $item_depth;
+      // |P1|  | |
+      // |  |P2| |
+      // |  |  |X| <= we are here. The current item is X, the parent stack top
+      // currently is P1, the previous item is P2.
+      if ($item_depth > $expected_child_depth()) {
+        $parent_stack->push($previous_item);
+      }
+      // |P1|  | |
+      // |  |P2| |
+      // |  |  |X|
+      // |Y |  | | <= we are here, remove P1, P2 and any other parents even
+      // deeper.
+      while ($item_depth < $expected_child_depth()) {
+        $parent_stack->pop();
+      }
+      // The parent stack at this point contains the correct paths. The number
+      // of them minus one for the root object is the correct depth.
+      $item->setDepth($parent_stack->count() - 1);
+      $previous_item = $item;
+    }
   }
 
 }

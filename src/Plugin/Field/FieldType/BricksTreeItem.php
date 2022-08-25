@@ -23,11 +23,4 @@ class BricksTreeItem extends EntityReferenceItem implements BricksFieldItemInter
 
   use BricksFieldTypeTrait;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function getPreconfiguredOptions() {
-    return [];
-  }
-
 }

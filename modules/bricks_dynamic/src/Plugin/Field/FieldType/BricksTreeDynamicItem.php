@@ -2,7 +2,8 @@
 
 namespace Drupal\bricks_dynamic\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\bricks\BricksFieldItemInterface;
+use Drupal\bricks\BricksFieldTypeTrait;
 use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceItem;
 
 /**
@@ -18,28 +19,8 @@ use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenc
  *   list_class = "\Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceFieldItemList",
  * )
  */
-class BricksTreeDynamicItem extends DynamicEntityReferenceItem {
+class BricksTreeDynamicItem extends DynamicEntityReferenceItem implements BricksFieldItemInterface {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties = parent::propertyDefinitions($field_definition);
-
-    _bricks_field_properties_alter($properties);
-
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    $schema = parent::schema($field_definition);
-
-    _bricks_field_schema_alter($schema);
-
-    return $schema;
-  }
+  use BricksFieldTypeTrait;
 
 }

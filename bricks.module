@@ -1,6 +1,9 @@
 <?php
 
 use Drupal\bricks\Bricks;
+use Drupal\bricks\BricksFieldItemInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
@@ -36,7 +39,8 @@ function bricks_field_widget_info_alter(array &$info) {
 }
 
 /**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `entity_reference_autocomplete`.
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for
+ * `entity_reference_autocomplete`.
  */
 function bricks_field_widget_entity_reference_autocomplete_form_alter(&$element, FormStateInterface $form_state, $context) {
   $field_type = $context['items']->getFieldDefinition()->getType();
@@ -51,7 +55,8 @@ function bricks_field_widget_entity_reference_autocomplete_form_alter(&$element,
   }
 }
 /**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter() for `bricks_tree_autocomplete`.
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for
+ * `bricks_tree_autocomplete`.
  */
 function bricks_field_widget_bricks_tree_autocomplete_form_alter(&$element, FormStateInterface $form_state, $context) {
   bricks_field_widget_entity_reference_autocomplete_form_alter($element, $form_state, $context);
@@ -85,7 +90,7 @@ function _bricks_preprocess_bricks_tree_paragraphs_widget(&$variables) {
     $table['#header'][] = t('Depth');
     $table['#header'][] = [
       'data' => t('Parent'),
-      'class' => 'hidden'
+      'class' => 'hidden',
     ];
 
     // We need to turn the regular tabledrag set up by
@@ -135,7 +140,7 @@ function _bricks_preprocess_bricks_tree_paragraphs_widget(&$variables) {
           '#type' => 'hidden',
           '#size' => 5,
           '#default_value' => 0,
-          '#attributes' => ['class' => ['tablesort-fake-parent']]
+          '#attributes' => ['class' => ['tablesort-fake-parent']],
         ],
       ];
 
@@ -288,4 +293,17 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
 function bricks_preprocess_block__system_powered_by_block(&$variables) {
   $bricks_link = '<a href="https://uibricks.com">Bricks</a>';
   $variables['content']['#markup'] = str_replace('>Drupal</a>', '>Drupal</a> & ' . $bricks_link, $variables['content']['#markup']);
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function bricks_entity_presave(EntityInterface $entity) {
+  if ($entity instanceof FieldableEntityInterface) {
+    foreach ($entity->getFields() as $field_item_list) {
+      if ($field_item_list->get(0) instanceof BricksFieldItemInterface) {
+        Bricks::correctDepths($field_item_list);
+      }
+    }
+  }
 }

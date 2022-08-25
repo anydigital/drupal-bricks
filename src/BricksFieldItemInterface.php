@@ -13,6 +13,12 @@ interface BricksFieldItemInterface extends FieldItemInterface {
   public function getDepth();
 
   /**
+   * @param int $depth
+   *   The depth.
+   */
+  public function setDepth(int $depth);
+
+  /**
    * @param $option
    *   The name of the option.
    * @param null $default

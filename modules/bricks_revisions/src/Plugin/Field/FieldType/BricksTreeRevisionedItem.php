@@ -23,11 +23,4 @@ class BricksTreeRevisionedItem extends EntityReferenceRevisionsItem implements B
 
   use BricksFieldTypeTrait;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function getPreconfiguredOptions() {
-    return [];
-  }
-
 }

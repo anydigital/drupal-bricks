@@ -55,6 +55,11 @@ trait BricksFieldTypeTrait {
     return $this->depth;
   }
 
+  public function setDepth($depth) {
+    $this->depth = $depth;
+    return $this;
+  }
+
   public function getOption($option, $default = NULL) {
     return $this->options[$option] ?? $default;
   }
