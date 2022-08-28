@@ -77,8 +77,8 @@ class Bricks {
    */
   protected static function newElements(array $render_elements, FieldItemListInterface $items): array {
     // \SplObjectStorage only allows objects as keys.
-    $root_object = new class { };
-    $parent_items = self::parentItems($items, $root_object);
+    $root_object = self::getRootObject();
+    $parent_items = self::findParentItems($items, $root_object);
     // The keys in are the same field items/$root_object as in $parent_items,
     // the values are keys in the $new_elements array or self::ROOT.
     $parent_keys = new \SplObjectStorage();
@@ -121,23 +121,44 @@ class Bricks {
    * @param FieldItemListInterface $items
    *   The bricks field items.
    * @param object $root_object
-   *   An object representing the tree root.
+   *   An object representing the tree root. It should have a getDepth method
+   *   which returns a negative number.
    *
    * @return \SplObjectStorage
    *   keys are field items, values are the parent item or $root_object.
    */
-  protected static function parentItems(FieldItemListInterface $items, object $root_object): \SplObjectStorage {
+  protected static function findParentItems(FieldItemListInterface $items, object $root_object): \SplObjectStorage {
     $parent_items = new \SplObjectStorage();
-    $parent_for_depth[0] = $root_object;
+    $parent_stack = new \SplStack();
+    // The tree starts with the root. The first item has an unsigned depth
+    // so its depth will be larger than this and will push the root on the
+    // stack.
+    $previous_item = $root_object;
+    /** @var \Drupal\bricks\BricksFieldItemInterface $item */
     foreach ($items as $item) {
-      $depth = $item->getDepth();
-      if (!isset($depth)) {
-        $depth = 0;
-        drupal_register_shutdown_function([$items->getEntity(), 'save']);
+      // One of the broken cases is a NULL depth which doesn't work with the
+      // comparisons below.
+      $item_depth = (int) $item->getDepth();
+      // |P0|  | |
+      // |P1|  | |
+      // |  |P2| |
+      // |  |  |X| ⇐ we are here. The current item is X, the parent stack top
+      // currently is P1, the previous item is P2. It's not possible to push
+      // the current item because until a child is seen, it is not a parent,
+      // this is the case for P0 and P1.
+      if ($item_depth > $previous_item->getDepth()) {
+        $parent_stack->push($previous_item);
       }
-      $parent_items[$item] = $parent_for_depth[$depth];
-      // Thanks to ::correctDepths() we know the children are exactly 1 deeper.
-      $parent_for_depth[$depth + 1] = $item;
+      // |P1|  | |
+      // |  |P2| |
+      // |  |  |X|
+      // |Y |  | | ⇐ we are here, remove P1, P2 and any other parents even
+      // deeper. Depth is unsigned so this will not remove the root.
+      while ($item_depth <= $parent_stack->top()->getDepth()) {
+        $parent_stack->pop();
+      }
+      $previous_item = $item;
+      $parent_items[$item] = $parent_stack->top();
     }
     return $parent_items;
   }
@@ -242,54 +263,16 @@ class Bricks {
   }
 
   /**
-   * Renumber depths.
-   *
-   * The increment from one item to the next must be 1. The widget enforces
-   * this and so clicking an item with the wrong depth will jump around,
-   * confusing users. It is also a major hassle to do this runtime so rather
-   * enforce a uniform structure save time.
+   * @return object
+   *   An object which has a getDepth() method which returns -1.
    */
-  public static function correctDepths(\Traversable $items): void {
-    $root_object = new class {
-      // Top level elements have a depth of 0, the helper root object must have
-      // a depth of -1.
+  protected static function getRootObject(): object {
+    return new class {
       public function getDepth(): int {
         return -1;
       }
     };
-    $parent_stack = new \SplStack();
-    $parent_stack->push($root_object);
-    $uncorrected_depths = new \SplObjectStorage();
-    $uncorrected_depths[$root_object] = $root_object->getDepth();
-    $expected_child_depth = fn () => $uncorrected_depths[$parent_stack->top()] + 1;
-    // The tree starts with the root.
-    $previous_item = $root_object;
-    /** @var \Drupal\bricks\BricksFieldItemInterface $item */
-    foreach ($items as $item) {
-      // One of the broken cases is a NULL depth which doesn't work with the
-      // comparisons below.
-      $item_depth = (int) $item->getDepth();
-      $uncorrected_depths[$item] = $item_depth;
-      // |P1|  | |
-      // |  |P2| |
-      // |  |  |X| <= we are here. The current item is X, the parent stack top
-      // currently is P1, the previous item is P2.
-      if ($item_depth > $expected_child_depth()) {
-        $parent_stack->push($previous_item);
-      }
-      // |P1|  | |
-      // |  |P2| |
-      // |  |  |X|
-      // |Y |  | | <= we are here, remove P1, P2 and any other parents even
-      // deeper.
-      while ($item_depth < $expected_child_depth()) {
-        $parent_stack->pop();
-      }
-      // The parent stack at this point contains the correct paths. The number
-      // of them minus one for the root object is the correct depth.
-      $item->setDepth($parent_stack->count() - 1);
-      $previous_item = $item;
-    }
   }
+
 
 }
