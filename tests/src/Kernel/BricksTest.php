@@ -108,6 +108,7 @@ class BricksTest extends KernelTestBase {
     foreach (array_keys($tree) as $delta => $key) {
       [$paragraph_id, $layout] = explode(':', $key) + [1 => ''];
       $brick = $bricks->eq($delta);
+      $this->assertTrue(in_array("brick--id--$paragraph_id", explode(' ', $brick->attr('class'))));
       if ($layout) {
         $regions = \Drupal::service('plugin.manager.core.layout')
           ->createInstance($layout)
@@ -123,7 +124,6 @@ class BricksTest extends KernelTestBase {
         // same amount of children as the layout it intends to use.
         unset($subtree);
         if ($region) {
-          // @TODO assert $paragraph_id here.
           $child_bricks_container = $child_bricks_container->filter(".region-$region");
           // array_shift with key does not exist, so this ugly here needs to
           // suffice.
