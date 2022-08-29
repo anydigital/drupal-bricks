@@ -81,7 +81,7 @@ class BricksTest extends KernelTestBase {
     $build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node);
     $contents = (string) \Drupal::service('renderer')->renderPlain($build);
     $crawler = new Crawler($contents);
-    $bricks = $crawler->filter('.brick--id--1')->ancestors()->children();
+    $bricks = $crawler->filter('.brick--id--1')->ancestors()->first()->children();
     $total = $this->recurseBricks($tree, $bricks);
     $this->assertSame($n, $total);
   }
