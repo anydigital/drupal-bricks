@@ -78,15 +78,13 @@ class BricksTest extends KernelTestBase {
     ]);
     $this->arrangeParagraphs($tree, $node, $paragraphs);
     $node->save();
-    $build = $node->get('test')->view();
+    $build = $node->get('test')->view(['label' => 'hidden']);
     $contents = (string) \Drupal::service('renderer')->renderPlain($build);
     $bricks = (new Crawler($contents))
       // Peel off <html>.
       ->children()->first()
       // Peel off <body>.
       ->children()->first()
-      // The first child is the field label, we need the second.
-      ->children()->eq(1)
       // One more div to get rid of.
       ->children()->first()
       ->children();
