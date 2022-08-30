@@ -78,17 +78,25 @@ class BricksTest extends KernelTestBase {
     ]);
     $this->arrangeParagraphs($tree, $node, $paragraphs);
     $node->save();
-    $build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node);
+    $build = $node->get('test')->view();
     $contents = (string) \Drupal::service('renderer')->renderPlain($build);
-    $crawler = new Crawler($contents);
-    $bricks = $crawler->filter('.brick--id--1')->ancestors()->first()->children();
+    $bricks = (new Crawler($contents))
+      // Peel off <html>.
+      ->children()->first()
+      // Peel off <body>.
+      ->children()->first()
+      // The first child is the field label, we need the second.
+      ->children()->eq(1)
+      // One more div to get rid of.
+      ->children()->first()
+      ->children();
     $total = $this->recurseBricks($tree, $bricks);
     $this->assertSame($n, $total);
   }
 
   public function arrangeParagraphs($tree, $node, $paragraphs, $depth = 0) {
     foreach ($tree as $id => $children) {
-      [$paragraph_id, $layout] = explode(':', $id) + [1 => ''];
+      [$paragraph_id, $layout] = $this->getParagraphIdAndLayout($id);
       $node->test->appendItem([
         'entity' => $paragraphs[$paragraph_id],
         'depth' => $depth,
@@ -106,9 +114,10 @@ class BricksTest extends KernelTestBase {
   protected function recurseBricks(array $tree, Crawler $bricks): int {
     $total = count($tree);
     foreach (array_keys($tree) as $delta => $key) {
-      [$paragraph_id, $layout] = explode(':', $key) + [1 => ''];
+      [$paragraph_id, $layout] = $this->getParagraphIdAndLayout($key);
       $brick = $bricks->eq($delta);
-      $this->assertTrue(in_array("brick--id--$paragraph_id", explode(' ', $brick->attr('class'))));
+      $class = $brick->attr('class');
+      $this->assertTrue(in_array("brick--id--$paragraph_id", explode(' ', $class)), "$paragraph_id not found in $class");
       if ($layout) {
         $regions = \Drupal::service('plugin.manager.core.layout')
           ->createInstance($layout)
@@ -120,16 +129,16 @@ class BricksTest extends KernelTestBase {
       }
       foreach ($regions as $region) {
         $child_bricks_container = $brick;
-        // This unset()ensures the test blows up if $tree does not contain the
+        // This unset() ensures the test blows up if $tree does not contain the
         // same amount of children as the layout it intends to use.
-        unset($subtree);
+        unset($subtree, $layout);
         if ($region) {
           $child_bricks_container = $child_bricks_container->filter(".region-$region");
           // array_shift with key does not exist, so this ugly here needs to
           // suffice.
           foreach ($tree[$key] as $k => $v) {
             $subtree = [$k => $v];
-            [$paragraph_id] = explode(':', $k);
+            [$paragraph_id, $layout] = $this->getParagraphIdAndLayout($k);
             unset($tree[$key][$k]);
             break;
           }
@@ -138,11 +147,13 @@ class BricksTest extends KernelTestBase {
           $subtree = $tree[$key];
         }
         // This is just <div><div> but DOM is clumsy.
-        $content = $child_bricks_container
-          ->children()->first()
-          ->children()->first();
-        $this->assertSame("testplain $paragraph_id", $content->text());
-        $total += $this->recurseBricks($subtree, $child_bricks_container->children()->filter('.paragraph'));
+        if (empty($layout)) {
+          $content = $child_bricks_container
+            ->children()->first()
+            ->children()->first();
+          $this->assertSame("testplain $paragraph_id", $content->text());
+        }
+        $total += $this->recurseBricks($subtree, $child_bricks_container->children()->filter('.brick--type--test'));
       }
     }
     return $total;
@@ -160,10 +171,20 @@ class BricksTest extends KernelTestBase {
         1 => [],
         '2:layout_test_2col' => [
           3 => [4 => [], 5 => []],
-          6 => [7 => []],
+          '6:layout_test_2col' => [7 => [], 8 => []],
         ]
       ]],
     ];
   }
+
+  /**
+   * @param int|string $key
+   *
+   * @return string[]
+   */
+  protected function getParagraphIdAndLayout(int|string $key): array {
+    return explode(':', $key) + [1 => ''];
+  }
+
 
 }
