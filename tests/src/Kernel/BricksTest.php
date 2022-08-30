@@ -80,13 +80,9 @@ class BricksTest extends KernelTestBase {
     $node->save();
     $build = $node->get('test')->view(['label' => 'hidden']);
     $contents = (string) \Drupal::service('renderer')->renderPlain($build);
-    $bricks = (new Crawler($contents))
-      // Peel off <html>.
-      ->children()->first()
-      // Peel off <body>.
-      ->children()->first()
-      // One more div to get rid of.
-      ->children()->first()
+    $bricks = (new Crawler($contents))->filter('div')
+      // Get rid of one level of wrapping.
+      ->eq(1)
       ->children();
     $total = $this->recurseBricks($tree, $bricks);
     $this->assertSame($n, $total);
