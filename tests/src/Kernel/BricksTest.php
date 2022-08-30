@@ -49,7 +49,7 @@ class BricksTest extends KernelTestBase {
    */
   public function testBricks(array $tree) {
     $paragraphs = [];
-    $n = max(
+    $keys =
       array_keys(
         iterator_to_array(
           new \RecursiveIteratorIterator(
@@ -60,17 +60,17 @@ class BricksTest extends KernelTestBase {
             \RecursiveIteratorIterator::CHILD_FIRST
           )
         )
-      )
-    );
-    for ($i = 1; $i <= $n; $i++) {
+      );
+    foreach ($keys as $key) {
+      [$id] = $this->getParagraphIdAndLayout($key);
       $paragraph = Paragraph::create([
         'type' => 'test',
-        'testplain' => "testplain $i",
-        'id' => $i,
+        'testplain' => "testplain $id",
+        'id' => $id,
       ]);
       $paragraph->enforceIsNew();
       $paragraph->save();
-      $paragraphs[$i] = $paragraph;
+      $paragraphs[$id] = $paragraph;
     }
     $node = Node::create([
       'type' => 'test',
@@ -85,7 +85,7 @@ class BricksTest extends KernelTestBase {
       ->eq(1)
       ->children();
     $total = $this->recurseBricks($tree, $bricks);
-    $this->assertSame($n, $total);
+    $this->assertSame(count($keys), $total);
   }
 
   public function arrangeParagraphs($tree, $node, $paragraphs, $depth = 0) {
