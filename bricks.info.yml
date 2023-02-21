@@ -3,7 +3,6 @@ description: Allows to create bricky content.
 package: Bricks
 
 type: module
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9.3 || ^10
 simplytest_dependencies:
   - bootstrap_kit

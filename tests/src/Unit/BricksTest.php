@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\bricks\Unit;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\bricks\Bricks;
 use Drupal\bricks\BricksFieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -14,6 +15,7 @@ use Drupal\Tests\UnitTestCase;
  */
 class BricksTest extends UnitTestCase {
 
+  use ProphecyTrait;
   /**
    * @dataProvider depthsProvider
    */

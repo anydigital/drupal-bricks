@@ -19,7 +19,7 @@ class BricksTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field_ui', 'block', 'node', 'taxonomy', 'bricks'];
+  protected static $modules = ['field_ui', 'block', 'node', 'taxonomy', 'bricks'];
 
   /**
    * @var \Drupal\taxonomy\VocabularyInterface
@@ -34,7 +34,7 @@ class BricksTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->rootUser);
 
@@ -60,17 +60,17 @@ class BricksTest extends BrowserTestBase {
       'label' => 'Brick field',
       'field_name' => 'brick',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save and continue');
+    $this->submitForm($edit, 'Save and continue');
     $edit = [
       'cardinality' => -1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save field settings');
+    $this->submitForm($edit, 'Save field settings');
 
     $edit = [
       'settings[handler_settings][auto_create]' => TRUE,
       'settings[handler_settings][target_bundles][' . $this->vocabulary->id() . ']' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
   }
 
   /**
@@ -81,8 +81,9 @@ class BricksTest extends BrowserTestBase {
     $edit = [];
     $edit['title[0][value]'] = 'Llamas are cool';
     $edit['field_brick[0][target_id]'] = 'Camelid';
-    $this->drupalPostForm("node/add/article", $edit, 'Save');
-    $this->assertText('Article Llamas are cool has been created.');
+    $this->drupalGet("node/add/article");
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('Article Llamas are cool has been created.');
   }
 
 }

@@ -11,7 +11,7 @@ use Drupal\Core\Render\Element;
  * Implements hook_theme_registry_alter().
  */
 function bricks_inline_theme_registry_alter(&$theme_registry) {
-  $theme_registry['inline_entity_form_entity_table']['theme path'] = drupal_get_path('module', 'bricks_inline');
+  $theme_registry['inline_entity_form_entity_table']['theme path'] = \Drupal::service('extension.list.module')->getPath('bricks_inline');
   $theme_registry['inline_entity_form_entity_table']['function'] = 'bricks_inline_inline_entity_form_entity_table';
 }
 

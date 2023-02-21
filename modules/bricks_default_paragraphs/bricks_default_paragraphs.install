@@ -16,8 +16,8 @@ function bricks_default_paragraphs_install() {
   ]);
   $layout->save();
 
-  $data = file_get_contents(drupal_get_path('theme', 'bartik') . '/screenshot.png');
-  $file = file_save_data($data, 'public://bartik.png');
+  $data = file_get_contents(\Drupal::service('extension.list.theme')->getPath('bartik') . '/screenshot.png');
+  $file = \Drupal::service('file.repository')->writeData($data, 'public://bartik.png');
   $image = $entity_type_manager->getStorage('paragraph')->create([
     'type' => 'images',
     'field_images_demo' => [
