@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * {@inheritdoc}
+ */
+
+/**
+ * Prepares variables for `field-multiple-value-form.html.twig`.
+ */
+function bricks_paragraphs_preprocess_field_multiple_value_form(&$variables) {
+  _bricks_preprocess_tabledrag_form($variables, 'element', 'paragraphs', $variables['element']['#field_name'] . '-delta-order');
+
+  if (isset($variables['element']['#widget']) && $variables['element']['#widget'] === 'bricks_tree_paragraphs') {
+    _bricks_preprocess_bricks_tree_paragraphs_widget($variables);
+  }
+}
+
+/**
+ * Helper preprocess function for the bricks_tree_paragraphs tabledrag form.
+ */
+function _bricks_preprocess_bricks_tree_paragraphs_widget(&$variables) {
+  // Paragraphs module is going to remove its order column in this case, so we
+  // shouldn't bother altering it.
+  // @see paragraphs_preprocess_field_multiple_value_form()
+  if ((isset($variables['element']['#allow_reference_changes']) && !$variables['element']['#allow_reference_changes']) || (isset($variables['element']['#cardinality']) && $variables['element']['#cardinality'] == 1) || (isset($variables['table']['#rows']) && count($variables['table']['#rows']) == 0)) {
+    // Do nothing; paragraphs module will get rid of tabledrag anyway.
+  }
+  else {
+    $table = &$variables['table'];
+    // Add header columns for tabledrag data.
+    $table['#header'][] = t('Depth');
+    $table['#header'][] = [
+      'data' => t('Parent'),
+      'class' => 'hidden',
+    ];
+
+    // We need to turn the regular tabledrag set up by
+    // template_preprocess_field_multiple_value_form() into a tabledrag that
+    // handles not just order but also depth.
+    // This makes tabledrag keep track of indentation; we'll give it a
+    // FAPI element to store the data in later.
+    $table['#tabledrag'][] = [
+      'action' => 'depth',
+      'relationship' => 'group',
+      'group' => 'bricks-depth',
+    ];
+    // Tabledrag always expects to see a parent column if it's being asked
+    // to keep track of depth. (It assumes anyone who cares about depth has
+    // hierarchical data.) We will give it a fake FAPI element to put its
+    // data into, but we don't want that data and won't store it anywhere.
+    $table['#tabledrag'][] = [
+      'action' => 'match',
+      'relationship' => 'parent',
+      'group' => 'tablesort-fake-parent',
+    ];
+    // We're now in kind of a funny situation: because we told tabledrag
+    // we want to keep track of parent data, it now thinks we want the weight
+    // data divided up by parent (the way it works for, say, taxonomy terms).
+    // We have to tell it no, we want to number the rows from the top to the
+    // bottom regardless of hierarchy. This requires some bricks-specific JS.
+    $table['#tabledrag'][0]['relationship'] = 'all';
+    $table['#attached']['library'][] = 'bricks/tabledrag.relationship-all';
+
+    // We've now told tabledrag to expect depth and parent columns, so we'll
+    // add cells for those columns to every row.
+    foreach ($table['#rows'] as &$row) {
+      // Move the depth element into its own column.
+      if (!isset($row['data'][1]['data']['depth'])) {
+        continue;
+      }
+      $depth_element = $row['data'][1]['data']['depth'];
+      $row['data'][] = [
+        'data' => $depth_element,
+      ];
+      unset($row['data'][1]['data']['depth']);
+
+      // Create a parent column with a fake element.
+      $row['data'][] = [
+        'data' => [
+          '#type' => 'hidden',
+          '#size' => 5,
+          '#default_value' => 0,
+          '#attributes' => ['class' => ['tablesort-fake-parent']],
+        ],
+      ];
+
+      // Also, fix the column with the drag handle so that it can handle
+      // the depth/indentation data.
+      $depth = $depth_element['#value'];
+      $indentation = [];
+      if ($depth > 0) {
+        $indentation = [
+          '#theme' => 'indentation',
+          '#size' => $depth,
+        ];
+      }
+      $drag_cell = &$row['data'][0];
+      $drag_cell['style'] = 'width: auto; min-width: 8em';
+      $drag_cell['data'] = !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '' . $drag_cell['data'];
+    }
+  }
+
+}

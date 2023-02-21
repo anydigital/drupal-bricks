@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\bricks\Plugin\Field\FieldWidget;
+namespace Drupal\bricks_paragraphs\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -22,6 +22,9 @@ use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
  */
 class BricksTreeParagraphsWidget extends ParagraphsWidget {
 
+  /**
+   * {@inheritdoc}
+   */
   public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL) {
     $widget = parent::form($items, $form, $form_state, $get_delta);
     // This lets us pull in the widget CSS from paragraphs module.
