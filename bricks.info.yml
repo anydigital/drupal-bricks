@@ -5,4 +5,4 @@ package: Bricks
 type: module
 core_version_requirement: ^9.3 || ^10
 simplytest_dependencies:
-  - bootstrap_kit
+  - bootstrap_kit:bootstrap_kit
