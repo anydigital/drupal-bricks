@@ -226,6 +226,9 @@ class Bricks {
     if ($css_class = $field_item->getOption('css_class')) {
       $element['#attributes']['class'][] = $css_class;
     }
+    if ($css_id = $field_item->getOption('css_id')) {
+      $element['#attributes']['id'][] = $css_id;
+    }
     return $element;
   }
 

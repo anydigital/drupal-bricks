@@ -187,6 +187,14 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
       'placeholder' => t('CSS class(-es)'),
     ],
   ];
+  $element['options']['css_id'] = [
+    '#type' => 'textfield',
+    '#default_value' => !empty($item->options['css_id']) ? $item->options['css_id'] : '',
+    '#size' => 10,
+    '#attributes' => [
+      'placeholder' => t('CSS ID'),
+    ],
+  ];
 }
 
 /* MISC */
