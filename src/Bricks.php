@@ -102,7 +102,7 @@ class Bricks {
       $parent_item = $parent_items[$field_item];
       // Only keep elements whose parent is in the new tree. If it is not then
       // the parent was access denied.
-      if (isset($parent_keys[$parent_item])) {
+      if (isset($parent_item) && isset($parent_keys[$parent_item])) {
         $new_elements[$key] = static::newElement($content, $field_item, $parent_keys[$parent_item]);
         $parent_keys[$field_item] = $key;
         $key++;
