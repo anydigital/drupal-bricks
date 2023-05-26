@@ -119,7 +119,7 @@ function _inline_entity_form_preprocess_inline_entity_form_entity_table(&$variab
           $arguments = array_merge($arguments, $field['callback_arguments']);
         }
 
-        $data = call_user_func_array($field['callback'], $arguments);
+        $data = call_user_func_array($field['callback'], array_values($arguments));
       }
 
       $cells[] = ['data' => $data, 'class' => ['inline-entity-form-' . $entity_type . '-' . $field_name]];
