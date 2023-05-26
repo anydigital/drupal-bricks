@@ -16,3 +16,4 @@ dependencies:
   - drupal:path
   - drupal:text
   - drupal:user
+  - bartik

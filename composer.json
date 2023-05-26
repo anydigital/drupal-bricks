@@ -10,6 +10,9 @@
     "source": "http://cgit.drupalcode.org/bricks"
   },
   "license": "GPL-2.0+",
+  "require": {
+    "drupal/bartik": "^1.0"
+  },
   "require-dev": {
     "querypath/querypath": "^3.0"
   }
