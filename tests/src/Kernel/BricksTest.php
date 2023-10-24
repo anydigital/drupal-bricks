@@ -27,11 +27,9 @@ class BricksTest extends KernelTestBase {
     'bricks',
     'bricks_revisions',
     'bricks_test',
-    'layout_discovery',
-    'layout_test'
   ];
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('system', 'sequences');
     $this->installSchema('node', 'node_access');
@@ -49,55 +47,31 @@ class BricksTest extends KernelTestBase {
    */
   public function testBricks(array $tree) {
     $paragraphs = [];
-    $keys =
-      array_keys(
-        iterator_to_array(
-          new \RecursiveIteratorIterator(
-            new \RecursiveArrayIterator($tree),
-            // It doesn't matter whether SELF_FIRST or CHILD_FIRST but if none
-            // is given then LEAVES_ONLY is the default and all our leaves are
-            // empty.
-            \RecursiveIteratorIterator::CHILD_FIRST
-          )
-        )
-      );
-    foreach ($keys as $key) {
-      [$id] = $this->getParagraphIdAndLayout($key);
+    $n = max(array_keys($tree));
+    for ($i = 1; $i <= $n; $i++) {
+      $string = "testplain $i";
       $paragraph = Paragraph::create([
         'type' => 'test',
-        'testplain' => "testplain $id",
-        'id' => $id,
+        'testplain' => $string,
+        'test' => array_intersect_key($paragraphs, $tree[$i] ?? []),
+        'id' => $i,
       ]);
       $paragraph->enforceIsNew();
       $paragraph->save();
-      $paragraphs[$id] = $paragraph;
+      $paragraphs[$i] = $paragraph;
     }
     $node = Node::create([
       'type' => 'test',
       'title' => 'test',
+      'test' => array_intersect_key($paragraphs, $tree),
     ]);
-    $this->arrangeParagraphs($tree, $node, $paragraphs);
     $node->save();
-    $build = $node->get('test')->view(['label' => 'hidden']);
+    $build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node);
     $contents = (string) \Drupal::service('renderer')->renderPlain($build);
-    $bricks = (new Crawler($contents))->filter('div')
-      // Get rid of one level of wrapping.
-      ->eq(1)
-      ->children();
+    $crawler = new Crawler($contents);
+    $bricks = $crawler->filter('.brick--id--1')->parents()->children();
     $total = $this->recurseBricks($tree, $bricks);
-    $this->assertSame(count($keys), $total);
-  }
-
-  public function arrangeParagraphs($tree, $node, $paragraphs, $depth = 0) {
-    foreach ($tree as $id => $children) {
-      [$paragraph_id, $layout] = $this->getParagraphIdAndLayout($id);
-      $node->test->appendItem([
-        'entity' => $paragraphs[$paragraph_id],
-        'depth' => $depth,
-        'options' => ['layout' => $layout],
-      ]);
-      $this->arrangeParagraphs($children, $node, $paragraphs, $depth + 1);
-    }
+    $this->assertSame($n, $total);
   }
 
   /**
@@ -107,48 +81,14 @@ class BricksTest extends KernelTestBase {
    */
   protected function recurseBricks(array $tree, Crawler $bricks): int {
     $total = count($tree);
-    foreach (array_keys($tree) as $delta => $key) {
-      [$paragraph_id, $layout] = $this->getParagraphIdAndLayout($key);
+    foreach (array_keys($tree) as $delta => $paragraph_id) {
       $brick = $bricks->eq($delta);
-      $class = $brick->attr('class');
-      $this->assertTrue(in_array("brick--id--$paragraph_id", explode(' ', $class)), "$paragraph_id not found in $class");
-      if ($layout) {
-        $regions = \Drupal::service('plugin.manager.core.layout')
-          ->createInstance($layout)
-          ->getPluginDefinition()
-          ->getRegionNames();
-      }
-      else {
-        $regions = [''];
-      }
-      foreach ($regions as $region) {
-        $child_bricks_container = $brick;
-        // This unset() ensures the test blows up if $tree does not contain the
-        // same amount of children as the layout it intends to use.
-        unset($subtree, $layout);
-        if ($region) {
-          $child_bricks_container = $child_bricks_container->filter(".region-$region");
-          // array_shift with key does not exist, so this ugly here needs to
-          // suffice.
-          foreach ($tree[$key] as $k => $v) {
-            $subtree = [$k => $v];
-            [$paragraph_id, $layout] = $this->getParagraphIdAndLayout($k);
-            unset($tree[$key][$k]);
-            break;
-          }
-        }
-        else {
-          $subtree = $tree[$key];
-        }
-        // This is just <div><div> but DOM is clumsy.
-        if (empty($layout)) {
-          $content = $child_bricks_container
-            ->children()->first()
-            ->children()->first();
-          $this->assertSame("testplain $paragraph_id", $content->text());
-        }
-        $total += $this->recurseBricks($subtree, $child_bricks_container->children()->filter('.brick--type--test'));
-      }
+      // This is just <div><div> but DOM is clumsy.
+      $content = $brick
+        ->children()->first()
+        ->children()->first();
+      $this->assertSame("testplain $paragraph_id", $content->text());
+      $total += $this->recurseBricks($tree[$paragraph_id], $brick->children()->filter('.paragraph'));
     }
     return $total;
   }
@@ -158,27 +98,10 @@ class BricksTest extends KernelTestBase {
     return [
       [[
         1 => [],
-        2 => [3 => [], 4 => [5 => []]],
-        6 => [7 => []],
-      ]],
-      [[
-        1 => [],
-        '2:layout_test_2col' => [
-          3 => [4 => [], 5 => []],
-          '6:layout_test_2col' => [7 => [], 8 => []],
-        ]
+        4 => [2 => [], 3 => []],
+        6 => [5 => []],
       ]],
     ];
   }
-
-  /**
-   * @param int|string $key
-   *
-   * @return string[]
-   */
-  protected function getParagraphIdAndLayout(int|string $key): array {
-    return explode(':', $key) + [1 => ''];
-  }
-
 
 }

@@ -4,8 +4,6 @@ namespace Drupal\Tests\bricks\Unit;
 
 use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\bricks\Bricks;
-use Drupal\bricks\BricksFieldItemInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -19,63 +17,35 @@ class BricksTest extends UnitTestCase {
   /**
    * @dataProvider depthsProvider
    */
-  public function testfindParentItems($depths, $expected_parents) {
+  public function testFixDepths($depths, $expected_depths) {
     $a = new \ArrayObject();
     foreach ($depths as $depth) {
-      $item = $this->prophesize(BricksFieldItemInterface::class);
-      $item->getDepth()->willReturn($depth);
-      $a[] = $item->reveal();
+      $a[] = new class($depth) {
+        function __construct(protected $depth) {}
+        function getDepth() {
+          return $this->depth;
+        }
+        function setDepth($depth): self {
+          $this->depth = $depth;
+          return $this;
+        }
+      };
     }
-    $item_list = $this->prophesize(FieldItemListInterface::class);
-    $item_list->willImplement(\IteratorAggregate::class);
-    $item_list->getIterator()->willReturn($a);
-    $rc = new \ReflectionClass(Bricks::class);
-    $root_object = $this->callMethod($rc, 'getRootObject');
-    $this->assertSame(-1, $root_object->getDepth());
-    $parents = $this->callMethod($rc, 'findParentItems', $item_list->reveal(), $root_object);
-    foreach ($a as $i => $item) {
-      $this->assertSame($a[$expected_parents[$i]] ?? $root_object, $parents[$item], "at index $i");
-    }
+    Bricks::correctDepths($a);
+    $this->assertSame($expected_depths, array_map(fn ($x) => $x->getDepth(), iterator_to_array($a)));
   }
 
-  /**
-   * Data provider for testParentItems.
-   *
-   * @return \int[][][]
-   *   A list of test cases. Each test case are two arrays, the first is a list
-   *   of depth, the second is a list of expected parents based on those
-   *   depths. This list contains keys of the first list and -1 for the root.
-   */
-  public function depthsProvider(): array {
+  function depthsProvider() {
     return [
       // This is a normal case.
-      [[0, 1, 1, 2, 2, 0, 0, 1, 2, 0], [-1, 0, 0, 2, 2, -1, -1, 6, 7, -1]],
-      // Has depth jumps of 2.
-      [[0, 2, 0, 0, 2, 0], [-1, 0, -1, -1, 3, -1]],
-      // Even more jumps.
-      [[0, 2, 4, 2, 0], [-1, 0, 1, 0, -1]],
-      // This is exceptionally broken.
-      [[1, 3, 2], [-1, 0, 0]],
+      [[0, 1, 1, 2, 2, 0, 0, 1, 2, 0], [0, 1, 1, 2, 2, 0, 0, 1, 2, 0]],
+      // This needs correction.
+      [[0, 2, 0, 0, 2, 0], [0, 1, 0, 0, 1, 0]],
+      // This even more so.
+      [[0, 2, 4, 2, 0], [0, 1, 2, 1, 0]],
+      // This is so broken it's hard to say what it even *should* be.
+      [[0, 2, 1], [0, 1, 1]],
     ];
-  }
-
-  /**
-   * Call a protected method on an object.
-   *
-   * @param \ReflectionClass $rc
-   *   The object.
-   * @param $method_name
-   *   The method name on the object.
-   * @param ...$args
-   *   Arguments to pass to the method.
-   *
-   * @return mixed
-   *   Return value from the method.
-   */
-  protected function callMethod(\ReflectionClass $rc, $method_name, ... $args): mixed {
-    $method = $rc->getMethod($method_name);
-    $method->setAccessible(TRUE);
-    return $method->invokeArgs(NULL, $args);
   }
 
 }

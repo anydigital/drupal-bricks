@@ -2,6 +2,7 @@
 
 namespace Drupal\bricks_paragraphs\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
@@ -41,6 +42,11 @@ class BricksTreeParagraphsWidget extends ParagraphsWidget {
     $widget_state = static::getWidgetState($element['#field_parents'], $this->fieldDefinition->getName(), $form_state);
     $entity = $widget_state['paragraphs'][$delta]['entity'];
     $item = $items[$delta];
+    // ::duplicateSubmit sets up depth for duplicated entities. $item is an empty
+    // item added in parent::formMultipleElements() with $items->appendItem().
+    if ($entity?->isNew() && isset($widget_state['paragraphs'][$delta]['depth'])) {
+      $item->depth = $widget_state['paragraphs'][$delta]['depth'];
+    }
     _bricks_form_element_alter($element, $item, $entity);
 
     // Restore keyboard/screenreader accessibility for the depth field.
@@ -48,6 +54,23 @@ class BricksTreeParagraphsWidget extends ParagraphsWidget {
     $element['depth']['#size'] = 3;
 
     return $element;
+  }
+
+  public static function duplicateSubmit(array $form, FormStateInterface $form_state) {
+    parent::duplicateSubmit($form, $form_state);
+    // All this is copied from the parent.
+    $button = $form_state->getTriggeringElement();
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -5));
+    $field_name = $element['#field_name'];
+    $parents = $element['#field_parents'];
+    $widget_state = static::getWidgetState($parents, $field_name, $form_state);
+    $delta = array_search($button['#delta'], $widget_state['original_deltas']);
+    // The parent appended the duplicate paragraph to the end of the
+    // paragraphs list in widget state. Copy the depth of the original.
+    // This single line is the only specific piece of logic, everything else
+    // is copied from the parent.
+    $widget_state['paragraphs'][array_key_last($widget_state['paragraphs'])]['depth'] = $element[$delta]['depth']['#value'];
+    static::setWidgetState($parents, $field_name, $form_state, $widget_state);
   }
 
   /**

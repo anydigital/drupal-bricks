@@ -1,6 +1,9 @@
 <?php
 
 use Drupal\bricks\Bricks;
+use Drupal\bricks\BricksFieldItemInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
@@ -205,4 +208,17 @@ function _bricks_form_element_alter(&$element, $item, $entity) {
 function bricks_preprocess_block__system_powered_by_block(&$variables) {
   $bricks_link = '<a href="https://uibricks.com">Bricks</a>';
   $variables['content']['#markup'] = str_replace('>Drupal</a>', '>Drupal</a> & ' . $bricks_link, $variables['content']['#markup']);
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function bricks_entity_presave(EntityInterface $entity) {
+  if ($entity instanceof FieldableEntityInterface) {
+    foreach ($entity->getFields() as $field_item_list) {
+      if ($field_item_list->get(0) instanceof BricksFieldItemInterface) {
+        Bricks::correctDepths($field_item_list);
+      }
+    }
+  }
 }
