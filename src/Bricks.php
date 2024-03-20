@@ -133,7 +133,9 @@ class Bricks {
       $depth = $item->getDepth();
       if (!isset($depth)) {
         $depth = 0;
-        drupal_register_shutdown_function([$items->getEntity(), 'save']);
+        if (!$items->getEntity()->isNew()) {
+          drupal_register_shutdown_function([$items->getEntity(), 'save']);
+        }
       }
       $parent_items[$item] = $parent_for_depth[$depth];
       // Thanks to ::correctDepths() we know the children are exactly 1 deeper.
