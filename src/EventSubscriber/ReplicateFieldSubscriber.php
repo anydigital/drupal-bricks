@@ -13,7 +13,7 @@ class ReplicateFieldSubscriber extends BaseReplicateFieldSubscriber {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[ReplicatorEvents::replicateEntityField('bricks_revisioned')][] = 'onClone';
     return $events;
   }

@@ -29,7 +29,7 @@ class BricksTest extends KernelTestBase {
     'bricks_test',
   ];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('system', 'sequences');
     $this->installSchema('node', 'node_access');
