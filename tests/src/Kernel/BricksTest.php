@@ -93,7 +93,7 @@ class BricksTest extends KernelTestBase {
     return $total;
   }
 
-  public function getTrees(): array {
+  public static function getTrees(): array {
     // Keys are the paragraph ID of parents, the values are subtrees.
     return [
       [[

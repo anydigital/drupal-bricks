@@ -35,7 +35,7 @@ class BricksTest extends UnitTestCase {
     $this->assertSame($expected_depths, array_map(fn ($x) => $x->getDepth(), iterator_to_array($a)));
   }
 
-  function depthsProvider() {
+  public static function depthsProvider() {
     return [
       // This is a normal case.
       [[0, 1, 1, 2, 2, 0, 0, 1, 2, 0], [0, 1, 1, 2, 2, 0, 0, 1, 2, 0]],

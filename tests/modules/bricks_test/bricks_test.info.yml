@@ -2,4 +2,4 @@ name: Bricks test
 description: bricks test
 package: Bricks
 type: module
-core_version_requirement: ^9.3 || ^10
+core_version_requirement: ^10.1 || ^11
