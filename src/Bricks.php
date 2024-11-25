@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\TypedData\TranslatableInterface;
 
 /**
  * Helper class.
@@ -79,30 +80,42 @@ class Bricks {
     // \SplObjectStorage only allows objects as keys.
     $root_object = new class { };
     $parent_items = self::parentItems($items, $root_object);
+    // The field item is needed because it stores bricks specific options.
+    // While EntityReferenceFormatterBase::getEntitiesToView() indexes
+    // by delta, FormatterBase::view() has
+    // $elements = array_merge($info, $elements); which loses this and changes
+    // $elements into a list as defined by array_is_list(). Also,
+    // https://www.drupal.org/project/drupal/issues/3489179
+    // makes _referringItem unreliable if the same entity is referred twice. So
+    // this code needs to guess. It has two guessing mechanisms: one is
+    // collecting the items referring an allowed entity into a list, borrowing
+    // the access check logic from
+    // EntityReferenceFormatterBase::getEntitiesToView(). If no elements are
+    // added or removed in various hooks then this will work (unless an alter
+    // hook replaces an element, no way to detect that). If some are added or
+    // removed then fall back to using _referringItem. Note, however this is
+    // also guesswork because there's no API helper to get the rendered entity
+    // back from a render element.
+    $allowed_items = self::getAllowedItems($items);
+    $fallback = (!array_is_list($render_elements) || count($allowed_items) !== count($render_elements));
     // The keys in are the same field items/$root_object as in $parent_items,
     // the values are keys in the $new_elements array or self::ROOT.
     $parent_keys = new \SplObjectStorage();
     $parent_keys[$root_object] = self::ROOT;
     $key = 0;
-    foreach ($render_elements as $render_element) {
+    foreach ($render_elements as $render_key => $render_element) {
       // At this point, the element contains a 'content' key containing a render
       // array to view an entity and an empty attributes object. Remove this
       // layer and keep only content.
       $content = $render_element['content'] ?? [];
-      // The field item is needed because it stores the bricks specific
-      // options. Because of
-      // https://www.drupal.org/project/drupal/issues/3108189 it is not
-      // possible to correlate $render_elements to $items, it needs to be found
-      // in the current render element.
-      $field_item = static::fieldItem($content);
-      // Sanity check.
-      if (!$field_item) {
-        continue;
+      $field_item = $fallback ? static::fieldItem($content) : $allowed_items[$render_key];
+      if (!isset($parent_items[$field_item])) {
+        throw new \UnexpectedValueException(sprintf('Bricks field %s has been altered in unholy ways', $items->getName()));
       }
       $parent_item = $parent_items[$field_item];
       // Only keep elements whose parent is in the new tree. If it is not then
       // the parent was access denied.
-      if (isset($parent_item) && isset($parent_keys[$parent_item])) {
+      if (isset($parent_keys[$parent_item])) {
         $new_elements[$key] = static::newElement($content, $field_item, $parent_keys[$parent_item]);
         $parent_keys[$field_item] = $key;
         $key++;
@@ -295,6 +308,31 @@ class Bricks {
       $item->setDepth($parent_stack->count() - 1);
       $previous_item = $item;
     }
+  }
+
+  /**
+   * Collect items referring an allowed entity into a list.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *
+   * @return array
+   *   A list containing items referring an allowed entity.
+   */
+  public static function getAllowedItems(FieldItemListInterface $items): array {
+    $allowed_items = [];
+    $langcode = $items->getLangcode();
+    foreach ($items as $item) {
+      if (!empty($item->_loaded)) {
+        $entity = $item->entity;
+        if ($entity instanceof TranslatableInterface) {
+          $entity = \Drupal::service('entity.repository')->getTranslationFromContext($entity, $langcode);
+        }
+        if ($entity->access('view')) {
+          $allowed_items[] = $item;
+        }
+      }
+    }
+    return $allowed_items;
   }
 
 }
