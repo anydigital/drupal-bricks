@@ -109,7 +109,7 @@ class Bricks {
       // layer and keep only content.
       $content = $render_element['content'] ?? [];
       $field_item = $fallback ? static::fieldItem($content) : $allowed_items[$render_key];
-      if (!isset($parent_items[$field_item])) {
+      if (empty($parent_items[$field_item])) {
         throw new \UnexpectedValueException(sprintf('Bricks field %s has been altered in unholy ways', $items->getName()));
       }
       $parent_item = $parent_items[$field_item];
@@ -269,8 +269,8 @@ class Bricks {
    */
   public static function correctDepths(\Traversable $items): void {
     $root_object = new class {
-      // Top level elements have a depth of 0, the helper root object must have
-      // a depth of -1.
+      // Top level elements have a depth of 0 (but see below), the helper root
+      // object must have a depth of -1.
       public function getDepth(): int {
         return -1;
       }
@@ -282,11 +282,17 @@ class Bricks {
     $expected_child_depth = fn () => $uncorrected_depths[$parent_stack->top()] + 1;
     // The tree starts with the root.
     $previous_item = $root_object;
+    // Actual top level depth.
+    $top_level_depth = NULL;
     /** @var \Drupal\bricks\BricksFieldItemInterface $item */
     foreach ($items as $item) {
       // One of the broken cases is a NULL depth which doesn't work with the
       // comparisons below.
       $item_depth = (int) $item->getDepth();
+      if (!isset($top_level_depth)) {
+        $top_level_depth = $item_depth;
+      }
+      $item_depth -= $top_level_depth;
       $uncorrected_depths[$item] = $item_depth;
       // |P1|  | |
       // |  |P2| |
