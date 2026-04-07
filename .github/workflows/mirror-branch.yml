@@ -8,9 +8,13 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync Branch
+      - name: Checkout destination
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync branch
         run: |
-          git clone --single-branch --branch 2.x https://git.drupalcode.org/project/bricks.git temp_dir
-          cd temp_dir
-          git remote add github https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git push github 2.x --force
+          git remote add external https://git.drupalcode.org/project/bricks.git
+          git fetch external 2.x
+          git push origin external/2.x:refs/heads/2.x --force
