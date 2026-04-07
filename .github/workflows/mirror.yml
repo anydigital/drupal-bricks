@@ -1,0 +1,16 @@
+name: Mirror Branch
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs every day at midnight
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync Branch
+        run: |
+          git clone --single-branch --branch 2.x https://git.drupalcode.org/project/bricks.git temp_dir
+          cd temp_dir
+          git remote add github https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push github 2.x --force
